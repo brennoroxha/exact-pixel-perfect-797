@@ -25,7 +25,7 @@ export const useLocationStore = create<LocationState>()(
       setLocation: (location) => set({ location }),
       clear: () => set({ location: null }),
     }),
-    { name: "flora-luxe-location", version: 2 },
+    { name: "flora-luxe-location", version: 3 },
   ),
 );
 
