@@ -67,7 +67,7 @@ function HomePage() {
 
       {/* Card da loja */}
       <section className="mx-auto max-w-3xl px-4 pt-6">
-        <div className="rounded-3xl border border-border bg-cream p-6 shadow-soft">
+        <div className="rounded-3xl border border-border bg-white p-6 shadow-soft">
           <div className="flex flex-col items-center text-center">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-background shadow-soft">
               <Flower2 className="h-9 w-9 text-green-deep" />
