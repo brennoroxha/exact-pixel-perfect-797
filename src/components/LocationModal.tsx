@@ -89,19 +89,24 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
 
   const useGeolocation = () => {
     if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      try {
-        const r = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`,
-        );
-        const data = await r.json();
-        const cityName: string =
-          data.address?.city || data.address?.town || data.address?.municipality || "";
-        const stateUf = (data.address?.["ISO3166-2-lvl4"] || "").split("-")[1];
-        if (stateUf) setUf(stateUf);
-        if (cityName) setSearch(cityName);
-      } catch {}
-    });
+    setAutoDetecting(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const r = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`,
+          );
+          const data = await r.json();
+          const cityName: string =
+            data.address?.city || data.address?.town || data.address?.municipality || "";
+          const stateUf = (data.address?.["ISO3166-2-lvl4"] || "").split("-")[1];
+          if (stateUf) setUf(stateUf);
+          if (cityName) setSearch(cityName);
+        } catch {}
+        setAutoDetecting(false);
+      },
+      () => setAutoDetecting(false),
+    );
   };
 
   const messages = [
