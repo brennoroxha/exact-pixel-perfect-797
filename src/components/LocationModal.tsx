@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Search, MapPin, Check, Flower2, Loader2 } from "lucide-react";
 import { BR_STATES, stateName } from "@/lib/br-states";
-import { CITIES_BY_STATE } from "@/lib/br-cities";
+// Cidades carregadas sob demanda (lazy) para não inflar o bundle inicial
 import { useLocationStore, type SavedLocation } from "@/stores/location";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,9 +31,22 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [autoDetecting, setAutoDetecting] = useState(true);
+  const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
 
-  // Auto-detect via IP geolocation on mount
+  // Lazy-load the cities list on mount (chunk separated from main bundle)
   useEffect(() => {
+    let cancelled = false;
+    import("@/lib/br-cities").then((m) => {
+      if (!cancelled) setCitiesByState(m.CITIES_BY_STATE);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Auto-detect via IP geolocation, runs after cities are loaded
+  useEffect(() => {
+    if (Object.keys(citiesByState).length === 0) return;
     let cancelled = false;
     (async () => {
       try {
@@ -42,18 +55,18 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         if (cancelled) return;
         const detectedUf: string | undefined = data?.region_code;
         const detectedCity: string | undefined = data?.city;
-        if (detectedUf && CITIES_BY_STATE[detectedUf]) {
-          setUf(detectedUf);
+        if (detectedUf && citiesByState[detectedUf]) {
+          setUf((prev) => prev || detectedUf);
           if (detectedCity) {
-            const list = CITIES_BY_STATE[detectedUf];
+            const list = citiesByState[detectedUf];
             const match = list.find(
-              (c) => slugify(c) === slugify(detectedCity),
+              (c: string) => slugify(c) === slugify(detectedCity),
             );
             if (match) {
-              setPicked(match);
-              setSearch(match);
+              setPicked((prev) => prev || match);
+              setSearch((prev) => prev || match);
             } else {
-              setSearch(detectedCity);
+              setSearch((prev) => prev || detectedCity);
             }
           }
         }
@@ -63,13 +76,16 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [citiesByState]);
 
-  const cities = useMemo(() => (uf ? CITIES_BY_STATE[uf] || [] : []), [uf]);
+  const cities = useMemo(
+    () => (uf ? citiesByState[uf] || [] : []),
+    [uf, citiesByState],
+  );
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     const list = q
-      ? cities.filter((c) => c.toLowerCase().includes(q))
+      ? cities.filter((c: string) => c.toLowerCase().includes(q))
       : cities;
     return list.slice(0, 50);
   }, [cities, search]);
