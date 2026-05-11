@@ -1,4 +1,3 @@
-import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { LocationModal } from "./LocationModal";
 import { isLocationFresh, useLocationStore } from "@/stores/location";
@@ -27,9 +26,7 @@ export function LocationGate() {
 
   if (!hydrated) return null;
 
-  return (
-    <AnimatePresence>{open && <LocationModal onClose={() => setOpen(false)} />}</AnimatePresence>
-  );
+  return open ? <LocationModal onClose={() => setOpen(false)} /> : null;
 }
 
 export const openLocationModal = () =>
