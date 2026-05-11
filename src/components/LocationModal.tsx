@@ -30,7 +30,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [progress, setProgress] = useState(0);
   const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [autoDetecting, setAutoDetecting] = useState(true);
+  const [autoDetecting, setAutoDetecting] = useState(false);
   const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
 
   // Lazy-load the cities list on mount (chunk separated from main bundle)
@@ -43,40 +43,6 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
       cancelled = true;
     };
   }, []);
-
-  // Auto-detect via IP geolocation, runs after cities are loaded
-  useEffect(() => {
-    if (Object.keys(citiesByState).length === 0) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const r = await fetch("https://ipapi.co/json/");
-        const data = await r.json();
-        if (cancelled) return;
-        const detectedUf: string | undefined = data?.region_code;
-        const detectedCity: string | undefined = data?.city;
-        if (detectedUf && citiesByState[detectedUf]) {
-          setUf((prev) => prev || detectedUf);
-          if (detectedCity) {
-            const list = citiesByState[detectedUf];
-            const match = list.find(
-              (c: string) => slugify(c) === slugify(detectedCity),
-            );
-            if (match) {
-              setPicked((prev) => prev || match);
-              setSearch((prev) => prev || match);
-            } else {
-              setSearch((prev) => prev || detectedCity);
-            }
-          }
-        }
-      } catch {}
-      if (!cancelled) setAutoDetecting(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [citiesByState]);
 
   const cities = useMemo(
     () => (uf ? citiesByState[uf] || [] : []),
