@@ -281,34 +281,60 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
             animate={{ opacity: 1 }}
             className="space-y-6 py-6 text-center"
           >
-            <motion.div
-              animate={{ scale: [1, 1.15, 1], rotate: [0, 360] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-              className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20"
-            >
-              <Flower2 className="h-10 w-10 text-green-deep" />
-            </motion.div>
-            <div>
-              <h3 className="font-display text-2xl text-green-deep">
-                Buscando floriculturas em {picked.city_name} 🌸
-              </h3>
-            </div>
-            <div className="mx-auto h-2 w-full max-w-sm overflow-hidden rounded-full bg-cream-dark">
+            {showSuccess ? (
               <motion.div
-                className="h-full rounded-full bg-green-deep"
-                style={{ width: `${progress}%` }}
-                transition={{ ease: "easeInOut" }}
-              />
-            </div>
-            <motion.p
-              key={searchMsg}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-center gap-2 text-sm text-muted-foreground"
-            >
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {messages[searchMsg]}
-            </motion.p>
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="space-y-4"
+              >
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20 text-green-deep">
+                  <Check className="h-10 w-10" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-display text-2xl text-green-deep">
+                    Cidade encontrada! 📍
+                  </h3>
+                  <p className="text-green-deep/70">
+                    Estamos a <strong className="text-green-deep">2.75km</strong> de distância.
+                  </p>
+                </div>
+                <div className="mx-auto max-w-[280px] rounded-2xl bg-green-deep/5 p-4 text-green-deep">
+                  <p className="text-xs uppercase tracking-wider opacity-60">Previsão de Entrega</p>
+                  <p className="text-lg font-semibold">Grátis: 18 a 35 minutos</p>
+                </div>
+              </motion.div>
+            ) : (
+              <>
+                <motion.div
+                  animate={{ scale: [1, 1.15, 1], rotate: [0, 360] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                  className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20"
+                >
+                  <Flower2 className="h-10 w-10 text-green-deep" />
+                </motion.div>
+                <div>
+                  <h3 className="font-display text-2xl text-green-deep">
+                    Buscando floriculturas em {picked.city_name} 🌸
+                  </h3>
+                </div>
+                <div className="mx-auto h-2 w-full max-w-sm overflow-hidden rounded-full bg-cream-dark">
+                  <motion.div
+                    className="h-full rounded-full bg-green-deep"
+                    style={{ width: `${progress}%` }}
+                    transition={{ ease: "easeInOut" }}
+                  />
+                </div>
+                <motion.p
+                  key={searchMsg}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center justify-center gap-2 text-sm text-muted-foreground"
+                >
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  {messages[searchMsg]}
+                </motion.p>
+              </>
+            )}
           </motion.div>
         )}
       </motion.div>
