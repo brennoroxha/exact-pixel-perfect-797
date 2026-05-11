@@ -89,6 +89,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
       setSearchMsg(Math.min(2, Math.floor(elapsed / 800)));
       if (p >= 100) {
         clearInterval(interval);
+        setShowSuccess(true);
         const saved: SavedLocation = {
           state: picked.state,
           city: picked.city_name,
@@ -100,7 +101,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
           savedAt: Date.now(),
         };
         setLocation(saved);
-        setTimeout(() => onClose?.(), 350);
+        setTimeout(() => onClose?.(), 2500);
       }
     }, 60);
     return () => clearInterval(interval);
