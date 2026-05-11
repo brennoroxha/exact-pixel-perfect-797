@@ -101,7 +101,6 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
           savedAt: Date.now(),
         };
         setLocation(saved);
-        setTimeout(() => onClose?.(), 2500);
       }
     }, 60);
     return () => clearInterval(interval);
@@ -302,6 +301,12 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                   <p className="text-xs uppercase tracking-wider opacity-60">Previsão de Entrega</p>
                   <p className="text-lg font-semibold">Grátis: 18 a 35 minutos</p>
                 </div>
+                <Button
+                  onClick={() => onClose?.()}
+                  className="w-full rounded-full bg-green-deep py-6 text-base text-cream hover:bg-green-mid"
+                >
+                  Ver catálogo →
+                </Button>
               </motion.div>
             ) : (
               <>
