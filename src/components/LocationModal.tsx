@@ -37,7 +37,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   useEffect(() => {
     let cancelled = false;
     import("@/lib/br-cities").then((m) => {
-      if (!cancelled) setCitiesByState(m.citiesByState);
+      if (!cancelled) setCitiesByState(m.CITIES_BY_STATE);
     });
     return () => {
       cancelled = true;
