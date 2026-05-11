@@ -21,5 +21,8 @@ export const imageMap: Record<string, string> = {
 
 export const heroImage = hero1;
 
-export const resolveImage = (key?: string | null) =>
-  (key && imageMap[key]) || pastel;
+export const resolveImage = (key?: string | null) => {
+  if (!key) return pastel;
+  if (key.startsWith("http://") || key.startsWith("https://")) return key;
+  return imageMap[key] || pastel;
+};
