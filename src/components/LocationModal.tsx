@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { Search, MapPin, Check, Flower2, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,42 +16,13 @@ type City = {
   delivery_time_max: number;
 };
 
-const PETALS = Array.from({ length: 14 });
-
-function PetalsBg() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {PETALS.map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute"
-          initial={{ y: -40, x: `${(i * 17) % 100}%`, opacity: 0, rotate: 0 }}
-          animate={{
-            y: "110vh",
-            x: `${((i * 17) % 100) + (i % 2 ? 6 : -6)}%`,
-            opacity: [0, 0.7, 0.7, 0],
-            rotate: [0, 180, 360],
-          }}
-          transition={{ duration: 9 + (i % 5), repeat: Infinity, delay: i * 0.7, ease: "linear" }}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2C8 8 4 11 4 16a8 8 0 0016 0c0-5-4-8-8-14z" fill="#E8A4A4" opacity="0.7" />
-          </svg>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
 export function LocationModal({ onClose }: { onClose?: () => void }) {
   const setLocation = useLocationStore((s) => s.setLocation);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [uf, setUf] = useState<string>("");
-  const [cities, setCities] = useState<City[]>([]);
   const [allCities, setAllCities] = useState<City[]>([]);
   const [search, setSearch] = useState("");
   const [picked, setPicked] = useState<City | null>(null);
-  const [loadingCities, setLoadingCities] = useState(false);
   const [progress, setProgress] = useState(0);
   const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -63,30 +33,25 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     });
   }, []);
 
-  useEffect(() => {
-    if (!uf) return;
-    setLoadingCities(true);
-    setCities(allCities.filter((c) => c.state === uf));
-    setLoadingCities(false);
-  }, [uf, allCities]);
-
+  const cities = useMemo(() => allCities.filter((c) => c.state === uf), [allCities, uf]);
   const filtered = useMemo(
     () =>
       cities.filter((c) => c.city_name.toLowerCase().includes(search.toLowerCase())).slice(0, 12),
     [cities, search],
   );
 
-  // Step 3 progression
+  // Step 3 progression — faster (1.2s)
   useEffect(() => {
     if (step !== 3 || !picked) return;
     setProgress(0);
     setSearchMsg(0);
+    setShowSuccess(false);
     const start = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - start;
-      const p = Math.min(100, (elapsed / 2400) * 100);
+      const p = Math.min(100, (elapsed / 1200) * 100);
       setProgress(p);
-      setSearchMsg(Math.min(2, Math.floor(elapsed / 800)));
+      setSearchMsg(Math.min(2, Math.floor(elapsed / 400)));
       if (p >= 100) {
         clearInterval(interval);
         setShowSuccess(true);
@@ -102,9 +67,9 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         };
         setLocation(saved);
       }
-    }, 60);
+    }, 80);
     return () => clearInterval(interval);
-  }, [step, picked, setLocation, onClose]);
+  }, [step, picked, setLocation]);
 
   const useGeolocation = () => {
     if (!navigator.geolocation) return;
@@ -130,31 +95,15 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 px-4"
-    >
-      <PetalsBg />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 12 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 w-full max-w-xl rounded-3xl bg-cream p-8 shadow-float md:p-10"
-      >
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 px-4 animate-in fade-in duration-200">
+      <div className="relative z-10 w-full max-w-xl rounded-3xl bg-cream p-8 shadow-float md:p-10 animate-in zoom-in-95 duration-200">
         <div className="mb-6 flex items-center justify-center gap-2">
           <Flower2 className="h-6 w-6 text-green-deep" />
           <span className="font-display text-2xl text-green-deep">Flora Luxe</span>
         </div>
 
         {step === 1 && (
-          <motion.div
-            key="s1"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-5"
-          >
+          <div className="space-y-5">
             <div className="text-center">
               <h2 className="font-display text-3xl text-green-deep">Onde você está? 🌿</h2>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -196,16 +145,11 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
             >
               Continuar →
             </Button>
-          </motion.div>
+          </div>
         )}
 
         {step === 2 && (
-          <motion.div
-            key="s2"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-5"
-          >
+          <div className="space-y-5">
             <div className="text-center">
               <h2 className="font-display text-3xl text-green-deep">Agora sua cidade 🏙️</h2>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -224,9 +168,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
             </div>
 
             <div className="max-h-[40vh] space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
-              {loadingCities ? (
-                <div className="py-8 text-center text-sm text-muted-foreground">Carregando...</div>
-              ) : filtered.length === 0 ? (
+              {filtered.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">
                   Ainda não atendemos sua cidade. Em breve!
                 </div>
@@ -270,29 +212,18 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                 Confirmar →
               </Button>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {step === 3 && picked && (
-          <motion.div
-            key="s3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="space-y-6 py-6 text-center"
-          >
+          <div className="space-y-6 py-6 text-center">
             {showSuccess ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="space-y-4"
-              >
+              <div className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
                 <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20 text-green-deep">
                   <Check className="h-10 w-10" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-display text-2xl text-green-deep">
-                    Cidade encontrada! 📍
-                  </h3>
+                  <h3 className="font-display text-2xl text-green-deep">Cidade encontrada! 📍</h3>
                   <p className="text-green-deep/70">
                     Estamos a <strong className="text-green-deep">2.75km</strong> de distância.
                   </p>
@@ -307,42 +238,30 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                 >
                   Ver catálogo →
                 </Button>
-              </motion.div>
+              </div>
             ) : (
               <>
-                <motion.div
-                  animate={{ scale: [1, 1.15, 1], rotate: [0, 360] }}
-                  transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                  className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20"
-                >
-                  <Flower2 className="h-10 w-10 text-green-deep" />
-                </motion.div>
-                <div>
-                  <h3 className="font-display text-2xl text-green-deep">
-                    Buscando floriculturas em {picked.city_name} 🌸
-                  </h3>
+                <div className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20">
+                  <Flower2 className="h-10 w-10 text-green-deep animate-pulse" />
                 </div>
+                <h3 className="font-display text-2xl text-green-deep">
+                  Buscando floriculturas em {picked.city_name} 🌸
+                </h3>
                 <div className="mx-auto h-2 w-full max-w-sm overflow-hidden rounded-full bg-cream-dark">
-                  <motion.div
-                    className="h-full rounded-full bg-green-deep"
+                  <div
+                    className="h-full rounded-full bg-green-deep transition-[width] duration-100 ease-linear"
                     style={{ width: `${progress}%` }}
-                    transition={{ ease: "easeInOut" }}
                   />
                 </div>
-                <motion.p
-                  key={searchMsg}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center justify-center gap-2 text-sm text-muted-foreground"
-                >
+                <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   {messages[searchMsg]}
-                </motion.p>
+                </p>
               </>
             )}
-          </motion.div>
+          </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

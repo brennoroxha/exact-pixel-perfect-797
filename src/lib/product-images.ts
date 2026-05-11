@@ -1,12 +1,12 @@
-import rosas from "@/assets/products/rosas-vermelhas.jpg";
-import girassois from "@/assets/products/girassois.jpg";
-import peonias from "@/assets/products/peonias.jpg";
-import orquidea from "@/assets/products/orquidea.jpg";
-import cesta from "@/assets/products/cesta-presente.jpg";
-import campo from "@/assets/products/flores-campo.jpg";
-import pastel from "@/assets/products/buque-pastel.jpg";
-import secas from "@/assets/products/flores-secas.jpg";
-import hero1 from "@/assets/hero-1.jpg";
+import rosas from "@/assets/products/rosas-vermelhas.webp";
+import girassois from "@/assets/products/girassois.webp";
+import peonias from "@/assets/products/peonias.webp";
+import orquidea from "@/assets/products/orquidea.webp";
+import cesta from "@/assets/products/cesta-presente.webp";
+import campo from "@/assets/products/flores-campo.webp";
+import pastel from "@/assets/products/buque-pastel.webp";
+import secas from "@/assets/products/flores-secas.webp";
+import hero1 from "@/assets/hero-1.webp";
 
 export const imageMap: Record<string, string> = {
   "rosas-vermelhas": rosas,
