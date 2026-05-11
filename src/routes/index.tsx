@@ -65,6 +65,64 @@ function HomePage() {
     <div className="min-h-screen bg-background text-foreground">
       <Header />
 
+      {/* Card da loja */}
+      <section className="mx-auto max-w-3xl px-4 pt-6">
+        <div className="rounded-3xl border border-border bg-cream p-6 shadow-soft">
+          <div className="flex flex-col items-center text-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-background shadow-soft">
+              <Flower2 className="h-9 w-9 text-green-deep" />
+            </div>
+            <h1 className="mt-4 font-display text-2xl text-green-deep">Floratta Express</h1>
+            <div className="mt-2 flex items-center gap-2 text-sm">
+              <span className="flex text-yellow-500">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-current" />
+                ))}
+              </span>
+              <span className="font-medium text-green-deep">4,9</span>
+              <span className="text-muted-foreground">(2.847 avaliações)</span>
+            </div>
+            <div className="mt-3 flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Tempo de Entrega</span>
+              <span className="rounded-full bg-green-mid px-3 py-0.5 text-xs font-semibold text-cream">
+                {loc ? `${loc.deliveryTimeMin} - ${loc.deliveryTimeMax} min` : "20 - 30 min"}
+              </span>
+            </div>
+          </div>
+
+          <div className="my-5 border-t border-border" />
+
+          <div className="space-y-2 text-center text-sm">
+            <p>
+              <span className="mr-1">🌹</span>
+              <span className="text-foreground">Mínimo </span>
+              <strong className="text-green-deep">R$ 50,00</strong>
+              <span className="mx-2 text-muted-foreground">·</span>
+              <span className="italic text-green-mid">Entrega Grátis para {cityLabel}</span>
+            </p>
+            <p className="text-muted-foreground">
+              <span className="mr-1">📍</span>
+              Estamos a <strong className="text-green-deep">1,6 km</strong> de você
+            </p>
+          </div>
+
+          <div className="mt-5 flex justify-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-green-mid bg-background px-5 py-2 text-sm font-semibold text-green-deep">
+              <span className="h-2 w-2 rounded-full bg-green-mid" />
+              ABERTO
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-3 rounded-2xl bg-rose-300/40 p-4 text-center text-sm text-green-deep">
+          <p>
+            <span className="mr-1">🌸</span> Promoção de primeiro pedido ativada!
+          </p>
+          <p className="mt-1 font-display text-base font-semibold">Entrega Grátis para {cityLabel}!</p>
+          <p className="mt-1 text-xs">Flores frescas com até 50% OFF + frete grátis no seu primeiro pedido!</p>
+        </div>
+      </section>
+
       {/* Categorias */}
       <section className="border-y border-border bg-cream-dark/40">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-4 scrollbar-hide">
