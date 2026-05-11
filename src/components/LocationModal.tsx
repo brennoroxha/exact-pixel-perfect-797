@@ -55,6 +55,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [loadingCities, setLoadingCities] = useState(false);
   const [progress, setProgress] = useState(0);
   const [searchMsg, setSearchMsg] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     supabase.from("cities").select("*").eq("active", true).then(({ data }) => {
