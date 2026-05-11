@@ -44,13 +44,13 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
     <Link
       to="/produto/$slug"
       params={{ slug: product.slug }}
-      className="group block overflow-hidden rounded-2xl bg-card shadow-soft transition hover:-translate-y-1 hover:shadow-elegant"
+      className="group block overflow-hidden rounded-2xl bg-card shadow-soft transition hover:-translate-y-1 hover:shadow-elegant [contain-intrinsic-size:360px] [content-visibility:auto]"
     >
       <div className="relative aspect-square overflow-hidden bg-cream-dark">
         <img
           src={resolveImage(imageKey)}
           alt={product.name}
-          loading={index < 8 ? "eager" : "lazy"}
+          loading={index < 4 ? "eager" : "lazy"}
           decoding="async"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
