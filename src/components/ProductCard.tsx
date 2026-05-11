@@ -61,6 +61,12 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       </div>
 
       <div className="flex flex-1 flex-col p-3 sm:p-4">
+        {discount > 0 && (
+          <span className="mb-2 inline-flex w-fit items-center gap-1 rounded-full bg-green-deep px-2 py-0.5 text-[10px] font-bold text-cream sm:text-[11px]">
+            <Tag className="h-3 w-3" />
+            {discount}% OFF
+          </span>
+        )}
         <h3 className="font-display text-sm text-green-deep line-clamp-1 sm:text-base">{product.name}</h3>
         {product.description && (
           <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
