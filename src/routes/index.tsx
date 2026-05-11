@@ -126,11 +126,11 @@ function HomePage() {
           <h2 className="font-display text-3xl text-green-deep md:text-4xl">Por ocasião</h2>
           <span className="text-sm text-muted-foreground">Escolha o motivo</span>
         </div>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
+        <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-4 md:gap-3 md:overflow-visible md:px-0 lg:grid-cols-7">
           {(homeQ.data?.occasions ?? []).map((o, i) => (
             <button
               key={o.slug}
-              className="group relative flex aspect-[4/5] flex-col items-center justify-end overflow-hidden rounded-2xl bg-green-mid p-3 text-cream shadow-soft transition hover:-translate-y-1 hover:shadow-elegant"
+              className="group relative flex aspect-[4/5] w-[38vw] shrink-0 snap-start flex-col items-center justify-end overflow-hidden rounded-2xl bg-green-mid p-3 text-cream shadow-soft transition hover:-translate-y-1 hover:shadow-elegant md:w-auto"
               style={{ backgroundImage: `url(${resolveImage(["rosas-vermelhas","girassois","peonias","flores-campo","flores-secas","orquidea","buque-pastel"][i % 7])})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
               <div className="absolute inset-0 bg-overlay-warm" />
