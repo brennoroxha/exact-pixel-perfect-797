@@ -1,4 +1,3 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { X, Trash2, ShoppingBag, Tag } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { cartSubtotal, useCartStore } from "@/stores/cart";
@@ -14,24 +13,15 @@ export function CartDrawer() {
   const remaining = Math.max(0, freeMin - subtotal);
   const progress = Math.min(100, (subtotal / freeMin) * 100);
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+    <>
+          <div
             onClick={close}
-            className="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm animate-in fade-in duration-150"
           />
-          <motion.aside
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 280 }}
-            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-cream shadow-float"
-          >
+          <aside className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-cream shadow-float animate-in slide-in-from-right duration-200">
             <header className="flex items-center justify-between border-b border-border px-6 py-5">
               <div className="flex items-center gap-2">
                 <ShoppingBag className="h-5 w-5 text-green-deep" />
@@ -133,9 +123,7 @@ export function CartDrawer() {
                 </Link>
               </footer>
             )}
-          </motion.aside>
+          </aside>
         </>
-      )}
-    </AnimatePresence>
   );
 }

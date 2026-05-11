@@ -58,10 +58,12 @@ export function Header() {
 
         <button
           onClick={openLocationModal}
-          className="hidden items-center gap-1.5 rounded-full border border-green-sage/40 bg-cream-dark px-3 py-1.5 text-xs text-green-deep transition hover:border-green-mid sm:flex"
+          className="inline-flex min-w-0 items-center gap-1.5 rounded-full border border-green-sage/40 bg-cream-dark px-2.5 py-2 text-xs text-green-deep transition hover:border-green-mid sm:px-3 sm:py-1.5"
         >
           <MapPin className="h-3.5 w-3.5" />
-          {loc ? `${loc.city}/${loc.state}` : "Escolher cidade"}
+          <span className="max-w-[92px] truncate sm:max-w-none">
+            {loc ? `${loc.city}/${loc.state}` : "Cidade"}
+          </span>
         </button>
 
         <button

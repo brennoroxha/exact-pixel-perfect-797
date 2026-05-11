@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Check, Copy, CreditCard, QrCode } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -218,15 +217,12 @@ function CheckoutPage() {
                     placeholder="Escreva sua mensagem (até 300 caracteres)"
                     className="w-full rounded-xl border border-border bg-cream p-3 text-sm"
                   />
-                  <motion.div
-                    layout
-                    className="mx-auto max-w-md rounded-2xl bg-gradient-luxe p-8 text-center text-cream shadow-elegant"
-                  >
+                  <div className="mx-auto max-w-md rounded-2xl bg-gradient-luxe p-8 text-center text-cream shadow-elegant">
                     <div className="font-display text-3xl">🌹</div>
                     <p className="mt-3 whitespace-pre-wrap font-display text-lg italic">
                       {form.cardMessage || "Sua mensagem aparecerá aqui..."}
                     </p>
-                  </motion.div>
+                  </div>
                 </>
               )}
             </div>
@@ -279,17 +275,13 @@ function CheckoutPage() {
           )}
 
           {step === 4 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="rounded-3xl bg-gradient-luxe p-12 text-center text-cream shadow-elegant"
-            >
+            <div className="rounded-3xl bg-gradient-luxe p-12 text-center text-cream shadow-elegant animate-in fade-in zoom-in-95 duration-200">
               <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-cream/20">
                 <Check className="h-8 w-8" />
               </div>
               <h2 className="font-display text-3xl">Pedido confirmado! 🌸</h2>
               <p className="mt-2 text-cream/80">Redirecionando para o rastreamento...</p>
-            </motion.div>
+            </div>
           )}
 
           {step < 4 && (

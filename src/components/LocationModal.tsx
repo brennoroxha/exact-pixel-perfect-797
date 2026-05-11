@@ -30,11 +30,12 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [progress, setProgress] = useState(0);
   const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [autoDetecting, setAutoDetecting] = useState(true);
+  const [autoDetecting, setAutoDetecting] = useState(false);
   const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
 
-  // Lazy-load the cities list on mount (chunk separated from main bundle)
+  // Lazy-load the cities list only when the city step is needed
   useEffect(() => {
+    if (step !== 2 || Object.keys(citiesByState).length > 0) return;
     let cancelled = false;
     import("@/lib/br-cities").then((m) => {
       if (!cancelled) setCitiesByState(m.CITIES_BY_STATE);
@@ -42,41 +43,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     return () => {
       cancelled = true;
     };
-  }, []);
-
-  // Auto-detect via IP geolocation, runs after cities are loaded
-  useEffect(() => {
-    if (Object.keys(citiesByState).length === 0) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const r = await fetch("https://ipapi.co/json/");
-        const data = await r.json();
-        if (cancelled) return;
-        const detectedUf: string | undefined = data?.region_code;
-        const detectedCity: string | undefined = data?.city;
-        if (detectedUf && citiesByState[detectedUf]) {
-          setUf((prev) => prev || detectedUf);
-          if (detectedCity) {
-            const list = citiesByState[detectedUf];
-            const match = list.find(
-              (c: string) => slugify(c) === slugify(detectedCity),
-            );
-            if (match) {
-              setPicked((prev) => prev || match);
-              setSearch((prev) => prev || match);
-            } else {
-              setSearch((prev) => prev || detectedCity);
-            }
-          }
-        }
-      } catch {}
-      if (!cancelled) setAutoDetecting(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [citiesByState]);
+  }, [citiesByState, step]);
 
   const cities = useMemo(
     () => (uf ? citiesByState[uf] || [] : []),
@@ -123,19 +90,24 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
 
   const useGeolocation = () => {
     if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      try {
-        const r = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`,
-        );
-        const data = await r.json();
-        const cityName: string =
-          data.address?.city || data.address?.town || data.address?.municipality || "";
-        const stateUf = (data.address?.["ISO3166-2-lvl4"] || "").split("-")[1];
-        if (stateUf) setUf(stateUf);
-        if (cityName) setSearch(cityName);
-      } catch {}
-    });
+    setAutoDetecting(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const r = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`,
+          );
+          const data = await r.json();
+          const cityName: string =
+            data.address?.city || data.address?.town || data.address?.municipality || "";
+          const stateUf = (data.address?.["ISO3166-2-lvl4"] || "").split("-")[1];
+          if (stateUf) setUf(stateUf);
+          if (cityName) setSearch(cityName);
+        } catch {}
+        setAutoDetecting(false);
+      },
+      () => setAutoDetecting(false),
+    );
   };
 
   const messages = [

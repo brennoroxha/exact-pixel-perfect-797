@@ -6,6 +6,8 @@ type WindowWithLocationModal = Window & {
   floraOpenLocationModal?: () => void;
 };
 
+const OPEN_LOCATION_EVENT = "flora:open-location";
+
 export function LocationGate() {
   const [open, setOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -32,10 +34,11 @@ export function LocationGate() {
       setOpen(true);
     };
     (window as WindowWithLocationModal).floraOpenLocationModal = handler;
-    window.addEventListener("flora:open-location", handler);
+    window.addEventListener(OPEN_LOCATION_EVENT, handler);
+    window.dispatchEvent(new CustomEvent("flora:location-gate-ready"));
     return () => {
       delete (window as WindowWithLocationModal).floraOpenLocationModal;
-      window.removeEventListener("flora:open-location", handler);
+      window.removeEventListener(OPEN_LOCATION_EVENT, handler);
     };
   }, []);
 
@@ -44,6 +47,12 @@ export function LocationGate() {
   return open ? <LocationModal onClose={() => setOpen(false)} /> : null;
 }
 
-export const openLocationModal = () =>
-  (window as WindowWithLocationModal).floraOpenLocationModal?.() ??
-  window.dispatchEvent(new CustomEvent("flora:open-location"));
+export const openLocationModal = () => {
+  if (typeof window === "undefined") return;
+  const open = (window as WindowWithLocationModal).floraOpenLocationModal;
+  if (open) {
+    open();
+    return;
+  }
+  window.dispatchEvent(new CustomEvent(OPEN_LOCATION_EVENT));
+};
