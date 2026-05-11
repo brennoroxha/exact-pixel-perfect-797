@@ -108,7 +108,10 @@ function HomePage() {
 
           <div className="mt-5 flex justify-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-green-mid bg-background px-5 py-2 text-sm font-semibold text-green-deep">
-              <span className="h-2 w-2 rounded-full bg-green-mid" />
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+              </span>
               ABERTO
             </span>
           </div>
