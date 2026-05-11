@@ -44,8 +44,9 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     };
   }, []);
 
-  // Auto-detect via IP geolocation on mount
+  // Auto-detect via IP geolocation, runs after cities are loaded
   useEffect(() => {
+    if (Object.keys(citiesByState).length === 0) return;
     let cancelled = false;
     (async () => {
       try {
@@ -55,17 +56,17 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         const detectedUf: string | undefined = data?.region_code;
         const detectedCity: string | undefined = data?.city;
         if (detectedUf && citiesByState[detectedUf]) {
-          setUf(detectedUf);
+          setUf((prev) => prev || detectedUf);
           if (detectedCity) {
             const list = citiesByState[detectedUf];
             const match = list.find(
-              (c) => slugify(c) === slugify(detectedCity),
+              (c: string) => slugify(c) === slugify(detectedCity),
             );
             if (match) {
-              setPicked(match);
-              setSearch(match);
+              setPicked((prev) => prev || match);
+              setSearch((prev) => prev || match);
             } else {
-              setSearch(detectedCity);
+              setSearch((prev) => prev || detectedCity);
             }
           }
         }
@@ -75,13 +76,16 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [citiesByState]);
 
-  const cities = useMemo(() => (uf ? citiesByState[uf] || [] : []), [uf]);
+  const cities = useMemo(
+    () => (uf ? citiesByState[uf] || [] : []),
+    [uf, citiesByState],
+  );
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     const list = q
-      ? cities.filter((c) => c.toLowerCase().includes(q))
+      ? cities.filter((c: string) => c.toLowerCase().includes(q))
       : cities;
     return list.slice(0, 50);
   }, [cities, search]);
