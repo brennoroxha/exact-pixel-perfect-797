@@ -65,39 +65,6 @@ function HomePage() {
     <div className="min-h-screen bg-background text-foreground">
       <Header />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-cream-dark px-3 py-1 text-xs text-green-deep">
-              🔥 Primeiro pedido com frete grátis · cupom <strong>FLORASPRIMEIRA</strong>
-            </span>
-            <h1 className="mt-5 font-display text-5xl leading-[1.05] text-green-deep md:text-7xl">
-              Flores que <br />
-              <span className="italic text-green-mid">chegam vivas</span> <br />
-              até você. 🌹
-            </h1>
-            <p className="mt-5 max-w-md text-base text-muted-foreground">
-              Entrega em <strong>{loc ? `${loc.deliveryTimeMin}–${loc.deliveryTimeMax} min` : "30–60 min"}</strong> para {cityLabel}. Buquês editoriais, embalagem caprichada e mensagem manuscrita.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <a href="#vitrine" className="inline-flex items-center gap-2 rounded-full bg-green-deep px-6 py-3.5 text-sm font-medium text-cream transition hover:bg-green-mid">
-                Ver buquês <ArrowRight className="h-4 w-4" />
-              </a>
-              <a href="#ocasioes" className="inline-flex items-center gap-2 rounded-full border border-green-deep px-6 py-3.5 text-sm font-medium text-green-deep transition hover:bg-green-deep hover:text-cream">
-                Por ocasião
-              </a>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-3">
-            <img src={heroImage} alt="Buquê de rosas pastel" className="col-span-2 row-span-2 h-full w-full rounded-3xl object-cover shadow-elegant" loading="eager" decoding="async" />
-            <img src={resolveImage("girassois")} alt="Girassóis" className="aspect-square w-full rounded-3xl object-cover shadow-soft" loading="eager" decoding="async" />
-            <img src={resolveImage("orquidea")} alt="Orquídea" className="aspect-square w-full rounded-3xl object-cover shadow-soft" loading="eager" decoding="async" />
-          </div>
-        </div>
-      </section>
-
       {/* Categorias */}
       <section className="border-y border-border bg-cream-dark/40">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-4 scrollbar-hide">
