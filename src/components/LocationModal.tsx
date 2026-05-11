@@ -1,48 +1,82 @@
 import { useEffect, useMemo, useState } from "react";
 import { Search, MapPin, Check, Flower2, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { BR_STATES, stateName } from "@/lib/br-states";
+import { CITIES_BY_STATE } from "@/lib/br-cities";
 import { useLocationStore, type SavedLocation } from "@/stores/location";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type City = {
-  city_name: string;
-  slug: string;
-  state: string;
-  delivery_fee: number;
-  free_shipping_min: number;
-  delivery_time_min: number;
-  delivery_time_max: number;
+const slugify = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+const DEFAULTS = {
+  delivery_fee: 0,
+  free_shipping_min: 0,
+  delivery_time_min: 18,
+  delivery_time_max: 35,
 };
 
 export function LocationModal({ onClose }: { onClose?: () => void }) {
   const setLocation = useLocationStore((s) => s.setLocation);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [uf, setUf] = useState<string>("");
-  const [allCities, setAllCities] = useState<City[]>([]);
   const [search, setSearch] = useState("");
-  const [picked, setPicked] = useState<City | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [autoDetecting, setAutoDetecting] = useState(true);
 
+  // Auto-detect via IP geolocation on mount
   useEffect(() => {
-    supabase.from("cities").select("*").eq("active", true).then(({ data }) => {
-      setAllCities((data as City[]) || []);
-    });
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await fetch("https://ipapi.co/json/");
+        const data = await r.json();
+        if (cancelled) return;
+        const detectedUf: string | undefined = data?.region_code;
+        const detectedCity: string | undefined = data?.city;
+        if (detectedUf && CITIES_BY_STATE[detectedUf]) {
+          setUf(detectedUf);
+          if (detectedCity) {
+            const list = CITIES_BY_STATE[detectedUf];
+            const match = list.find(
+              (c) => slugify(c) === slugify(detectedCity),
+            );
+            if (match) {
+              setPicked(match);
+              setSearch(match);
+            } else {
+              setSearch(detectedCity);
+            }
+          }
+        }
+      } catch {}
+      if (!cancelled) setAutoDetecting(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const cities = useMemo(() => allCities.filter((c) => c.state === uf), [allCities, uf]);
-  const filtered = useMemo(
-    () =>
-      cities.filter((c) => c.city_name.toLowerCase().includes(search.toLowerCase())).slice(0, 12),
-    [cities, search],
-  );
+  const cities = useMemo(() => (uf ? CITIES_BY_STATE[uf] || [] : []), [uf]);
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    const list = q
+      ? cities.filter((c) => c.toLowerCase().includes(q))
+      : cities;
+    return list.slice(0, 50);
+  }, [cities, search]);
 
-  // Step 3 progression — faster (1.2s)
+  // Step 3 progression — 1.2s
   useEffect(() => {
-    if (step !== 3 || !picked) return;
+    if (step !== 3 || !picked || !uf) return;
     setProgress(0);
     setSearchMsg(0);
     setShowSuccess(false);
@@ -56,20 +90,20 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         clearInterval(interval);
         setShowSuccess(true);
         const saved: SavedLocation = {
-          state: picked.state,
-          city: picked.city_name,
-          citySlug: picked.slug,
-          deliveryFee: Number(picked.delivery_fee),
-          freeShippingMin: Number(picked.free_shipping_min),
-          deliveryTimeMin: picked.delivery_time_min,
-          deliveryTimeMax: picked.delivery_time_max,
+          state: uf,
+          city: picked,
+          citySlug: slugify(picked),
+          deliveryFee: DEFAULTS.delivery_fee,
+          freeShippingMin: DEFAULTS.free_shipping_min,
+          deliveryTimeMin: DEFAULTS.delivery_time_min,
+          deliveryTimeMax: DEFAULTS.delivery_time_max,
           savedAt: Date.now(),
         };
         setLocation(saved);
       }
     }, 80);
     return () => clearInterval(interval);
-  }, [step, picked, setLocation]);
+  }, [step, picked, uf, setLocation]);
 
   const useGeolocation = () => {
     if (!navigator.geolocation) return;
@@ -107,7 +141,11 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
             <div className="text-center">
               <h2 className="font-display text-3xl text-green-deep">Onde você está? 🌿</h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Selecione seu estado para encontrar flores frescas perto de você
+                {autoDetecting
+                  ? "Detectando sua localização..."
+                  : uf
+                  ? "Detectamos seu estado. Confirme ou escolha outro."
+                  : "Selecione seu estado para encontrar flores frescas perto de você"}
               </p>
             </div>
 
@@ -124,7 +162,11 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                 return (
                   <button
                     key={s.uf}
-                    onClick={() => setUf(s.uf)}
+                    onClick={() => {
+                      setUf(s.uf);
+                      setPicked(null);
+                      setSearch("");
+                    }}
                     className={`flex flex-col items-center justify-center rounded-xl border-2 px-2 py-2.5 text-center transition ${
                       active
                         ? "border-green-deep bg-green-deep text-cream"
@@ -153,7 +195,16 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
             <div className="text-center">
               <h2 className="font-display text-3xl text-green-deep">Agora sua cidade 🏙️</h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Selecione ou busque sua cidade em <strong>{stateName(uf)}</strong>
+                {picked ? (
+                  <>
+                    Detectamos <strong>{picked}</strong>. Confirme ou escolha outra cidade em{" "}
+                    <strong>{stateName(uf)}</strong>.
+                  </>
+                ) : (
+                  <>
+                    Selecione ou busque sua cidade em <strong>{stateName(uf)}</strong>
+                  </>
+                )}
               </p>
             </div>
 
@@ -170,14 +221,14 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
             <div className="max-h-[40vh] space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
               {filtered.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">
-                  Ainda não atendemos sua cidade. Em breve!
+                  Nenhuma cidade encontrada.
                 </div>
               ) : (
                 filtered.map((c) => {
-                  const active = picked?.slug === c.slug;
+                  const active = picked === c;
                   return (
                     <button
-                      key={c.slug}
+                      key={c}
                       onClick={() => setPicked(c)}
                       className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition ${
                         active
@@ -186,8 +237,8 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                       }`}
                     >
                       <span>
-                        <span className="font-medium">{c.city_name}</span>
-                        <span className="ml-2 text-xs opacity-70">{c.state}</span>
+                        <span className="font-medium">{c}</span>
+                        <span className="ml-2 text-xs opacity-70">{uf}</span>
                       </span>
                       {active && <Check className="h-5 w-5" />}
                     </button>
@@ -245,7 +296,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                   <Flower2 className="h-10 w-10 text-green-deep animate-pulse" />
                 </div>
                 <h3 className="font-display text-2xl text-green-deep">
-                  Buscando floriculturas em {picked.city_name} 🌸
+                  Buscando floriculturas em {picked} 🌸
                 </h3>
                 <div className="mx-auto h-2 w-full max-w-sm overflow-hidden rounded-full bg-cream-dark">
                   <div
