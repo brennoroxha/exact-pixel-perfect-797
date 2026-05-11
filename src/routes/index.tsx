@@ -152,13 +152,13 @@ function HomePage() {
           <span className="text-sm text-muted-foreground">{filtered.length} produtos</span>
         </div>
         {homeQ.isLoading ? (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="aspect-square animate-pulse rounded-2xl bg-cream-dark" />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filtered.map((p, i) => (
               <ProductCard key={p.id} product={p} index={i} />
             ))}
