@@ -32,10 +32,12 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [autoDetecting, setAutoDetecting] = useState(false);
   const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
+  const [ipCity, setIpCity] = useState<string>("");
 
-  // Lazy-load the cities list only when the city step is needed
+  // Lazy-load the cities list only when the city step is needed (or after IP detect)
   useEffect(() => {
-    if (step !== 2 || Object.keys(citiesByState).length > 0) return;
+    if (Object.keys(citiesByState).length > 0) return;
+    if (step !== 2 && !ipCity) return;
     let cancelled = false;
     import("@/lib/br-cities").then((m) => {
       if (!cancelled) setCitiesByState(m.CITIES_BY_STATE);
@@ -43,7 +45,45 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     return () => {
       cancelled = true;
     };
-  }, [citiesByState, step]);
+  }, [citiesByState, step, ipCity]);
+
+  // Pré-seleção via IP (não bloqueante, sem chave)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await fetch("https://ipwho.is/?fields=success,country_code,region_code,city");
+        const d = await r.json();
+        if (cancelled || !d?.success || d.country_code !== "BR") return;
+        const detectedUf: string | undefined = d.region_code;
+        const detectedCity: string | undefined = d.city;
+        if (detectedUf) {
+          setUf((cur) => cur || detectedUf);
+        }
+        if (detectedCity) {
+          setIpCity(detectedCity);
+        }
+      } catch {}
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Quando as cidades carregarem, tenta casar a cidade do IP com a lista oficial
+  useEffect(() => {
+    if (!ipCity || !uf) return;
+    const list = citiesByState[uf];
+    if (!list || list.length === 0) return;
+    const norm = (s: string) =>
+      s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const target = norm(ipCity);
+    const match = list.find((c) => norm(c) === target);
+    if (match) {
+      setPicked((cur) => cur || match);
+      setSearch((cur) => cur || match);
+    }
+  }, [ipCity, uf, citiesByState]);
 
   const cities = useMemo(
     () => (uf ? citiesByState[uf] || [] : []),
