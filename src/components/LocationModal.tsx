@@ -33,8 +33,9 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [autoDetecting, setAutoDetecting] = useState(false);
   const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
 
-  // Lazy-load the cities list on mount (chunk separated from main bundle)
+  // Lazy-load the cities list only when the city step is needed
   useEffect(() => {
+    if (step !== 2 || Object.keys(citiesByState).length > 0) return;
     let cancelled = false;
     import("@/lib/br-cities").then((m) => {
       if (!cancelled) setCitiesByState(m.CITIES_BY_STATE);
@@ -42,7 +43,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [citiesByState, step]);
 
   const cities = useMemo(
     () => (uf ? citiesByState[uf] || [] : []),
