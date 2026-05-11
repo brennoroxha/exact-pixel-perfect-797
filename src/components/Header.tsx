@@ -13,6 +13,7 @@ export function ContextBar() {
         <span className="truncate">
           🌿 Entrega hoje em <strong>{loc.city}/{loc.state}</strong> · Aberto agora · ⏱{" "}
           {loc.deliveryTimeMin}–{loc.deliveryTimeMax}min
+          {loc.deliveryFee === 0 && <span className="ml-2 font-bold text-gold">· Entrega Grátis</span>}
         </span>
         <span className="hidden sm:inline">⭐ 4,9 (2.847 avaliações)</span>
       </div>
