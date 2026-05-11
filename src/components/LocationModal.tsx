@@ -37,7 +37,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   useEffect(() => {
     let cancelled = false;
     import("@/lib/br-cities").then((m) => {
-      if (!cancelled) setCitiesByState(m.CITIES_BY_STATE);
+      if (!cancelled) setCitiesByState(m.citiesByState);
     });
     return () => {
       cancelled = true;
@@ -54,10 +54,10 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         if (cancelled) return;
         const detectedUf: string | undefined = data?.region_code;
         const detectedCity: string | undefined = data?.city;
-        if (detectedUf && CITIES_BY_STATE[detectedUf]) {
+        if (detectedUf && citiesByState[detectedUf]) {
           setUf(detectedUf);
           if (detectedCity) {
-            const list = CITIES_BY_STATE[detectedUf];
+            const list = citiesByState[detectedUf];
             const match = list.find(
               (c) => slugify(c) === slugify(detectedCity),
             );
@@ -77,7 +77,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     };
   }, []);
 
-  const cities = useMemo(() => (uf ? CITIES_BY_STATE[uf] || [] : []), [uf]);
+  const cities = useMemo(() => (uf ? citiesByState[uf] || [] : []), [uf]);
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     const list = q
