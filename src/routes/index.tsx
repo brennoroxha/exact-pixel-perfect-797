@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,52 +26,38 @@ export const Route = createFileRoute("/")({
 type Category = { name: string; slug: string; emoji: string | null };
 type Occasion = { name: string; slug: string; emoji: string | null };
 type Review = { id: string; buyer_name: string; rating: number; comment: string | null; product_slug: string | null };
+type FullProduct = Product & { category_slug: string; featured: boolean };
 
 function HomePage() {
   const loc = useLocationStore((s) => s.location);
   const [activeCat, setActiveCat] = useState<string>("mais-vendidos");
 
-  const productsQ = useQuery({
-    queryKey: ["products"],
+  // Single combined query — runs all reads in parallel and caches together
+  const homeQ = useQuery({
+    queryKey: ["home"],
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("active", true)
-        .order("featured", { ascending: false });
-      if (error) throw error;
-      return data as Product[] & { category_slug: string; featured: boolean }[];
+      const [products, categories, occasions, reviews] = await Promise.all([
+        supabase.from("products").select("*").eq("active", true).order("featured", { ascending: false }),
+        supabase.from("categories").select("*").eq("active", true).order("sort_order"),
+        supabase.from("occasions").select("*").eq("active", true),
+        supabase.from("reviews").select("*").eq("approved", true).limit(8),
+      ]);
+      return {
+        products: (products.data ?? []) as FullProduct[],
+        categories: (categories.data ?? []) as Category[],
+        occasions: (occasions.data ?? []) as Occasion[],
+        reviews: (reviews.data ?? []) as Review[],
+      };
     },
   });
 
-  const catsQ = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const { data } = await supabase.from("categories").select("*").eq("active", true).order("sort_order");
-      return (data || []) as Category[];
-    },
-  });
-
-  const occQ = useQuery({
-    queryKey: ["occasions"],
-    queryFn: async () => {
-      const { data } = await supabase.from("occasions").select("*").eq("active", true);
-      return (data || []) as Occasion[];
-    },
-  });
-
-  const reviewsQ = useQuery({
-    queryKey: ["reviews"],
-    queryFn: async () => {
-      const { data } = await supabase.from("reviews").select("*").eq("approved", true).limit(8);
-      return (data || []) as Review[];
-    },
-  });
-
-  const allProducts = (productsQ.data ?? []) as (Product & { category_slug: string; featured: boolean })[];
-  const filtered = activeCat === "mais-vendidos"
-    ? allProducts.filter((p) => p.featured)
-    : allProducts.filter((p) => p.category_slug === activeCat);
+  const allProducts = homeQ.data?.products ?? [];
+  const filtered =
+    activeCat === "mais-vendidos"
+      ? allProducts.filter((p) => p.featured)
+      : allProducts.filter((p) => p.category_slug === activeCat);
 
   const cityLabel = loc ? `${loc.city}` : "sua cidade";
 
@@ -83,11 +68,7 @@ function HomePage() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-          >
+          <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-cream-dark px-3 py-1 text-xs text-green-deep">
               🔥 Primeiro pedido com frete grátis · cupom <strong>FLORASPRIMEIRA</strong>
             </span>
@@ -107,25 +88,20 @@ function HomePage() {
                 Por ocasião
               </a>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="grid grid-cols-3 gap-3"
-          >
-            <img src={heroImage} alt="Buquê de rosas pastel" className="col-span-2 row-span-2 h-full w-full rounded-3xl object-cover shadow-elegant" />
-            <img src={resolveImage("girassois")} alt="Girassóis" className="aspect-square w-full rounded-3xl object-cover shadow-soft" />
-            <img src={resolveImage("orquidea")} alt="Orquídea" className="aspect-square w-full rounded-3xl object-cover shadow-soft" />
-          </motion.div>
+          <div className="grid grid-cols-3 gap-3">
+            <img src={heroImage} alt="Buquê de rosas pastel" className="col-span-2 row-span-2 h-full w-full rounded-3xl object-cover shadow-elegant" loading="eager" decoding="async" />
+            <img src={resolveImage("girassois")} alt="Girassóis" className="aspect-square w-full rounded-3xl object-cover shadow-soft" loading="eager" decoding="async" />
+            <img src={resolveImage("orquidea")} alt="Orquídea" className="aspect-square w-full rounded-3xl object-cover shadow-soft" loading="eager" decoding="async" />
+          </div>
         </div>
       </section>
 
       {/* Categorias */}
       <section className="border-y border-border bg-cream-dark/40">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-4 scrollbar-hide">
-          {(catsQ.data ?? []).map((c) => {
+          {(homeQ.data?.categories ?? []).map((c) => {
             const active = activeCat === c.slug;
             return (
               <button
@@ -151,13 +127,9 @@ function HomePage() {
           <span className="text-sm text-muted-foreground">Escolha o motivo</span>
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
-          {(occQ.data ?? []).map((o, i) => (
-            <motion.button
+          {(homeQ.data?.occasions ?? []).map((o, i) => (
+            <button
               key={o.slug}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
               className="group relative flex aspect-[4/5] flex-col items-center justify-end overflow-hidden rounded-2xl bg-green-mid p-3 text-cream shadow-soft transition hover:-translate-y-1 hover:shadow-elegant"
               style={{ backgroundImage: `url(${resolveImage(["rosas-vermelhas","girassois","peonias","flores-campo","flores-secas","orquidea","buque-pastel"][i % 7])})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
@@ -166,7 +138,7 @@ function HomePage() {
                 <div className="text-2xl">{o.emoji}</div>
                 <div className="mt-1 font-display text-sm">{o.name}</div>
               </div>
-            </motion.button>
+            </button>
           ))}
         </div>
       </section>
@@ -179,7 +151,7 @@ function HomePage() {
           </h2>
           <span className="text-sm text-muted-foreground">{filtered.length} produtos</span>
         </div>
-        {productsQ.isLoading ? (
+        {homeQ.isLoading ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="aspect-square animate-pulse rounded-2xl bg-cream-dark" />
@@ -203,18 +175,11 @@ function HomePage() {
             { icon: CreditCard, title: "PIX, cartão ou boleto", desc: "Pagamento 100% seguro" },
             { icon: MessageCircle, title: "Suporte WhatsApp 24h", desc: "Atendimento humano" },
           ].map((p, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              className="text-center"
-            >
+            <div key={i} className="text-center">
               <p.icon className="mx-auto mb-3 h-8 w-8 text-green-mid" />
               <h3 className="font-display text-lg text-green-deep">{p.title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
@@ -226,7 +191,7 @@ function HomePage() {
           <p className="mt-2 text-sm text-muted-foreground">⭐ 4,9 de 5 com 2.847 avaliações</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {(reviewsQ.data ?? []).slice(0, 6).map((r) => (
+          {(homeQ.data?.reviews ?? []).slice(0, 6).map((r) => (
             <article key={r.id} className="rounded-2xl bg-card p-6 shadow-soft">
               <div className="flex items-center gap-1 text-gold">
                 {Array.from({ length: r.rating }).map((_, i) => (
