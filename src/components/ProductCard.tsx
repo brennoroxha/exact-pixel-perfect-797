@@ -53,11 +53,6 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           decoding="async"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
-        {product.badge && (
-          <span className="absolute right-2 top-2 rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold text-green-deep sm:right-3 sm:top-3 sm:px-2.5 sm:py-1 sm:text-[11px]">
-            {product.badge}
-          </span>
-        )}
       </div>
 
       <div className="flex flex-1 flex-col p-3 sm:p-4">
