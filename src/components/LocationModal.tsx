@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Search, MapPin, Check, Flower2, Loader2 } from "lucide-react";
 import { BR_STATES, stateName } from "@/lib/br-states";
-import { CITIES_BY_STATE } from "@/lib/br-cities";
+// Cidades carregadas sob demanda (lazy) para não inflar o bundle inicial
 import { useLocationStore, type SavedLocation } from "@/stores/location";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,18 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [autoDetecting, setAutoDetecting] = useState(true);
+  const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
+
+  // Lazy-load the cities list on mount (chunk separated from main bundle)
+  useEffect(() => {
+    let cancelled = false;
+    import("@/lib/br-cities").then((m) => {
+      if (!cancelled) setCitiesByState(m.CITIES_BY_STATE);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Auto-detect via IP geolocation on mount
   useEffect(() => {
