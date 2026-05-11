@@ -55,14 +55,14 @@ function AdminLayout() {
     );
   }
 
-  const nav = [
+  const nav: { to: "/admin" | "/admin/pedidos" | "/admin/produtos" | "/admin/cidades" | "/admin/cupons" | "/admin/avaliacoes"; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
     { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
     { to: "/admin/produtos", label: "Produtos", icon: Package },
     { to: "/admin/cidades", label: "Cidades", icon: MapPin },
     { to: "/admin/cupons", label: "Cupons", icon: Tag },
     { to: "/admin/avaliacoes", label: "Avaliações", icon: Star },
-  ] as const;
+  ];
 
   return (
     <div className="grid min-h-screen bg-background md:grid-cols-[240px_1fr]">

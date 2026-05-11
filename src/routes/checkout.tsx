@@ -76,6 +76,7 @@ function CheckoutPage() {
     const { data, error } = await supabase
       .from("orders")
       .insert({
+        order_number: "",
         buyer_name: form.buyerName,
         buyer_phone: form.buyerPhone.replace(/\D/g, ""),
         buyer_email: form.buyerEmail || null,

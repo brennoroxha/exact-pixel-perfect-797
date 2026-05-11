@@ -14,7 +14,7 @@ export const Route = createFileRoute("/entrega/$cidade")({
 
 function CityPage() {
   const { cidade } = Route.useParams();
-  const name = cidade.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  const name = cidade.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
   return (
     <div className="min-h-screen bg-background">
       <Header />
