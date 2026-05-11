@@ -3,18 +3,22 @@ import { LocationModal } from "./LocationModal";
 import { isLocationFresh, useLocationStore } from "@/stores/location";
 
 export function LocationGate() {
-  const location = useLocationStore((s) => s.location);
   const [open, setOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    // Wait a tick for zustand persist to rehydrate from localStorage
-    const t = setTimeout(() => {
+    const showIfNeeded = () => {
       setHydrated(true);
       const current = useLocationStore.getState().location;
       if (!isLocationFresh(current)) setOpen(true);
-    }, 50);
-    return () => clearTimeout(t);
+    };
+
+    if (useLocationStore.persist.hasHydrated()) {
+      showIfNeeded();
+      return;
+    }
+
+    return useLocationStore.persist.onFinishHydration(showIfNeeded);
   }, []);
 
   // Allow opening from anywhere via custom event
