@@ -9,9 +9,14 @@ export function LocationGate() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setHydrated(true);
-    if (!isLocationFresh(location)) setOpen(true);
-  }, [location]);
+    // Wait a tick for zustand persist to rehydrate from localStorage
+    const t = setTimeout(() => {
+      setHydrated(true);
+      const current = useLocationStore.getState().location;
+      if (!isLocationFresh(current)) setOpen(true);
+    }, 50);
+    return () => clearTimeout(t);
+  }, []);
 
   // Allow opening from anywhere via custom event
   useEffect(() => {
