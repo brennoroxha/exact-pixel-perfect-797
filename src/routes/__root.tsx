@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { LocationGate } from "@/components/LocationGate";
 import { CartDrawer } from "@/components/CartDrawer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { BottomNav } from "@/components/BottomNav";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
