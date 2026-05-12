@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star, Search } from "lucide-react";
+import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star, Search, X, Plus } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
