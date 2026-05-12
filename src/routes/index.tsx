@@ -55,36 +55,68 @@ function HomePage() {
 
   const allProducts = homeQ.data?.products ?? [];
 
-  // Pontuação de popularidade — flores com maior probabilidade de venda primeiro
-  const salesScore = (p: FullProduct): number => {
-    const n = p.name.toLowerCase();
-    let s = 0;
-    if (/\brosas?\s+vermelhas?\b/.test(n)) s += 100;       // rosas vermelhas — campeãs de venda
-    else if (/\brosas?\s+(cor de rosa|pink|coloridas?)\b/.test(n)) s += 85;
-    else if (/\brosas?\s+(brancas?|champagne|amarelas?)\b/.test(n)) s += 75;
-    else if (/\brosas?\b/.test(n)) s += 70;
-    if (/\bgirass[oó]is?\b/.test(n)) s += 65;
-    if (/\borqu[ií]dea\b/.test(n)) s += 55;
-    if (/\bl[ií]rios?\b/.test(n)) s += 45;
-    if (/\bbuqu[eê]\b/.test(n)) s += 15;                    // formato buquê é mais vendido
-    if (/\barranjo\b/.test(n)) s += 8;
-    if (/\b(cesta|presente|caixa|box|b[aá]u)\b/.test(n)) s += 12;
-    if (/\b(ferrero|chocolate|pel[uú]cia|urso|teddy|bal[aã]o)\b/.test(n)) s += 10; // combos vendem mais
-    if (/\b(astrom[eé]lias?|beg[oô]nia|secas?)\b/.test(n)) s -= 10;
-    // bônus: maior desconto e preço acessível tendem a vender mais
-    if (p.original_price && p.original_price > p.price) {
-      const off = (p.original_price - p.price) / p.original_price;
-      s += Math.round(off * 30);
-    }
-    if (p.price <= 100) s += 8;
-    else if (p.price <= 150) s += 4;
-    return s;
-  };
+  // Ordem manual dos mais vendidos (ranking de probabilidade real de venda)
+  const BESTSELLER_ORDER: string[] = [
+    "buque-com-10-rosas-vermelhas-premium",
+    "buque-de-rosas-spray-vermelhas-no-kraft",
+    "buque-com-3-rosas-colombianas-no-kraft",
+    "buque-de-6-rosas-colombianas-fechadas",
+    "buque-com-10-rosas-amarelas-premium",
+    "buque-com-10-rosas-brancas-premium",
+    "buque-com-10-rosas-cor-de-rosa-premium",
+    "buque-com-10-rosas-champagne",
+    "buque-de-42-rosas-vermelhas",
+    "buque-de-24-rosas-vermelhas-e-pink",
+    "buque-de-24-rosas-vermelhas-premium",
+    "buque-de-50-rosas-vermelhas",
+    "buque-tradicional-de-12-rosas-vermelhas",
+    "kit-meu-amor-buque-de-15-rosas-vermelhas",
+    "bouquet-15-rosas-vermelhas",
+    "box-de-rosas-vermelhas-luxo-premium",
+    "buque-de-18-rosas-vermelhas",
+    "belissimo-bouquet-de-rosas-azuis",
+    "bouquet-12-rosas-colombianas",
+    "buque-de-20-rosas-colombianas-fechadas",
+    "ramalhete-com-6-rosas-vermelhas",
+    "ramalhete-de-rosa-spray-cor-de-rosa",
+    "ramalhete-de-rosas-champagne",
+    "buque-de-10-rosas-colombianas-fechadas",
+    "buque-de-24-rosas-colombianas-abertas",
+    "buque-de-36-rosas-colombianas-abertas",
+    "ramalhete-24-rosas-vermelhas-astromelias",
+    "buque-partitura-de-rosas-nacionais-vermelho",
+    "buque-de-rosas-vermelhas-amor-no-jornal",
+    "buque-carinho-de-rosas-pink",
+    "buque-de-mini-spray-vermelho-florence",
+    "mega-buque-supremo-lilas",
+    "buque-de-42-rosas-cor-de-rosa",
+    "buque-trio-de-rosas-cor-de-rosa",
+    "buque-de-6-rosas-vermelhas",
+    "buque-flame-20-rosas-coloridas",
+    "buque-tres-cores-36-rosas",
+    "buque-passion-12-rosas-coloridas",
+    "buque-20-rosas-cor-de-rosa",
+    "buque-amor-dourado-25-rosas-amarelas",
+    "bouquet-de-rosas-vermelhas-e-rosas",
+    "bouquet-de-rosas-brancas-e-vermelhas",
+    "bouquet-20-rosas-vermelhas-sem-folhagem",
+    "duplo-colombiano",
+    "bouquet-24-rosas-na-folhagem",
+    "bouquet-30-rosas-coloridas",
+    "bouquet-com-50-rosas-vermelhas",
+    "bouquet-de-12-rosas-vermelhas-no-kraft",
+  ];
+  const orderIndex = new Map(BESTSELLER_ORDER.map((slug, i) => [slug, i]));
 
+  // Dedup por slug e ordena: itens listados primeiro (na ordem manual), demais featured ao final
+  const seen = new Set<string>();
   const featuredProducts = allProducts
-    .filter((p) => p.featured)
-    .slice()
-    .sort((a, b) => salesScore(b) - salesScore(a));
+    .filter((p) => p.featured && !seen.has(p.slug) && (seen.add(p.slug), true))
+    .sort((a, b) => {
+      const ia = orderIndex.get(a.slug) ?? Number.POSITIVE_INFINITY;
+      const ib = orderIndex.get(b.slug) ?? Number.POSITIVE_INFINITY;
+      return ia - ib;
+    });
 
   const isAll = activeCat === "todos";
   const isFeatured = activeCat === "mais-vendidos";
