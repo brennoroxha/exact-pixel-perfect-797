@@ -9,7 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosECondicoesRouteImport } from './routes/termos-e-condicoes'
+import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-privacidade'
+import { Route as PoliticaDeEntregaRouteImport } from './routes/politica-de-entrega'
+import { Route as PoliticaDeDevolucaoRouteImport } from './routes/politica-de-devolucao'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CarrinhoRouteImport } from './routes/carrinho'
@@ -25,9 +31,39 @@ import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
 import { Route as AdminCidadesRouteImport } from './routes/admin.cidades'
 import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
 
+const TermosECondicoesRoute = TermosECondicoesRouteImport.update({
+  id: '/termos-e-condicoes',
+  path: '/termos-e-condicoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaDePrivacidadeRoute = PoliticaDePrivacidadeRouteImport.update({
+  id: '/politica-de-privacidade',
+  path: '/politica-de-privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaDeEntregaRoute = PoliticaDeEntregaRouteImport.update({
+  id: '/politica-de-entrega',
+  path: '/politica-de-entrega',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaDeDevolucaoRoute = PoliticaDeDevolucaoRouteImport.update({
+  id: '/politica-de-devolucao',
+  path: '/politica-de-devolucao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -107,7 +143,13 @@ export interface FileRoutesByFullPath {
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
+  '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
+  '/politica-de-entrega': typeof PoliticaDeEntregaRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/sobre': typeof SobreRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/cidades': typeof AdminCidadesRoute
   '/admin/cupons': typeof AdminCuponsRoute
@@ -123,7 +165,13 @@ export interface FileRoutesByTo {
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
+  '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
+  '/politica-de-entrega': typeof PoliticaDeEntregaRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/sobre': typeof SobreRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/cidades': typeof AdminCidadesRoute
   '/admin/cupons': typeof AdminCuponsRoute
@@ -141,7 +189,13 @@ export interface FileRoutesById {
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
+  '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
+  '/politica-de-entrega': typeof PoliticaDeEntregaRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/sobre': typeof SobreRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/cidades': typeof AdminCidadesRoute
   '/admin/cupons': typeof AdminCuponsRoute
@@ -160,7 +214,13 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/contato'
     | '/login'
+    | '/politica-de-devolucao'
+    | '/politica-de-entrega'
+    | '/politica-de-privacidade'
+    | '/sobre'
+    | '/termos-e-condicoes'
     | '/admin/avaliacoes'
     | '/admin/cidades'
     | '/admin/cupons'
@@ -176,7 +236,13 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/contato'
     | '/login'
+    | '/politica-de-devolucao'
+    | '/politica-de-entrega'
+    | '/politica-de-privacidade'
+    | '/sobre'
+    | '/termos-e-condicoes'
     | '/admin/avaliacoes'
     | '/admin/cidades'
     | '/admin/cupons'
@@ -193,7 +259,13 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/contato'
     | '/login'
+    | '/politica-de-devolucao'
+    | '/politica-de-entrega'
+    | '/politica-de-privacidade'
+    | '/sobre'
+    | '/termos-e-condicoes'
     | '/admin/avaliacoes'
     | '/admin/cidades'
     | '/admin/cupons'
@@ -211,7 +283,13 @@ export interface RootRouteChildren {
   CarrinhoRoute: typeof CarrinhoRoute
   CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
+  ContatoRoute: typeof ContatoRoute
   LoginRoute: typeof LoginRoute
+  PoliticaDeDevolucaoRoute: typeof PoliticaDeDevolucaoRoute
+  PoliticaDeEntregaRoute: typeof PoliticaDeEntregaRoute
+  PoliticaDePrivacidadeRoute: typeof PoliticaDePrivacidadeRoute
+  SobreRoute: typeof SobreRoute
+  TermosECondicoesRoute: typeof TermosECondicoesRoute
   EntregaCidadeRoute: typeof EntregaCidadeRoute
   PedidoIdRoute: typeof PedidoIdRoute
   ProdutoSlugRoute: typeof ProdutoSlugRoute
@@ -219,11 +297,53 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos-e-condicoes': {
+      id: '/termos-e-condicoes'
+      path: '/termos-e-condicoes'
+      fullPath: '/termos-e-condicoes'
+      preLoaderRoute: typeof TermosECondicoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-privacidade': {
+      id: '/politica-de-privacidade'
+      path: '/politica-de-privacidade'
+      fullPath: '/politica-de-privacidade'
+      preLoaderRoute: typeof PoliticaDePrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-entrega': {
+      id: '/politica-de-entrega'
+      path: '/politica-de-entrega'
+      fullPath: '/politica-de-entrega'
+      preLoaderRoute: typeof PoliticaDeEntregaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-devolucao': {
+      id: '/politica-de-devolucao'
+      path: '/politica-de-devolucao'
+      fullPath: '/politica-de-devolucao'
+      preLoaderRoute: typeof PoliticaDeDevolucaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -353,7 +473,13 @@ const rootRouteChildren: RootRouteChildren = {
   CarrinhoRoute: CarrinhoRoute,
   CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,
+  ContatoRoute: ContatoRoute,
   LoginRoute: LoginRoute,
+  PoliticaDeDevolucaoRoute: PoliticaDeDevolucaoRoute,
+  PoliticaDeEntregaRoute: PoliticaDeEntregaRoute,
+  PoliticaDePrivacidadeRoute: PoliticaDePrivacidadeRoute,
+  SobreRoute: SobreRoute,
+  TermosECondicoesRoute: TermosECondicoesRoute,
   EntregaCidadeRoute: EntregaCidadeRoute,
   PedidoIdRoute: PedidoIdRoute,
   ProdutoSlugRoute: ProdutoSlugRoute,
