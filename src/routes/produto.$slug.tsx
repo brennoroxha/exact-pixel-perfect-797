@@ -22,12 +22,24 @@ import { useLocationStore } from "@/stores/location";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/produto/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `Produto — Floratta Express` },
-      { name: "description", content: `Confira ${params.slug} na Floratta Express.` },
-    ],
-  }),
+  head: ({ params }) => {
+    const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
+    const title = params.slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    const url = `${SITE_URL}/produto/${params.slug}`;
+    return {
+      meta: [
+        { title: `${title} — Comprar com Entrega Hoje | Floratta Express` },
+        { name: "description", content: `Compre ${title} online na Floratta Express. Floricultura aberta agora com entrega de flores no mesmo dia em todo o Brasil. Pagamento via PIX ou cartão.` },
+        { property: "og:title", content: `${title} — Floratta Express` },
+        { property: "og:description", content: `Buquê ${title} com entrega rápida em até 60 minutos.` },
+        { property: "og:type", content: "product" },
+        { property: "og:url", content: url },
+        { property: "product:availability", content: "in stock" },
+        { property: "product:condition", content: "new" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: ProductPage,
 });
 
