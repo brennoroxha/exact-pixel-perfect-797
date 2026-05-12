@@ -19,9 +19,9 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Navegação principal"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card pb-[env(safe-area-inset-bottom)] shadow-float"
+      className="fixed inset-x-0 bottom-0 z-30 h-16 border-t border-border bg-card pb-[env(safe-area-inset-bottom)] shadow-float"
     >
-      <div className="mx-auto flex max-w-2xl items-stretch">
+      <div className="mx-auto flex h-full max-w-2xl items-stretch">
         <Link to="/" className={`${base} ${isActive("/", true) ? active : idle}`}>
           <Home className="h-5 w-5" />
           <span>Início</span>
