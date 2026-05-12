@@ -346,15 +346,15 @@ function HomePage() {
 
           <div className="my-5 border-t border-border" />
 
-          <div className="space-y-2 text-center text-sm">
-            <p>
+          <div className="space-y-2 text-center">
+            <p className="whitespace-nowrap text-[11px] sm:text-sm">
               <span className="mr-1">🌹</span>
               <span className="text-foreground">Mínimo </span>
               <strong className="text-green-deep">R$ 50,00</strong>
-              <span className="mx-2 text-muted-foreground">·</span>
+              <span className="mx-1.5 text-muted-foreground sm:mx-2">·</span>
               <span className="italic text-green-mid">Entrega Grátis para {cityLabel}</span>
             </p>
-            <p className="text-muted-foreground">
+            <p className="whitespace-nowrap text-[11px] text-muted-foreground sm:text-sm">
               <span className="mr-1">📍</span>
               Estamos a <strong className="text-green-deep">1,6 km</strong> de você
             </p>
@@ -376,7 +376,7 @@ function HomePage() {
             <span className="mr-1">🌸</span> Promoção de primeiro pedido ativada!
           </p>
           <p className="mt-1 font-display text-base font-semibold">Entrega Grátis para {cityLabel}!</p>
-          <p className="mt-1 text-xs">Flores frescas com até 50% OFF + frete grátis no seu primeiro pedido!</p>
+          <p className="mt-1 whitespace-nowrap text-[10px] sm:text-xs">Flores frescas com até 50% OFF + frete grátis no seu primeiro pedido!</p>
         </div>
       </section>
 
