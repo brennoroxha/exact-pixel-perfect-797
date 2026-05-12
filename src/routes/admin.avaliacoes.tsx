@@ -26,7 +26,7 @@ function AdminReviews() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="font-medium text-green-deep">{r.buyer_name}</div>
-                <div className="flex text-gold">{Array.from({ length: r.rating }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}</div>
+                <div className="flex text-star">{Array.from({ length: r.rating }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}</div>
               </div>
               <button onClick={() => toggle(r.id, !r.approved)}
                 className={`rounded-full px-3 py-1 text-xs ${r.approved ? "bg-green-mid text-cream" : "bg-cream-dark text-foreground"}`}>
