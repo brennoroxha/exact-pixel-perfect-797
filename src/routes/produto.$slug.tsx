@@ -406,15 +406,18 @@ function ProductPage() {
               <span className="text-muted-foreground">({ratingDisplay.count})</span>
             </div>
           </div>
-          <div className="mt-4 space-y-4">
+          <div className="mt-4 space-y-3">
             {(reviews ?? []).map((r) => (
-              <div key={r.id} className="flex gap-3 border-b border-border pb-3 last:border-0">
+              <div
+                key={r.id}
+                className="flex gap-3 rounded-2xl bg-cream p-3 shadow-soft"
+              >
                 {r.image_url ? (
                   <img
                     src={r.image_url}
                     alt={r.buyer_name}
                     loading="lazy"
-                    className="h-10 w-10 shrink-0 rounded-full object-cover"
+                    className="h-14 w-14 shrink-0 rounded-xl object-cover"
                     onError={(e) => {
                       const el = e.currentTarget as HTMLImageElement;
                       el.style.display = "none";
@@ -422,19 +425,26 @@ function ProductPage() {
                     }}
                   />
                 ) : null}
-                <div className={`${r.image_url ? "hidden " : ""}grid h-10 w-10 shrink-0 place-items-center rounded-full bg-cream-dark text-sm font-bold text-green-deep`}>
+                <div
+                  className={`${r.image_url ? "hidden " : ""}grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-cream-dark text-base font-bold text-green-deep`}
+                >
                   {r.buyer_name?.[0] ?? "C"}
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-green-deep">{r.buyer_name}</span>
-                    <span className="flex text-gold">
-                      {Array.from({ length: r.rating ?? 5 }).map((_, i) => (
-                        <Star key={i} className="h-3 w-3 fill-current" />
-                      ))}
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-bold text-green-deep">
+                      {r.buyer_name}
                     </span>
+                    <BadgeCheck className="h-4 w-4 fill-green-mid text-cream" />
                   </div>
-                  <p className="mt-1 text-sm text-foreground/80">{r.comment}</p>
+                  <span className="mt-0.5 flex text-gold">
+                    {Array.from({ length: r.rating ?? 5 }).map((_, i) => (
+                      <Star key={i} className="h-3 w-3 fill-current" />
+                    ))}
+                  </span>
+                  <p className="mt-1 text-xs leading-snug text-foreground/80">
+                    {r.comment}
+                  </p>
                 </div>
               </div>
             ))}
