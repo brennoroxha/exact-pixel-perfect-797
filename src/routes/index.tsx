@@ -184,7 +184,7 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="mt-3 rounded-2xl bg-rose-300/40 p-4 text-center text-sm text-green-deep">
+        <div className="mt-3 rounded-2xl bg-green-deep p-4 text-center text-sm text-cream">
           <p>
             <span className="mr-1">🌸</span> Promoção de primeiro pedido ativada!
           </p>
