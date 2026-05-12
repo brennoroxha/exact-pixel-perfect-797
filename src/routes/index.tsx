@@ -409,6 +409,20 @@ function HomePage() {
       </section>
 
       <Footer />
+
+      {/* Overlay de busca em tela cheia */}
+      {searchOpen && (
+        <SearchOverlay
+          allProducts={allProducts}
+          search={search}
+          setSearch={setSearch}
+          onClose={() => {
+            setSearchOpen(false);
+            setSearch("");
+          }}
+        />
+      )}
+
     </div>
   );
 }
