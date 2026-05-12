@@ -74,20 +74,30 @@ function ProductPage() {
   });
 
   const { data: related } = useQuery({
-    queryKey: ["related", product?.category_slug, product?.id],
+    queryKey: ["related-bestsellers", product?.id],
     enabled: !!product,
     queryFn: async () => {
       const { data } = await supabase
         .from("products")
-        .select("slug,name,price,images")
+        .select("slug,name,price,original_price,images")
         .eq("active", true)
+        .eq("featured", true)
         .gt("price", 0)
-        .eq("category_slug", product!.category_slug ?? "")
         .neq("id", product!.id)
-        .limit(4);
+        .limit(10);
       return data ?? [];
     },
   });
+
+  // Deterministic rating display per product (4.5 – 4.9, count 800 – 2500)
+  const ratingDisplay = useMemo(() => {
+    if (!product) return { rating: "4.9", count: 1274 };
+    let h = 0;
+    for (let i = 0; i < product.id.length; i++) h = (h * 31 + product.id.charCodeAt(i)) >>> 0;
+    const rating = (4.5 + (h % 5) * 0.1).toFixed(1);
+    const count = 800 + (h % 1700);
+    return { rating, count };
+  }, [product]);
 
   const { data: reviews } = useQuery({
     queryKey: ["reviews", slug],
