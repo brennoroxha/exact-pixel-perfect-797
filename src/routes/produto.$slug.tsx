@@ -408,7 +408,20 @@ function ProductPage() {
           <div className="mt-4 space-y-4">
             {(reviews ?? []).map((r) => (
               <div key={r.id} className="flex gap-3 border-b border-border pb-3 last:border-0">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-cream-dark text-sm font-bold text-green-deep">
+                {r.image_url ? (
+                  <img
+                    src={r.image_url}
+                    alt={r.buyer_name}
+                    loading="lazy"
+                    className="h-10 w-10 shrink-0 rounded-full object-cover"
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.style.display = "none";
+                      el.nextElementSibling?.classList.remove("hidden");
+                    }}
+                  />
+                ) : null}
+                <div className={`${r.image_url ? "hidden " : ""}grid h-10 w-10 shrink-0 place-items-center rounded-full bg-cream-dark text-sm font-bold text-green-deep`}>
                   {r.buyer_name?.[0] ?? "C"}
                 </div>
                 <div className="flex-1">
@@ -421,17 +434,6 @@ function ProductPage() {
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-foreground/80">{r.comment}</p>
-                  {r.image_url && (
-                    <img
-                      src={r.image_url}
-                      alt={`Foto de ${r.buyer_name}`}
-                      loading="lazy"
-                      className="mt-2 h-32 w-32 rounded-lg object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  )}
                 </div>
               </div>
             ))}
