@@ -438,31 +438,52 @@ function ProductPage() {
           </div>
         </section>
 
-        {/* Você também pode gostar */}
+        {/* Você também pode gostar — carrossel de mais vendidos */}
         {related && related.length > 0 && (
           <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
-            <h2 className="font-display text-lg font-semibold text-green-deep">
-              Você também pode gostar
-            </h2>
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              {related.map((p) => (
-                <Link
-                  key={p.slug}
-                  to="/produto/$slug"
-                  params={{ slug: p.slug }}
-                  className="group overflow-hidden rounded-xl border border-border bg-cream transition hover:shadow-soft"
-                >
-                  <img
-                    src={resolveImage(p.images?.[0])}
-                    alt={p.name}
-                    className="aspect-square w-full object-cover transition group-hover:scale-105"
-                  />
-                  <div className="p-2.5">
-                    <div className="line-clamp-2 text-xs font-medium text-green-deep">{p.name}</div>
-                    <div className="mt-1 text-sm font-bold text-green-deep">{brl(Number(p.price))}</div>
-                  </div>
-                </Link>
-              ))}
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-display text-lg font-semibold text-green-deep">
+                Você também pode gostar
+              </h2>
+              <span className="text-[10px] font-bold tracking-wider text-gold">MAIS VENDIDOS</span>
+            </div>
+            <div className="-mx-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex snap-x snap-mandatory gap-3">
+                {related.map((p) => {
+                  const orig = p.original_price ? Number(p.original_price) : null;
+                  const pct = orig && orig > Number(p.price)
+                    ? Math.round(((orig - Number(p.price)) / orig) * 100)
+                    : 0;
+                  return (
+                    <Link
+                      key={p.slug}
+                      to="/produto/$slug"
+                      params={{ slug: p.slug }}
+                      className="group relative w-[150px] shrink-0 snap-start overflow-hidden rounded-xl border border-border bg-cream transition hover:shadow-soft"
+                    >
+                      {pct > 0 && (
+                        <span className="absolute left-2 top-2 z-10 rounded-full bg-green-deep px-2 py-0.5 text-[10px] font-bold text-cream">
+                          {pct}% OFF
+                        </span>
+                      )}
+                      <img
+                        src={resolveImage(p.images?.[0])}
+                        alt={p.name}
+                        className="aspect-square w-full object-cover transition group-hover:scale-105"
+                      />
+                      <div className="p-2.5">
+                        <div className="line-clamp-2 text-xs font-medium text-green-deep">{p.name}</div>
+                        <div className="mt-1 flex items-baseline gap-1">
+                          {orig && orig > Number(p.price) && (
+                            <span className="text-[10px] text-muted-foreground line-through">{brl(orig)}</span>
+                          )}
+                          <span className="text-sm font-bold text-green-deep">{brl(Number(p.price))}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           </section>
         )}
