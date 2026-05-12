@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Header } from "@/components/Header";
+
 import { Footer } from "@/components/Footer";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { resolveImage, heroImage } from "@/lib/product-images";
@@ -130,7 +130,7 @@ function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Header />
+
 
       {/* Card da loja */}
       <section className="mx-auto max-w-3xl px-4 pt-6">
