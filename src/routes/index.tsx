@@ -54,12 +54,13 @@ function HomePage() {
   });
 
   const allProducts = homeQ.data?.products ?? [];
-  const filtered =
-    activeCat === "todos"
-      ? allProducts
-      : activeCat === "mais-vendidos"
-      ? allProducts.filter((p) => p.featured)
-      : allProducts.filter((p) => p.category_slug === activeCat);
+  const featuredProducts = allProducts.filter((p) => p.featured);
+  const isAll = activeCat === "todos";
+  const isFeatured = activeCat === "mais-vendidos";
+  const categoryFiltered = isAll || isFeatured
+    ? []
+    : allProducts.filter((p) => p.category_slug === activeCat);
+  const activeCategory = homeQ.data?.categories.find((c) => c.slug === activeCat);
 
   const cityLabel = loc ? `${loc.city}` : "sua cidade";
 
