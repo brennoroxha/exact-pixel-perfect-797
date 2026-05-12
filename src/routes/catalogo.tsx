@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { Footer } from "@/components/Footer";
@@ -11,13 +10,13 @@ import { Footer } from "@/components/Footer";
 type FullProduct = Product & { category_slug: string; featured: boolean };
 
 const searchSchema = z.object({
-  tipo: fallback(z.enum(["todos", "mais-vendidos"]), "todos").default("todos"),
-  cat: fallback(z.string(), "").default(""),
-  q: fallback(z.string(), "").default(""),
+  tipo: z.enum(["todos", "mais-vendidos"]).catch("todos").default("todos"),
+  cat: z.string().catch("").default(""),
+  q: z.string().catch("").default(""),
 });
 
 export const Route = createFileRoute("/catalogo")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (s: Record<string, unknown>) => searchSchema.parse(s),
   head: () => ({
     meta: [{ title: "Catálogo — Flor Express" }],
   }),
