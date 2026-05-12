@@ -131,7 +131,7 @@ function HomePage() {
       {/* Categorias */}
       <section className="border-y border-border bg-cream-dark/40">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-4 scrollbar-hide">
-          {(homeQ.data?.categories ?? []).map((c) => {
+          {([{ slug: "todos", name: "Todos", emoji: "🌼" } as Category, ...(homeQ.data?.categories ?? [])]).map((c) => {
             const active = activeCat === c.slug;
             return (
               <button
