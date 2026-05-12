@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
 
 type Category = { name: string; slug: string; emoji: string | null };
 type Occasion = { name: string; slug: string; emoji: string | null };
-type Review = { id: string; buyer_name: string; rating: number; comment: string | null; product_slug: string | null };
+type Review = { id: string; buyer_name: string; rating: number; comment: string | null; product_slug: string | null; created_at: string };
 type FullProduct = Product & { category_slug: string; featured: boolean };
 
 function HomePage() {
@@ -545,32 +545,79 @@ function HomePage() {
       </section>
 
       {/* Reviews */}
-      <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="mb-8 text-center">
-          <h2 className="font-display text-3xl text-green-deep md:text-4xl">O que dizem nossas clientes</h2>
-          <p className="mt-2 text-sm text-muted-foreground">⭐ 4,9 de 5 com 2.847 avaliações</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {(homeQ.data?.reviews ?? []).slice(0, 6).map((r) => (
-            <article key={r.id} className="rounded-2xl bg-card p-6 shadow-soft">
-              <div className="flex items-center gap-1 text-gold">
-                {Array.from({ length: r.rating }).map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-current" />
-                ))}
+      <section className="mx-auto max-w-3xl px-4 py-12">
+        {/* Stat card */}
+        <div className="rounded-3xl bg-blush/50 p-6 text-center">
+          <div className="font-display text-4xl text-green-deep">4,9</div>
+          <div className="mt-2 flex items-center justify-center gap-1 text-gold">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star key={i} className="h-5 w-5 fill-current" />
+            ))}
+          </div>
+          <p className="mt-2 text-sm text-green-deep/80">2.847 avaliações verificadas</p>
+          <div className="mt-5 grid grid-cols-3 gap-2">
+            {[
+              { v: "98%", l: "Recomendam" },
+              { v: "99%", l: "No prazo" },
+              { v: "97%", l: "Satisfeitos" },
+            ].map((s) => (
+              <div key={s.l}>
+                <div className="font-display text-base text-green-deep">{s.v}</div>
+                <div className="text-[11px] text-green-deep/70">{s.l}</div>
               </div>
-              <p className="mt-3 text-sm text-foreground">"{r.comment}"</p>
-              <div className="mt-4 flex items-center gap-3">
-                <div className="grid h-9 w-9 place-items-center rounded-full bg-green-deep font-display text-sm text-cream">
-                  {r.buyer_name.slice(0, 1)}
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-green-deep">{r.buyer_name}</div>
-                  <div className="text-xs text-muted-foreground">Cliente verificada</div>
-                </div>
-              </div>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
+
+        <h3 className="mt-8 mb-4 font-display text-lg text-green-deep">O que nossos clientes dizem</h3>
+
+        <div className="space-y-3">
+          {(homeQ.data?.reviews ?? []).slice(0, 2).map((r) => {
+            const product = rawProducts.find((p) => p.slug === r.product_slug);
+            const date = new Date(r.created_at).toLocaleDateString("pt-BR");
+            return (
+              <article key={r.id} className="flex gap-3 rounded-2xl bg-card p-3 shadow-soft">
+                <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-cream-dark">
+                  {product && (
+                    <img
+                      src={resolveImage(product.images[0])}
+                      alt={product.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                  )}
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display text-sm text-green-deep">{r.buyer_name}</span>
+                    <span className="grid h-4 w-4 place-items-center rounded-full bg-green-mid text-[9px] text-cream">✓</span>
+                  </div>
+                  <div className="mt-0.5 flex items-center gap-2">
+                    <div className="flex text-gold">
+                      {Array.from({ length: r.rating }).map((_, i) => (
+                        <Star key={i} className="h-3 w-3 fill-current" />
+                      ))}
+                    </div>
+                    <span className="text-[11px] text-muted-foreground">{date}</span>
+                  </div>
+                  {product && (
+                    <div className="mt-0.5 text-[11px] font-medium text-green-deep/80">{product.name}</div>
+                  )}
+                  {r.comment && (
+                    <p className="mt-1 line-clamp-3 text-xs text-foreground/80">{r.comment}</p>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-green-deep/30 bg-card py-3 text-sm font-medium text-green-deep transition hover:bg-blush/40"
+        >
+          Ver todas as avaliações ({homeQ.data?.reviews?.length ?? 0}) <ArrowRight className="h-4 w-4" />
+        </button>
       </section>
 
       {/* Banner promo */}
