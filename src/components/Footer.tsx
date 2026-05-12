@@ -27,6 +27,9 @@ export function Footer() {
         </nav>
 
         <p className="mt-6 text-[11px] text-muted-foreground">
+          Express Flor da Penha Ltda. — CNPJ 53.848.207/0001-87
+        </p>
+        <p className="mt-1 text-[11px] text-muted-foreground">
           © {new Date().getFullYear()} Flor Express · Todos os direitos reservados
         </p>
       </div>
