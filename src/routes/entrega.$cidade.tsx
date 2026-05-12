@@ -7,13 +7,9 @@ const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
 
 const setEdgeCache = createIsomorphicFn()
   .client(() => {})
-  .server(() => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { setResponseHeader } = require("@tanstack/react-start/server");
-    setResponseHeader(
-      "Cache-Control",
-      "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
-    );
+  .server(async () => {
+    const { setEdgeCacheHeader } = await import("@/lib/edge-cache.server");
+    setEdgeCacheHeader("public, max-age=300, s-maxage=3600, stale-while-revalidate=86400");
   });
 
 export const Route = createFileRoute("/entrega/$cidade")({
