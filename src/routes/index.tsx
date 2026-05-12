@@ -34,7 +34,7 @@ type FullProduct = Product & { category_slug: string; featured: boolean };
 
 function HomePage() {
   const loc = useLocationStore((s) => s.location);
-  const [activeCat, setActiveCat] = useState<string>("mais-vendidos");
+  const [activeCat, setActiveCat] = useState<string>("todos");
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
 
