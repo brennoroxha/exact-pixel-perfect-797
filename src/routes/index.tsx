@@ -32,6 +32,7 @@ function HomePage() {
   const loc = useLocationStore((s) => s.location);
   const [activeCat, setActiveCat] = useState<string>("mais-vendidos");
   const [search, setSearch] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
 
   // Single combined query — runs all reads in parallel and caches together
   const homeQ = useQuery({
