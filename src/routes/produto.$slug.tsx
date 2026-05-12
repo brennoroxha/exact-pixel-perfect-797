@@ -386,7 +386,7 @@ function ProductPage() {
             {(reviews ?? []).map((r) => (
               <div
                 key={r.id}
-                className="flex gap-3 rounded-2xl bg-cream p-3 shadow-soft"
+                className="flex gap-3 rounded-2xl border border-border bg-cream p-3 shadow-soft"
               >
                 {r.image_url ? (
                   <img
