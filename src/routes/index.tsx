@@ -197,17 +197,15 @@ function HomePage() {
 
       {/* Buscar Produtos + Categorias */}
       <section className="mx-auto max-w-3xl px-4 pt-4 space-y-3">
-        {/* Barra de busca */}
-        <div className="relative">
+        {/* Barra de busca (abre overlay ao clicar) */}
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          className="relative flex w-full items-center rounded-full border border-border bg-blush/30 py-3 pl-12 pr-4 text-left text-sm text-green-deep/60 outline-none transition hover:bg-blush/40"
+        >
           <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-deep/60" />
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar produtos..."
-            className="w-full rounded-full border border-border bg-blush/30 py-3 pl-12 pr-4 text-sm text-green-deep placeholder:text-green-deep/50 outline-none transition focus:border-green-deep focus:bg-blush/40"
-          />
-        </div>
+          Buscar produtos...
+        </button>
 
         {/* Categorias */}
         <div className="rounded-3xl border border-border bg-white p-4 shadow-soft sm:p-5">
