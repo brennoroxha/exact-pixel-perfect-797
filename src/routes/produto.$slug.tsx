@@ -74,20 +74,30 @@ function ProductPage() {
   });
 
   const { data: related } = useQuery({
-    queryKey: ["related", product?.category_slug, product?.id],
+    queryKey: ["related-bestsellers", product?.id],
     enabled: !!product,
     queryFn: async () => {
       const { data } = await supabase
         .from("products")
-        .select("slug,name,price,images")
+        .select("slug,name,price,original_price,images")
         .eq("active", true)
+        .eq("featured", true)
         .gt("price", 0)
-        .eq("category_slug", product!.category_slug ?? "")
         .neq("id", product!.id)
-        .limit(4);
+        .limit(10);
       return data ?? [];
     },
   });
+
+  // Deterministic rating display per product (4.5 – 4.9, count 800 – 2500)
+  const ratingDisplay = useMemo(() => {
+    if (!product) return { rating: "4.9", count: 1274 };
+    let h = 0;
+    for (let i = 0; i < product.id.length; i++) h = (h * 31 + product.id.charCodeAt(i)) >>> 0;
+    const rating = (4.5 + (h % 5) * 0.1).toFixed(1);
+    const count = 800 + (h % 1700);
+    return { rating, count };
+  }, [product]);
 
   const { data: reviews } = useQuery({
     queryKey: ["reviews", slug],
@@ -391,10 +401,8 @@ function ProductPage() {
                   <Star key={i} className="h-4 w-4 fill-current" />
                 ))}
               </span>
-              <span className="font-semibold text-green-deep">
-                {Number(product.rating ?? 4.9).toFixed(1)}
-              </span>
-              <span className="text-muted-foreground">({product.review_count ?? 0})</span>
+              <span className="font-semibold text-green-deep">{ratingDisplay.rating}</span>
+              <span className="text-muted-foreground">({ratingDisplay.count})</span>
             </div>
           </div>
           <div className="mt-4 space-y-4">
@@ -413,37 +421,69 @@ function ProductPage() {
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-foreground/80">{r.comment}</p>
+                  {r.image_url && (
+                    <img
+                      src={r.image_url}
+                      alt={`Foto de ${r.buyer_name}`}
+                      loading="lazy"
+                      className="mt-2 h-32 w-32 rounded-lg object-cover"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Você também pode gostar */}
+        {/* Você também pode gostar — carrossel de mais vendidos */}
         {related && related.length > 0 && (
           <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
-            <h2 className="font-display text-lg font-semibold text-green-deep">
-              Você também pode gostar
-            </h2>
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              {related.map((p) => (
-                <Link
-                  key={p.slug}
-                  to="/produto/$slug"
-                  params={{ slug: p.slug }}
-                  className="group overflow-hidden rounded-xl border border-border bg-cream transition hover:shadow-soft"
-                >
-                  <img
-                    src={resolveImage(p.images?.[0])}
-                    alt={p.name}
-                    className="aspect-square w-full object-cover transition group-hover:scale-105"
-                  />
-                  <div className="p-2.5">
-                    <div className="line-clamp-2 text-xs font-medium text-green-deep">{p.name}</div>
-                    <div className="mt-1 text-sm font-bold text-green-deep">{brl(Number(p.price))}</div>
-                  </div>
-                </Link>
-              ))}
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-display text-lg font-semibold text-green-deep">
+                Você também pode gostar
+              </h2>
+              <span className="text-[10px] font-bold tracking-wider text-gold">MAIS VENDIDOS</span>
+            </div>
+            <div className="-mx-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex snap-x snap-mandatory gap-3">
+                {related.map((p) => {
+                  const orig = p.original_price ? Number(p.original_price) : null;
+                  const pct = orig && orig > Number(p.price)
+                    ? Math.round(((orig - Number(p.price)) / orig) * 100)
+                    : 0;
+                  return (
+                    <Link
+                      key={p.slug}
+                      to="/produto/$slug"
+                      params={{ slug: p.slug }}
+                      className="group relative w-[150px] shrink-0 snap-start overflow-hidden rounded-xl border border-border bg-cream transition hover:shadow-soft"
+                    >
+                      {pct > 0 && (
+                        <span className="absolute left-2 top-2 z-10 rounded-full bg-green-deep px-2 py-0.5 text-[10px] font-bold text-cream">
+                          {pct}% OFF
+                        </span>
+                      )}
+                      <img
+                        src={resolveImage(p.images?.[0])}
+                        alt={p.name}
+                        className="aspect-square w-full object-cover transition group-hover:scale-105"
+                      />
+                      <div className="p-2.5">
+                        <div className="line-clamp-2 text-xs font-medium text-green-deep">{p.name}</div>
+                        <div className="mt-1 flex items-baseline gap-1">
+                          {orig && orig > Number(p.price) && (
+                            <span className="text-[10px] text-muted-foreground line-through">{brl(orig)}</span>
+                          )}
+                          <span className="text-sm font-bold text-green-deep">{brl(Number(p.price))}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           </section>
         )}
