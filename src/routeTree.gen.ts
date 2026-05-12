@@ -18,6 +18,7 @@ import { Route as PoliticaDeDevolucaoRouteImport } from './routes/politica-de-de
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FloriculturaAbertaAgoraRouteImport } from './routes/floricultura-aberta-agora'
 import { Route as Floricultura24hRouteImport } from './routes/floricultura-24h'
+import { Route as DiaDasMaesRouteImport } from './routes/dia-das-maes'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
@@ -78,6 +79,11 @@ const FloriculturaAbertaAgoraRoute = FloriculturaAbertaAgoraRouteImport.update({
 const Floricultura24hRoute = Floricultura24hRouteImport.update({
   id: '/floricultura-24h',
   path: '/floricultura-24h',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiaDasMaesRoute = DiaDasMaesRouteImport.update({
+  id: '/dia-das-maes',
+  path: '/dia-das-maes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContatoRoute = ContatoRouteImport.update({
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/dia-das-maes': typeof DiaDasMaesRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/dia-das-maes': typeof DiaDasMaesRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/dia-das-maes': typeof DiaDasMaesRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
@@ -252,6 +261,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/dia-das-maes'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
     | '/login'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/dia-das-maes'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
     | '/login'
@@ -305,6 +316,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/dia-das-maes'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
     | '/login'
@@ -333,6 +345,7 @@ export interface RootRouteChildren {
   CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
   ContatoRoute: typeof ContatoRoute
+  DiaDasMaesRoute: typeof DiaDasMaesRoute
   Floricultura24hRoute: typeof Floricultura24hRoute
   FloriculturaAbertaAgoraRoute: typeof FloriculturaAbertaAgoraRoute
   LoginRoute: typeof LoginRoute
@@ -410,6 +423,13 @@ declare module '@tanstack/react-router' {
       path: '/floricultura-24h'
       fullPath: '/floricultura-24h'
       preLoaderRoute: typeof Floricultura24hRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dia-das-maes': {
+      id: '/dia-das-maes'
+      path: '/dia-das-maes'
+      fullPath: '/dia-das-maes'
+      preLoaderRoute: typeof DiaDasMaesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contato': {
@@ -555,6 +575,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,
   ContatoRoute: ContatoRoute,
+  DiaDasMaesRoute: DiaDasMaesRoute,
   Floricultura24hRoute: Floricultura24hRoute,
   FloriculturaAbertaAgoraRoute: FloriculturaAbertaAgoraRoute,
   LoginRoute: LoginRoute,
