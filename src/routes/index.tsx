@@ -645,27 +645,6 @@ function HomePage() {
         </button>
       </section>
 
-      {/* Banner promo */}
-      <section className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="overflow-hidden rounded-3xl bg-gradient-luxe p-10 text-cream md:p-14">
-          <div className="grid gap-6 md:grid-cols-[1.5fr_1fr] md:items-center">
-            <div>
-              <h2 className="font-display text-3xl md:text-5xl">🎁 Primeiro pedido com frete grátis</h2>
-              <p className="mt-3 text-cream/80">
-                Use o cupom <span className="rounded bg-cream px-2 py-0.5 font-mono text-sm text-green-deep">FLORASPRIMEIRA</span> no checkout.
-              </p>
-            </div>
-            <div className="text-right">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-medium text-green-deep hover:bg-gold/90"
-              >
-                Aproveitar agora →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <Footer />
 
