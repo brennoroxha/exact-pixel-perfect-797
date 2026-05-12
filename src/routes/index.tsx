@@ -13,14 +13,37 @@ import { useCartStore } from "@/stores/cart";
 import { brl } from "@/lib/format";
 import { toast } from "sonner";
 
+const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Flora Luxe — Buquês entregues em 60 min" },
+      { title: "Floricultura Online com Entrega Hoje em todo o Brasil | Floratta Express" },
       {
         name: "description",
         content:
-          "Floricultura delivery premium. Rosas, peônias, orquídeas e arranjos editoriais entregues em até 60 minutos.",
+          "Floricultura aberta agora com entrega de flores no mesmo dia em todo o Brasil. Buquês de rosas vermelhas, flores para namorada, presente e aniversário. Compre online com entrega rápida em até 60 minutos.",
+      },
+      { name: "keywords", content: "floricultura, floricultura aberta agora, floricultura aberta 24 horas, floricultura entregando, floricultura online, comprar flores online, entrega de flores hoje, buquê de rosas vermelhas, flores para namorada entrega, flores para aniversário, enviar flores online, floricultura delivery, floricultura perto de mim" },
+      { property: "og:title", content: "Floricultura Online com Entrega Hoje no Brasil — Floratta Express" },
+      { property: "og:description", content: "Buquês entregues em até 60 minutos. Floricultura aberta agora em todo o Brasil." },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: SITE_URL }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            { "@type": "Question", name: "A floricultura está aberta agora?", acceptedAnswer: { "@type": "Answer", text: "Sim, a Floratta Express está aberta 24 horas e entrega flores no mesmo dia em todo o Brasil." } },
+            { "@type": "Question", name: "Vocês entregam flores hoje?", acceptedAnswer: { "@type": "Answer", text: "Sim, fazemos entrega de flores no mesmo dia, em até 60 minutos nas principais capitais do Brasil." } },
+            { "@type": "Question", name: "Quais formas de pagamento aceitam?", acceptedAnswer: { "@type": "Answer", text: "Aceitamos PIX e cartão de crédito, com confirmação imediata e despacho em minutos." } },
+            { "@type": "Question", name: "Como enviar flores para outra cidade?", acceptedAnswer: { "@type": "Answer", text: "Basta escolher o buquê, informar o endereço de entrega e a mensagem do cartão. Entregamos em todo o Brasil." } },
+          ],
+        }),
       },
     ],
   }),
