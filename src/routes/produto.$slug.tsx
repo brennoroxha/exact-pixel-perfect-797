@@ -220,7 +220,7 @@ function ProductPage() {
                 de <span className="line-through">{brl(original)}</span>
               </span>
             )}
-            <span className="font-display text-3xl font-bold text-blush">{brl(price)}</span>
+            <span className="font-display text-3xl font-bold text-foreground">{brl(price)}</span>
           </div>
 
           {discountPct > 0 && (
