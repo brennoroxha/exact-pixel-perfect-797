@@ -8,13 +8,13 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
   tanstackStart: {
-    server: { entry: "server" },
+    server: { entry: "./src/server.ts" },
   },
 
   vite: {
     preview: {
       host: "0.0.0.0",
-      port: 3000,
+      port: 3001,
       allowedHosts: ["florexpress.delivery", "www.florexpress.delivery"],
     },
   },
