@@ -136,34 +136,25 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 px-4 animate-in fade-in duration-200">
-      <div className="relative z-10 w-full max-w-xl rounded-3xl bg-cream p-8 shadow-float md:p-10 animate-in zoom-in-95 duration-200">
-        <div className="mb-6 flex items-center justify-center gap-2">
-          <Flower2 className="h-6 w-6 text-green-deep" />
-          <span className="font-display text-2xl text-green-deep">Flora Luxe</span>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 md:px-4 animate-in fade-in duration-200">
+      <div className="relative z-10 flex h-full w-full flex-col bg-cream p-6 md:h-auto md:max-w-lg md:rounded-3xl md:p-8 shadow-float animate-in zoom-in-95 duration-200">
+        <div className="mb-4 flex items-center justify-center gap-2">
+          <Flower2 className="h-5 w-5 text-green-deep" />
+          <span className="font-display text-xl text-green-deep">Flora Luxe</span>
         </div>
 
         {step === 1 && (
-          <div className="space-y-5">
+          <div className="flex flex-1 flex-col space-y-4">
             <div className="text-center">
-              <h2 className="font-display text-3xl text-green-deep">Onde você está? 🌿</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {autoDetecting
-                  ? "Detectando sua localização..."
-                  : uf
+              <h2 className="font-display text-2xl text-green-deep">Onde você está? 🌿</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {uf
                   ? "Detectamos seu estado. Confirme ou escolha outro."
                   : "Selecione seu estado para encontrar flores frescas perto de você"}
               </p>
             </div>
 
-            <button
-              onClick={useGeolocation}
-              className="flex w-full items-center justify-center gap-2 rounded-full border border-green-sage bg-cream-dark px-4 py-2.5 text-sm font-medium text-green-deep transition hover:bg-green-sage/20"
-            >
-              <MapPin className="h-4 w-4" /> Usar minha localização
-            </button>
-
-            <div className="grid max-h-[42vh] grid-cols-3 gap-2 overflow-y-auto rounded-2xl bg-cream-dark/40 p-3 sm:grid-cols-4 md:grid-cols-5">
+            <div className="grid max-h-[50vh] flex-1 grid-cols-3 gap-2 overflow-y-auto rounded-2xl bg-cream-dark/40 p-3 sm:grid-cols-4">
               {BR_STATES.map((s) => {
                 const active = uf === s.uf;
                 return (
