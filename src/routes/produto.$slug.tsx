@@ -397,7 +397,7 @@ function ProductPage() {
           <div className="flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold text-green-deep">Avaliações</h2>
             <div className="flex items-center gap-1 text-sm">
-              <span className="flex text-gold">
+              <span className="flex text-star">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-current" />
                 ))}
@@ -437,7 +437,7 @@ function ProductPage() {
                     </span>
                     <BadgeCheck className="h-4 w-4 fill-green-mid text-cream" />
                   </div>
-                  <span className="mt-0.5 flex text-gold">
+                  <span className="mt-0.5 flex text-star">
                     {Array.from({ length: r.rating ?? 5 }).map((_, i) => (
                       <Star key={i} className="h-3 w-3 fill-current" />
                     ))}
