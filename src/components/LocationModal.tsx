@@ -1,10 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search, MapPin, Check, Flower2, Loader2 } from "lucide-react";
+import { MapPin, Check, Loader2, ChevronDown, Search } from "lucide-react";
 import { BR_STATES, stateName } from "@/lib/br-states";
-// Cidades carregadas sob demanda (lazy) para não inflar o bundle inicial
 import { useLocationStore, type SavedLocation } from "@/stores/location";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const slugify = (s: string) =>
   s
@@ -28,13 +34,11 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [search, setSearch] = useState("");
   const [picked, setPicked] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
-  
+
   const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
   const [ipCity, setIpCity] = useState<string>("");
 
-  // Lazy-load the cities list only when the city step is needed (or after IP detect)
   useEffect(() => {
     if (Object.keys(citiesByState).length > 0) return;
     if (step !== 2 && !ipCity) return;
@@ -47,7 +51,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     };
   }, [citiesByState, step, ipCity]);
 
-  // Pré-seleção via IP (não bloqueante, sem chave)
+  // Pré-seleção via IP
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -55,14 +59,8 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         const r = await fetch("https://ipwho.is/?fields=success,country_code,region_code,city");
         const d = await r.json();
         if (cancelled || !d?.success || d.country_code !== "BR") return;
-        const detectedUf: string | undefined = d.region_code;
-        const detectedCity: string | undefined = d.city;
-        if (detectedUf) {
-          setUf((cur) => cur || detectedUf);
-        }
-        if (detectedCity) {
-          setIpCity(detectedCity);
-        }
+        if (d.region_code) setUf((cur) => cur || d.region_code);
+        if (d.city) setIpCity(d.city);
       } catch {}
     })();
     return () => {
@@ -70,11 +68,10 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     };
   }, []);
 
-  // Quando as cidades carregarem, tenta casar a cidade do IP com a lista oficial
   useEffect(() => {
     if (!ipCity || !uf) return;
     const list = citiesByState[uf];
-    if (!list || list.length === 0) return;
+    if (!list?.length) return;
     const norm = (s: string) =>
       s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     const target = norm(ipCity);
@@ -85,30 +82,22 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     }
   }, [ipCity, uf, citiesByState]);
 
-  const cities = useMemo(
-    () => (uf ? citiesByState[uf] || [] : []),
-    [uf, citiesByState],
-  );
+  const cities = useMemo(() => (uf ? citiesByState[uf] || [] : []), [uf, citiesByState]);
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
-    const list = q
-      ? cities.filter((c: string) => c.toLowerCase().includes(q))
-      : cities;
-    return list.slice(0, 50);
+    const list = q ? cities.filter((c) => c.toLowerCase().includes(q)) : cities;
+    return list.slice(0, 60);
   }, [cities, search]);
 
-  // Step 3 progression — 1.2s
   useEffect(() => {
     if (step !== 3 || !picked || !uf) return;
     setProgress(0);
-    setSearchMsg(0);
     setShowSuccess(false);
     const start = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - start;
       const p = Math.min(100, (elapsed / 1200) * 100);
       setProgress(p);
-      setSearchMsg(Math.min(2, Math.floor(elapsed / 400)));
       if (p >= 100) {
         clearInterval(interval);
         setShowSuccess(true);
@@ -128,97 +117,68 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     return () => clearInterval(interval);
   }, [step, picked, uf, setLocation]);
 
-
-  const messages = [
-    "Verificando disponibilidade de entrega...",
-    "Encontrando os buquês mais frescos...",
-    "Preparando ofertas exclusivas para você...",
-  ];
-
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 md:px-4 animate-in fade-in duration-200">
-      <div className="relative z-10 flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-cream p-4 md:h-auto md:max-h-[90vh] md:max-w-lg md:rounded-3xl md:p-8 shadow-float animate-in zoom-in-95 duration-200">
-        <div className="mb-3 flex items-center justify-center gap-2">
-          <Flower2 className="h-4 w-4 text-green-deep md:h-5 md:w-5" />
-          <span className="font-display text-lg text-green-deep md:text-xl">Flora Luxe</span>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4 animate-in fade-in duration-200">
+      <div className="relative w-full max-w-sm rounded-3xl bg-cream p-6 pt-12 shadow-float animate-in zoom-in-95 duration-200">
+        {/* Floating pin icon */}
+        <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blush text-cream shadow-lg">
+            <MapPin className="h-7 w-7" />
+          </div>
         </div>
 
         {step === 1 && (
-          <div className="flex min-h-0 flex-1 flex-col space-y-3 md:space-y-4">
-            <div className="text-center">
-              <h2 className="font-display text-xl text-green-deep md:text-2xl">Onde você está? 🌿</h2>
-              <p className="mt-1 text-[11px] text-muted-foreground md:text-xs">
-                {uf
-                  ? "Detectamos seu estado. Confirme ou escolha outro."
-                  : "Selecione seu estado para encontrar flores frescas perto de você"}
-              </p>
-            </div>
+          <div className="space-y-4 text-center">
+            <h2 className="font-display text-lg leading-tight text-green-deep">
+              Encontre o Delivery de Flores mais próximo
+            </h2>
+            <p className="text-sm text-muted-foreground">Escolha seu estado:</p>
 
-            <div className="grid min-h-0 flex-1 grid-cols-4 gap-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2 md:grid-cols-4 md:gap-2 md:p-3">
-              {BR_STATES.map((s) => {
-                const active = uf === s.uf;
-                return (
-                  <button
-                    key={s.uf}
-                    onClick={() => {
-                      setUf(s.uf);
-                      setPicked(null);
-                      setSearch("");
-                    }}
-                    className={`flex flex-col items-center justify-center rounded-xl border-2 px-1 py-2 text-center transition md:px-2 md:py-2.5 ${
-                      active
-                        ? "border-green-deep bg-green-deep text-cream"
-                        : "border-transparent bg-cream text-green-deep hover:border-green-sage"
-                    }`}
-                  >
-                    <span className="font-display text-sm font-semibold md:text-base">{s.uf}</span>
-                    <span className="hidden text-[10px] opacity-80 md:inline">{s.name.split(" ")[0]}</span>
-                  </button>
-                );
-              })}
-            </div>
+            <Select value={uf} onValueChange={(v) => { setUf(v); setPicked(null); setSearch(""); }}>
+              <SelectTrigger className="h-12 w-full rounded-full border-0 bg-blush/20 px-5 text-green-deep">
+                <SelectValue placeholder="Selecione seu estado" />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                {BR_STATES.map((s) => (
+                  <SelectItem key={s.uf} value={s.uf}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             <Button
               disabled={!uf}
               onClick={() => setStep(2)}
-              className="w-full rounded-full bg-green-deep py-5 text-base text-cream hover:bg-green-mid md:py-6"
+              className="h-12 w-full rounded-full bg-blush text-base font-semibold text-cream hover:bg-blush/90"
             >
-              Continuar →
+              Continuar
             </Button>
           </div>
         )}
 
         {step === 2 && (
-          <div className="flex min-h-0 flex-1 flex-col space-y-3 md:space-y-4">
-            <div className="text-center">
-              <h2 className="font-display text-xl text-green-deep md:text-2xl">Agora sua cidade 🏙️</h2>
-              <p className="mt-1 text-[11px] text-muted-foreground md:text-xs">
-                {picked ? (
-                  <>
-                    Detectamos <strong>{picked}</strong>. Confirme ou escolha outra em{" "}
-                    <strong>{stateName(uf)}</strong>.
-                  </>
-                ) : (
-                  <>
-                    Selecione sua cidade em <strong>{stateName(uf)}</strong>
-                  </>
-                )}
-              </p>
-            </div>
+          <div className="space-y-4 text-center">
+            <h2 className="font-display text-lg leading-tight text-green-deep">
+              Em qual cidade está?
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Estado: <strong className="text-green-deep">{stateName(uf)}</strong>
+            </p>
 
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Buscar cidade..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="rounded-full border-green-sage/30 bg-cream-dark pl-10"
+                className="h-12 rounded-full border-0 bg-blush/20 pl-11 text-green-deep"
               />
             </div>
 
-            <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
+            <div className="max-h-56 space-y-1 overflow-y-auto rounded-2xl bg-blush/10 p-2 text-left">
               {filtered.length === 0 ? (
-                <div className="py-8 text-center text-sm text-muted-foreground">
+                <div className="py-6 text-center text-sm text-muted-foreground">
                   Nenhuma cidade encontrada.
                 </div>
               ) : (
@@ -228,17 +188,14 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                     <button
                       key={c}
                       onClick={() => setPicked(c)}
-                      className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition md:px-4 md:py-3 md:text-base ${
+                      className={`flex w-full items-center justify-between rounded-xl px-4 py-2.5 text-sm transition ${
                         active
-                          ? "bg-green-deep text-cream"
-                          : "bg-cream text-green-deep hover:bg-green-sage/15"
+                          ? "bg-blush text-cream"
+                          : "text-green-deep hover:bg-blush/20"
                       }`}
                     >
-                      <span>
-                        <span className="font-medium">{c}</span>
-                        <span className="ml-2 text-xs opacity-70">{uf}</span>
-                      </span>
-                      {active && <Check className="h-5 w-5" />}
+                      <span>{c}</span>
+                      {active && <Check className="h-4 w-4" />}
                     </button>
                   );
                 })
@@ -249,62 +206,59 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
               <Button
                 variant="outline"
                 onClick={() => setStep(1)}
-                className="flex-1 rounded-full border-green-sage/40 py-5 md:py-6"
+                className="h-12 flex-1 rounded-full border-blush/40 text-green-deep"
               >
                 Voltar
               </Button>
               <Button
                 disabled={!picked}
                 onClick={() => setStep(3)}
-                className="flex-1 rounded-full bg-green-deep py-5 text-cream hover:bg-green-mid md:py-6"
+                className="h-12 flex-1 rounded-full bg-blush font-semibold text-cream hover:bg-blush/90"
               >
-                Confirmar →
+                Confirmar
               </Button>
             </div>
           </div>
         )}
 
         {step === 3 && picked && (
-          <div className="flex flex-1 flex-col justify-center space-y-6 py-4 text-center">
+          <div className="space-y-5 py-2 text-center">
             {showSuccess ? (
               <div className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20 text-green-deep">
-                  <Check className="h-10 w-10" />
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-sage/20 text-green-deep">
+                  <Check className="h-8 w-8" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="font-display text-2xl text-green-deep">Cidade encontrada! 📍</h3>
-                  <p className="text-green-deep/70">
-                    Estamos a <strong className="text-green-deep">2.75km</strong> de distância.
+                <div className="space-y-1">
+                  <h3 className="font-display text-lg text-green-deep">Entregamos aí! 📍</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {picked} - {uf}
                   </p>
                 </div>
-                <div className="mx-auto max-w-[280px] rounded-2xl bg-green-deep/5 p-4 text-green-deep">
-                  <p className="text-xs uppercase tracking-wider opacity-60">Previsão de Entrega</p>
-                  <p className="text-lg font-semibold">Grátis: 18 a 35 minutos</p>
+                <div className="rounded-2xl bg-blush/15 p-3 text-green-deep">
+                  <p className="text-[11px] uppercase tracking-wider opacity-60">Previsão</p>
+                  <p className="text-base font-semibold">Grátis: 18 a 35 min</p>
                 </div>
                 <Button
                   onClick={() => onClose?.()}
-                  className="w-full rounded-full bg-green-deep py-6 text-base text-cream hover:bg-green-mid"
+                  className="h-12 w-full rounded-full bg-blush font-semibold text-cream hover:bg-blush/90"
                 >
-                  Ver catálogo →
+                  Ver catálogo
                 </Button>
               </div>
             ) : (
               <>
-                <div className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20">
-                  <Flower2 className="h-10 w-10 text-green-deep animate-pulse" />
-                </div>
-                <h3 className="font-display text-2xl text-green-deep">
-                  Buscando floriculturas em {picked} 🌸
+                <h3 className="font-display text-lg text-green-deep">
+                  Buscando em {picked}...
                 </h3>
-                <div className="mx-auto h-2 w-full max-w-sm overflow-hidden rounded-full bg-cream-dark">
+                <div className="mx-auto h-2 w-full overflow-hidden rounded-full bg-blush/15">
                   <div
-                    className="h-full rounded-full bg-green-deep transition-[width] duration-100 ease-linear"
+                    className="h-full rounded-full bg-blush transition-[width] duration-100 ease-linear"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
                 <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  {messages[searchMsg]}
+                  Verificando disponibilidade...
                 </p>
               </>
             )}
