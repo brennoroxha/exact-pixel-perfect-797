@@ -137,10 +137,10 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 md:px-4 animate-in fade-in duration-200">
-      <div className="relative z-10 flex h-full w-full flex-col bg-cream p-6 md:h-auto md:max-w-lg md:rounded-3xl md:p-8 shadow-float animate-in zoom-in-95 duration-200">
-        <div className="mb-4 flex items-center justify-center gap-2">
-          <Flower2 className="h-5 w-5 text-green-deep" />
-          <span className="font-display text-xl text-green-deep">Flora Luxe</span>
+      <div className="relative z-10 flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-cream p-4 md:h-auto md:max-h-[90vh] md:max-w-lg md:rounded-3xl md:p-8 shadow-float animate-in zoom-in-95 duration-200">
+        <div className="mb-3 flex items-center justify-center gap-2">
+          <Flower2 className="h-4 w-4 text-green-deep md:h-5 md:w-5" />
+          <span className="font-display text-lg text-green-deep md:text-xl">Flora Luxe</span>
         </div>
 
         {step === 1 && (
