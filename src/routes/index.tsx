@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
 
 type Category = { name: string; slug: string; emoji: string | null };
 type Occasion = { name: string; slug: string; emoji: string | null };
-type Review = { id: string; buyer_name: string; rating: number; comment: string | null; product_slug: string | null; created_at: string };
+type Review = { id: string; buyer_name: string; rating: number; comment: string | null; product_slug: string | null; created_at: string; image_url: string | null };
 type FullProduct = Product & { category_slug: string; featured: boolean };
 
 function HomePage() {
