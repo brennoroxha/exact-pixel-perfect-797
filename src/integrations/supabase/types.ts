@@ -312,6 +312,7 @@ export type Database = {
           comment: string | null
           created_at: string
           id: string
+          image_url: string | null
           product_slug: string | null
           rating: number
         }
@@ -321,6 +322,7 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: string
+          image_url?: string | null
           product_slug?: string | null
           rating: number
         }
@@ -330,6 +332,7 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: string
+          image_url?: string | null
           product_slug?: string | null
           rating?: number
         }
