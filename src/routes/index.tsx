@@ -243,6 +243,38 @@ function HomePage() {
               <div key={i} className="aspect-square animate-pulse rounded-2xl bg-cream-dark" />
             ))}
           </div>
+        ) : search.trim().length > 0 ? (
+          (() => {
+            const q = search.trim().toLowerCase();
+            const results = allProducts.filter(
+              (p) =>
+                p.name.toLowerCase().includes(q) ||
+                (p.description ?? "").toLowerCase().includes(q),
+            );
+            return (
+              <div>
+                <div className="mb-5">
+                  <h2 className="font-display text-2xl text-green-deep md:text-3xl">
+                    🔍 Resultados da busca
+                  </h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {results.length} {results.length === 1 ? "produto encontrado" : "produtos encontrados"} para "{search}"
+                  </p>
+                </div>
+                {results.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    {results.map((p, i) => (
+                      <ProductCard key={p.id} product={p} index={i} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="rounded-2xl bg-cream-dark/40 py-12 text-center text-sm text-muted-foreground">
+                    Nenhum produto encontrado.
+                  </p>
+                )}
+              </div>
+            );
+          })()
         ) : isAll ? (
           <>
             {/* Mais Vendidos */}
