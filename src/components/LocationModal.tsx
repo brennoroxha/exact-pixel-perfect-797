@@ -265,7 +265,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         )}
 
         {step === 3 && picked && (
-          <div className="space-y-6 py-6 text-center">
+          <div className="flex flex-1 flex-col justify-center space-y-6 py-4 text-center">
             {showSuccess ? (
               <div className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
                 <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20 text-green-deep">
