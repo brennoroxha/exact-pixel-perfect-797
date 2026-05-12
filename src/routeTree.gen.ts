@@ -18,6 +18,7 @@ import { Route as PoliticaDeDevolucaoRouteImport } from './routes/politica-de-de
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FloriculturaAbertaAgoraRouteImport } from './routes/floricultura-aberta-agora'
 import { Route as Floricultura24hRouteImport } from './routes/floricultura-24h'
+import { Route as DiaDosNamoradosRouteImport } from './routes/dia-dos-namorados'
 import { Route as DiaDasMaesRouteImport } from './routes/dia-das-maes'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -79,6 +80,11 @@ const FloriculturaAbertaAgoraRoute = FloriculturaAbertaAgoraRouteImport.update({
 const Floricultura24hRoute = Floricultura24hRouteImport.update({
   id: '/floricultura-24h',
   path: '/floricultura-24h',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiaDosNamoradosRoute = DiaDosNamoradosRouteImport.update({
+  id: '/dia-dos-namorados',
+  path: '/dia-dos-namorados',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiaDasMaesRoute = DiaDasMaesRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
   '/dia-das-maes': typeof DiaDasMaesRoute
+  '/dia-dos-namorados': typeof DiaDosNamoradosRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
   '/dia-das-maes': typeof DiaDasMaesRoute
+  '/dia-dos-namorados': typeof DiaDosNamoradosRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
@@ -232,6 +240,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
   '/dia-das-maes': typeof DiaDasMaesRoute
+  '/dia-dos-namorados': typeof DiaDosNamoradosRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
@@ -262,6 +271,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contato'
     | '/dia-das-maes'
+    | '/dia-dos-namorados'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
     | '/login'
@@ -289,6 +299,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contato'
     | '/dia-das-maes'
+    | '/dia-dos-namorados'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
     | '/login'
@@ -317,6 +328,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contato'
     | '/dia-das-maes'
+    | '/dia-dos-namorados'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
     | '/login'
@@ -346,6 +358,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ContatoRoute: typeof ContatoRoute
   DiaDasMaesRoute: typeof DiaDasMaesRoute
+  DiaDosNamoradosRoute: typeof DiaDosNamoradosRoute
   Floricultura24hRoute: typeof Floricultura24hRoute
   FloriculturaAbertaAgoraRoute: typeof FloriculturaAbertaAgoraRoute
   LoginRoute: typeof LoginRoute
@@ -423,6 +436,13 @@ declare module '@tanstack/react-router' {
       path: '/floricultura-24h'
       fullPath: '/floricultura-24h'
       preLoaderRoute: typeof Floricultura24hRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dia-dos-namorados': {
+      id: '/dia-dos-namorados'
+      path: '/dia-dos-namorados'
+      fullPath: '/dia-dos-namorados'
+      preLoaderRoute: typeof DiaDosNamoradosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dia-das-maes': {
@@ -576,6 +596,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ContatoRoute: ContatoRoute,
   DiaDasMaesRoute: DiaDasMaesRoute,
+  DiaDosNamoradosRoute: DiaDosNamoradosRoute,
   Floricultura24hRoute: Floricultura24hRoute,
   FloriculturaAbertaAgoraRoute: FloriculturaAbertaAgoraRoute,
   LoginRoute: LoginRoute,
