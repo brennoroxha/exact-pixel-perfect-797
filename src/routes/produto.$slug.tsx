@@ -368,30 +368,6 @@ function ProductPage() {
           <div className="mt-1 text-right text-[11px] text-muted-foreground">{obs.length}/250</div>
         </section>
 
-        {/* Quantidade */}
-        <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-green-deep">Quantidade</span>
-            <div className="inline-flex items-center rounded-full border border-border bg-cream">
-              <button
-                onClick={() => setQty(Math.max(1, qty - 1))}
-                className="grid h-9 w-9 place-items-center text-green-deep hover:bg-cream-dark"
-                aria-label="Diminuir"
-              >
-                <Minus className="h-4 w-4" />
-              </button>
-              <span className="w-8 text-center text-sm font-semibold text-green-deep">{qty}</span>
-              <button
-                onClick={() => setQty(qty + 1)}
-                className="grid h-9 w-9 place-items-center text-green-deep hover:bg-cream-dark"
-                aria-label="Aumentar"
-              >
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </section>
-
         {/* Avaliações */}
         <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
           <div className="flex items-center justify-between">
