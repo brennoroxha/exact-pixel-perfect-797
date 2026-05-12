@@ -49,6 +49,9 @@
   --color-gold: var(--gold);
   --color-star: var(--star);
   --color-charcoal: var(--charcoal);
+  --color-wine: var(--wine);
+  --color-wine-soft: var(--wine-soft);
+  --color-peach: var(--peach);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
