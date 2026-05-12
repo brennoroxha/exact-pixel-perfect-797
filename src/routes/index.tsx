@@ -55,7 +55,9 @@ function HomePage() {
 
   const allProducts = homeQ.data?.products ?? [];
   const filtered =
-    activeCat === "mais-vendidos"
+    activeCat === "todos"
+      ? allProducts
+      : activeCat === "mais-vendidos"
       ? allProducts.filter((p) => p.featured)
       : allProducts.filter((p) => p.category_slug === activeCat);
 
@@ -129,7 +131,7 @@ function HomePage() {
       {/* Categorias */}
       <section className="border-y border-border bg-cream-dark/40">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-4 scrollbar-hide">
-          {(homeQ.data?.categories ?? []).map((c) => {
+          {([{ slug: "todos", name: "Todos", emoji: "🌼" } as Category, ...(homeQ.data?.categories ?? [])]).map((c) => {
             const active = activeCat === c.slug;
             return (
               <button
@@ -152,7 +154,7 @@ function HomePage() {
       <section id="vitrine" className="mx-auto max-w-7xl px-4 pb-16">
         <div className="mb-6 flex items-end justify-between">
           <h2 className="font-display text-3xl text-green-deep md:text-4xl">
-            {activeCat === "mais-vendidos" ? "Mais vendidos" : "Selecionados para você"}
+            {activeCat === "mais-vendidos" ? "Mais vendidos" : activeCat === "todos" ? "Todos os produtos" : "Selecionados para você"}
           </h2>
           <span className="text-sm text-muted-foreground">{filtered.length} produtos</span>
         </div>
