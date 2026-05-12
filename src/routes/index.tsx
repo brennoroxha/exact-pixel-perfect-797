@@ -4,6 +4,7 @@ import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star, Search, X,
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+import logoFlorExpress from "@/assets/logo.png";
 import { Footer } from "@/components/Footer";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { resolveImage, heroImage } from "@/lib/product-images";
