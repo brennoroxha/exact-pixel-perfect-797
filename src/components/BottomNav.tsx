@@ -14,7 +14,7 @@ export function BottomNav() {
   const base =
     "flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition";
   const active = "text-green-deep";
-  const idle = "text-foreground/50 hover:text-green-deep";
+  const idle = "text-green-deep/80 hover:text-green-deep";
 
   return (
     <nav
