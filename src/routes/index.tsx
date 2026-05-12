@@ -130,7 +130,7 @@ function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Header />
+
 
       {/* Card da loja */}
       <section className="mx-auto max-w-3xl px-4 pt-6">
