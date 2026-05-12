@@ -454,11 +454,10 @@ function ProductPage() {
         {/* Você também pode gostar — carrossel de mais vendidos */}
         {related && related.length > 0 && (
           <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-3">
               <h2 className="font-display text-lg font-semibold text-green-deep">
                 Você também pode gostar
               </h2>
-              <span className="text-[10px] font-bold tracking-wider text-gold">MAIS VENDIDOS</span>
             </div>
             <div className="-mx-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div className="flex snap-x snap-mandatory gap-3">
