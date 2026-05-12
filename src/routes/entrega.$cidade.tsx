@@ -5,6 +5,14 @@ import { Footer } from "@/components/Footer";
 const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
 
 export const Route = createFileRoute("/entrega/$cidade")({
+  loader: async () => {
+    if (typeof window === "undefined") {
+      const { setResponseHeader } = await import("@tanstack/react-start/server");
+      // Edge cache 1h, allow stale-while-revalidate 24h
+      setResponseHeader("Cache-Control", "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400");
+    }
+    return null;
+  },
   head: ({ params }) => {
     const name = params.cidade.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     const url = `${SITE_URL}/entrega/${params.cidade}`;
