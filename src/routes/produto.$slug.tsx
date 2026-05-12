@@ -175,7 +175,7 @@ function ProductPage() {
 
   return (
     <div className="min-h-screen bg-cream pb-28">
-      <div className="mx-auto max-w-2xl px-4 pt-4">
+      <div className="w-full pt-4">
         {/* Top bar */}
         <div className="flex items-center justify-between rounded-2xl bg-card px-3 py-2.5 shadow-soft">
           <Link
