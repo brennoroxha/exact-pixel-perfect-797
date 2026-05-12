@@ -195,11 +195,21 @@ function HomePage() {
       </section>
 
       {/* Buscar Produtos + Categorias */}
-      <section className="mx-auto max-w-3xl px-4 pt-4">
+      <section className="mx-auto max-w-3xl px-4 pt-4 space-y-3">
+        {/* Barra de busca */}
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-deep/60" />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar produtos..."
+            className="w-full rounded-full border border-border bg-blush/30 py-3 pl-12 pr-4 text-sm text-green-deep placeholder:text-green-deep/50 outline-none transition focus:border-green-deep focus:bg-blush/40"
+          />
+        </div>
+
+        {/* Categorias */}
         <div className="rounded-3xl border border-border bg-white p-4 shadow-soft sm:p-5">
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-green-deep">
-            Buscar Produtos
-          </h3>
           <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-green-deep">
             Categorias
           </h4>
