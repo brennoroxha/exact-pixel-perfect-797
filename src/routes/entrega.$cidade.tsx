@@ -1,16 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { createIsomorphicFn } from "@tanstack/react-start";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
 const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
 
+const setEdgeCache = createIsomorphicFn()
+  .client(() => {})
+  .server(async () => {
+    const { setEdgeCacheHeader } = await import("@/lib/edge-cache.server");
+    setEdgeCacheHeader("public, max-age=300, s-maxage=3600, stale-while-revalidate=86400");
+  });
+
 export const Route = createFileRoute("/entrega/$cidade")({
-  loader: async () => {
-    if (typeof window === "undefined") {
-      const { setResponseHeader } = await import("@tanstack/react-start/server");
-      // Edge cache 1h, allow stale-while-revalidate 24h
-      setResponseHeader("Cache-Control", "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400");
-    }
+  loader: () => {
+    setEdgeCache();
     return null;
   },
   head: ({ params }) => {
