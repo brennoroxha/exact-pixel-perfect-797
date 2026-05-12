@@ -247,6 +247,8 @@ function ProductPage() {
           <img
             src={image}
             alt={product.name}
+            fetchPriority="high"
+            decoding="async"
             className="aspect-square w-full object-contain"
           />
           {discountPct > 0 && (
