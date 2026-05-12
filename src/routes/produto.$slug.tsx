@@ -502,11 +502,11 @@ function ProductPage() {
       </div>
 
       {/* Sticky CTA */}
-      <div className="fixed inset-x-0 bottom-[64px] z-40 border-t border-border bg-card p-3 shadow-float">
+      <div className="fixed inset-x-0 bottom-[64px] z-40 border-t border-border bg-card px-3 py-2 shadow-float">
         <div className="mx-auto max-w-2xl">
           <button
             onClick={handleAdd}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-green-deep py-3.5 text-sm font-bold text-cream shadow-soft transition hover:opacity-90"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-deep py-3 text-sm font-bold text-cream shadow-soft transition hover:opacity-90"
           >
             <span>🌸</span>
             <span>Adicionar ao carrinho • {brl(totalPrice)}</span>
