@@ -97,7 +97,7 @@ function ProductPage() {
         .select("*")
         .eq("approved", true)
         .order("created_at", { ascending: false })
-        .limit(6);
+        .limit(3);
       return data ?? [];
     },
   });
