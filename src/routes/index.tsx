@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
 
 type Category = { name: string; slug: string; emoji: string | null };
 type Occasion = { name: string; slug: string; emoji: string | null };
-type Review = { id: string; buyer_name: string; rating: number; comment: string | null; product_slug: string | null; created_at: string };
+type Review = { id: string; buyer_name: string; rating: number; comment: string | null; product_slug: string | null; created_at: string; image_url: string | null };
 type FullProduct = Product & { category_slug: string; featured: boolean };
 
 function HomePage() {
@@ -48,7 +48,7 @@ function HomePage() {
         supabase.from("products").select("*").eq("active", true).gt("price", 0).order("featured", { ascending: false }),
         supabase.from("categories").select("*").eq("active", true).order("sort_order"),
         supabase.from("occasions").select("*").eq("active", true),
-        supabase.from("reviews").select("*").eq("approved", true).limit(8),
+        supabase.from("reviews").select("*").eq("approved", true).order("created_at", { ascending: false }).limit(20),
       ]);
       return {
         products: (products.data ?? []) as FullProduct[],
@@ -597,16 +597,17 @@ function HomePage() {
         <h3 className="mt-8 mb-4 font-display text-lg text-green-deep">O que nossos clientes dizem</h3>
 
         <div className="space-y-3">
-          {(homeQ.data?.reviews ?? []).slice(0, 2).map((r) => {
+          {(homeQ.data?.reviews ?? []).slice(0, 3).map((r) => {
             const product = rawProducts.find((p) => p.slug === r.product_slug);
             const date = new Date(r.created_at).toLocaleDateString("pt-BR");
+            const img = r.image_url ?? (product ? resolveImage(product.images[0]) : null);
             return (
               <article key={r.id} className="flex gap-3 rounded-2xl bg-card p-3 shadow-soft">
                 <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-cream-dark">
-                  {product && (
+                  {img && (
                     <img
-                      src={resolveImage(product.images[0])}
-                      alt={product.name}
+                      src={img}
+                      alt={product?.name ?? r.buyer_name}
                       loading="lazy"
                       className="h-full w-full object-cover"
                     />
