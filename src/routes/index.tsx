@@ -193,25 +193,34 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Categorias */}
-      <section className="border-y border-border bg-cream-dark/40">
-        <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-4 scrollbar-hide">
-          {([{ slug: "todos", name: "Todos", emoji: "🌼" } as Category, ...(homeQ.data?.categories ?? [])]).map((c) => {
-            const active = activeCat === c.slug;
-            return (
-              <button
-                key={c.slug}
-                onClick={() => setActiveCat(c.slug)}
-                className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${
-                  active
-                    ? "bg-green-deep text-cream"
-                    : "bg-cream text-green-deep hover:bg-green-sage/15"
-                }`}
-              >
-                <span className="mr-1">{c.emoji}</span> {c.name}
-              </button>
-            );
-          })}
+      {/* Buscar Produtos + Categorias */}
+      <section className="mx-auto max-w-3xl px-4 pt-4">
+        <div className="rounded-3xl border border-border bg-white p-4 shadow-soft sm:p-5">
+          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-green-deep">
+            Buscar Produtos
+          </h3>
+          <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-green-deep">
+            Categorias
+          </h4>
+          <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
+            {([{ slug: "todos", name: "Todos", emoji: "🌼" } as Category, ...(homeQ.data?.categories ?? [])]).map((c) => {
+              const active = activeCat === c.slug;
+              return (
+                <button
+                  key={c.slug}
+                  onClick={() => setActiveCat(c.slug)}
+                  className={`flex shrink-0 flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-3 text-xs font-semibold transition w-[88px] ${
+                    active
+                      ? "bg-green-deep text-cream shadow-soft"
+                      : "bg-blush/40 text-green-deep hover:bg-blush/60"
+                  }`}
+                >
+                  <span className="text-2xl leading-none">{c.emoji}</span>
+                  <span className="text-center leading-tight">{c.name}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </section>
 
