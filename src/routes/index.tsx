@@ -476,12 +476,13 @@ function HomePage() {
               </div>
               {allProducts.length > 6 && (
                 <div className="mt-6 flex justify-center">
-                  <button
-                    onClick={() => setActiveCat("todos")}
+                  <Link
+                    to="/catalogo"
+                    search={{ tipo: "todos", cat: "", q: "" }}
                     className="rounded-full border border-green-deep px-6 py-2.5 text-sm font-medium text-green-deep transition hover:bg-green-deep hover:text-cream"
                   >
                     Ver todos os produtos
-                  </button>
+                  </Link>
                 </div>
               )}
             </div>
