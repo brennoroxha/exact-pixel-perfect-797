@@ -55,7 +55,9 @@ function HomePage() {
 
   const allProducts = homeQ.data?.products ?? [];
   const filtered =
-    activeCat === "mais-vendidos"
+    activeCat === "todos"
+      ? allProducts
+      : activeCat === "mais-vendidos"
       ? allProducts.filter((p) => p.featured)
       : allProducts.filter((p) => p.category_slug === activeCat);
 
