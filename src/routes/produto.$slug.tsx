@@ -10,6 +10,7 @@ import {
   Check,
   Plus,
   Minus,
+  BadgeCheck,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
