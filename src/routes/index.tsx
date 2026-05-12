@@ -54,13 +54,45 @@ function HomePage() {
   });
 
   const allProducts = homeQ.data?.products ?? [];
-  const featuredProducts = allProducts.filter((p) => p.featured);
+
+  // Pontuação de popularidade — flores com maior probabilidade de venda primeiro
+  const salesScore = (p: FullProduct): number => {
+    const n = p.name.toLowerCase();
+    let s = 0;
+    if (/\brosas?\s+vermelhas?\b/.test(n)) s += 100;       // rosas vermelhas — campeãs de venda
+    else if (/\brosas?\s+(cor de rosa|pink|coloridas?)\b/.test(n)) s += 85;
+    else if (/\brosas?\s+(brancas?|champagne|amarelas?)\b/.test(n)) s += 75;
+    else if (/\brosas?\b/.test(n)) s += 70;
+    if (/\bgirass[oó]is?\b/.test(n)) s += 65;
+    if (/\borqu[ií]dea\b/.test(n)) s += 55;
+    if (/\bl[ií]rios?\b/.test(n)) s += 45;
+    if (/\bbuqu[eê]\b/.test(n)) s += 15;                    // formato buquê é mais vendido
+    if (/\barranjo\b/.test(n)) s += 8;
+    if (/\b(cesta|presente|caixa|box|b[aá]u)\b/.test(n)) s += 12;
+    if (/\b(ferrero|chocolate|pel[uú]cia|urso|teddy|bal[aã]o)\b/.test(n)) s += 10; // combos vendem mais
+    if (/\b(astrom[eé]lias?|beg[oô]nia|secas?)\b/.test(n)) s -= 10;
+    // bônus: maior desconto e preço acessível tendem a vender mais
+    if (p.original_price && p.original_price > p.price) {
+      const off = (p.original_price - p.price) / p.original_price;
+      s += Math.round(off * 30);
+    }
+    if (p.price <= 100) s += 8;
+    else if (p.price <= 150) s += 4;
+    return s;
+  };
+
+  const featuredProducts = allProducts
+    .filter((p) => p.featured)
+    .slice()
+    .sort((a, b) => salesScore(b) - salesScore(a));
+
   const isAll = activeCat === "todos";
   const isFeatured = activeCat === "mais-vendidos";
   const categoryFiltered = isAll || isFeatured
     ? []
     : allProducts.filter((p) => p.category_slug === activeCat);
   const activeCategory = homeQ.data?.categories.find((c) => c.slug === activeCat);
+
 
   const cityLabel = loc ? `${loc.city}` : "sua cidade";
 
