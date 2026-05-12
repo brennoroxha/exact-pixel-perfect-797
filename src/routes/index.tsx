@@ -346,12 +346,12 @@ function HomePage() {
 
           <div className="my-5 border-t border-border" />
 
-          <div className="space-y-2 text-center text-sm">
-            <p>
+          <div className="space-y-2 text-center">
+            <p className="whitespace-nowrap text-[11px] sm:text-sm">
               <span className="mr-1">🌹</span>
               <span className="text-foreground">Mínimo </span>
               <strong className="text-green-deep">R$ 50,00</strong>
-              <span className="mx-2 text-muted-foreground">·</span>
+              <span className="mx-1.5 text-muted-foreground sm:mx-2">·</span>
               <span className="italic text-green-mid">Entrega Grátis para {cityLabel}</span>
             </p>
             <p className="text-muted-foreground">
