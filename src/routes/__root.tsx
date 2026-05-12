@@ -129,7 +129,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <div className="pb-16">
+        <Outlet />
+      </div>
       <CartDrawer />
       <LocationGate />
       <WhatsAppButton />
