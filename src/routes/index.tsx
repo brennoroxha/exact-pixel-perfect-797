@@ -37,6 +37,7 @@ function HomePage() {
   const [activeCat, setActiveCat] = useState<string>("todos");
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const [reviewsExpanded, setReviewsExpanded] = useState(false);
 
   // Single combined query — runs all reads in parallel and caches together
   const homeQ = useQuery({
@@ -597,7 +598,7 @@ function HomePage() {
         <h3 className="mt-8 mb-4 font-display text-lg text-green-deep">O que nossos clientes dizem</h3>
 
         <div className="space-y-3">
-          {(homeQ.data?.reviews ?? []).slice(0, 3).map((r) => {
+          {(homeQ.data?.reviews ?? []).slice(0, reviewsExpanded ? undefined : 3).map((r) => {
             const product = rawProducts.find((p) => p.slug === r.product_slug);
             const date = new Date(r.created_at).toLocaleDateString("pt-BR");
             const img = r.image_url ?? (product ? resolveImage(product.images[0]) : null);
@@ -640,9 +641,11 @@ function HomePage() {
 
         <button
           type="button"
+          onClick={() => setReviewsExpanded((v) => !v)}
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-green-deep/30 bg-card py-3 text-sm font-medium text-green-deep transition hover:bg-blush/40"
         >
-          Ver todas as avaliações ({homeQ.data?.reviews?.length ?? 0}) <ArrowRight className="h-4 w-4" />
+          {reviewsExpanded ? "Mostrar menos" : `Ver todas as avaliações (${homeQ.data?.reviews?.length ?? 0})`}
+          <ArrowRight className={`h-4 w-4 transition ${reviewsExpanded ? "rotate-90" : ""}`} />
         </button>
       </section>
 
