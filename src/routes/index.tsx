@@ -268,68 +268,39 @@ function HomePage() {
     return ia - ib;
   });
 
-  // Ordem manual dos mais vendidos (ranking de probabilidade real de venda)
+  // Ordem manual dos mais vendidos
   const BESTSELLER_ORDER: string[] = [
     "buque-com-10-rosas-vermelhas-premium",
-    "buque-de-rosas-spray-vermelhas-no-kraft",
-    "buque-com-3-rosas-colombianas-no-kraft",
-    "buque-de-6-rosas-colombianas-fechadas",
-    "buque-com-10-rosas-amarelas-premium",
-    "buque-com-10-rosas-brancas-premium",
-    "buque-com-10-rosas-cor-de-rosa-premium",
-    "buque-com-10-rosas-champagne",
+    "orquidea-phalaenopsis-branca-no-cachepo",
+    "orquidea-2-hastes-premium-rose",
     "buque-de-42-rosas-vermelhas",
     "buque-de-24-rosas-vermelhas-e-pink",
+    "radiante-buque-de-6-girassois",
+    "rosa-preservada-vermelha-redoma-led",
+    "arranjo-nobreza-de-rosas-cor-de-rosa",
+    "buque-de-girassol-e-rosas-vermelhas",
     "buque-de-24-rosas-vermelhas-premium",
+    "buque-de-flores-do-campo-amor-no-jornal",
+    "buque-de-12-rosas-vermelhas-e-ferrero",
+    "arranjo-mix-de-flores-no-box-white",
     "buque-de-50-rosas-vermelhas",
+    "orquidea-phalaenopsis-pink-e-ferrero",
     "buque-tradicional-de-12-rosas-vermelhas",
+    "buque-amor-tropical-de-rosas-com-chocolates",
     "kit-meu-amor-buque-de-15-rosas-vermelhas",
+    "buque-tradicional-de-girassois",
     "bouquet-15-rosas-vermelhas",
+    "bouquet-6-rosas-urso-ferrero-t8",
+    "combo-conquista",
+    "coracao-de-rosas-e-chocolate-com-pelucia",
     "box-de-rosas-vermelhas-luxo-premium",
-    "buque-de-18-rosas-vermelhas",
-    "belissimo-bouquet-de-rosas-azuis",
-    "bouquet-12-rosas-colombianas",
-    "buque-de-20-rosas-colombianas-fechadas",
-    "ramalhete-com-6-rosas-vermelhas",
-    "ramalhete-de-rosa-spray-cor-de-rosa",
-    "ramalhete-de-rosas-champagne",
-    "buque-de-10-rosas-colombianas-fechadas",
-    "buque-de-24-rosas-colombianas-abertas",
-    "buque-de-36-rosas-colombianas-abertas",
-    "ramalhete-24-rosas-vermelhas-astromelias",
-    "buque-partitura-de-rosas-nacionais-vermelho",
-    "buque-de-rosas-vermelhas-amor-no-jornal",
-    "buque-carinho-de-rosas-pink",
-    "buque-de-mini-spray-vermelho-florence",
-    "mega-buque-supremo-lilas",
-    "buque-de-42-rosas-cor-de-rosa",
-    "buque-trio-de-rosas-cor-de-rosa",
-    "buque-de-6-rosas-vermelhas",
-    "buque-flame-20-rosas-coloridas",
-    "buque-tres-cores-36-rosas",
-    "buque-passion-12-rosas-coloridas",
-    "buque-20-rosas-cor-de-rosa",
-    "buque-amor-dourado-25-rosas-amarelas",
-    "bouquet-de-rosas-vermelhas-e-rosas",
-    "bouquet-de-rosas-brancas-e-vermelhas",
-    "bouquet-20-rosas-vermelhas-sem-folhagem",
-    "duplo-colombiano",
-    "bouquet-24-rosas-na-folhagem",
-    "bouquet-30-rosas-coloridas",
-    "bouquet-com-50-rosas-vermelhas",
-    "bouquet-de-12-rosas-vermelhas-no-kraft",
+    "cesta-luxo-flores-vinho-chocolates-e-pelucia",
+    "rosa-preservada-redoma-led",
   ];
-  const orderIndex = new Map(BESTSELLER_ORDER.map((slug, i) => [slug, i]));
-
-  // Dedup por slug e ordena: itens listados primeiro (na ordem manual), demais featured ao final
-  const seen = new Set<string>();
-  const featuredProducts = allProducts
-    .filter((p) => p.featured && !seen.has(p.slug) && (seen.add(p.slug), true))
-    .sort((a, b) => {
-      const ia = orderIndex.get(a.slug) ?? Number.POSITIVE_INFINITY;
-      const ib = orderIndex.get(b.slug) ?? Number.POSITIVE_INFINITY;
-      return ia - ib;
-    });
+  const bySlug = new Map(allProducts.map((p) => [p.slug, p]));
+  const featuredProducts = BESTSELLER_ORDER
+    .map((slug) => bySlug.get(slug))
+    .filter((p): p is FullProduct => Boolean(p));
 
   const isAll = activeCat === "todos";
   const isFeatured = activeCat === "mais-vendidos";
