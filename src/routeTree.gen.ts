@@ -16,10 +16,17 @@ import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-
 import { Route as PoliticaDeEntregaRouteImport } from './routes/politica-de-entrega'
 import { Route as PoliticaDeDevolucaoRouteImport } from './routes/politica-de-devolucao'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FloriculturaAbertaAgoraRouteImport } from './routes/floricultura-aberta-agora'
+import { Route as Floricultura24hRouteImport } from './routes/floricultura-24h'
+import { Route as FloresParaNamoradaRouteImport } from './routes/flores-para-namorada'
+import { Route as FloresParaAniversarioRouteImport } from './routes/flores-para-aniversario'
+import { Route as DiaDosNamoradosRouteImport } from './routes/dia-dos-namorados'
+import { Route as DiaDasMaesRouteImport } from './routes/dia-das-maes'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CarrinhoRouteImport } from './routes/carrinho'
+import { Route as BuqueDeRosasVermelhasRouteImport } from './routes/buque-de-rosas-vermelhas'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -67,6 +74,36 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FloriculturaAbertaAgoraRoute = FloriculturaAbertaAgoraRouteImport.update({
+  id: '/floricultura-aberta-agora',
+  path: '/floricultura-aberta-agora',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Floricultura24hRoute = Floricultura24hRouteImport.update({
+  id: '/floricultura-24h',
+  path: '/floricultura-24h',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FloresParaNamoradaRoute = FloresParaNamoradaRouteImport.update({
+  id: '/flores-para-namorada',
+  path: '/flores-para-namorada',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FloresParaAniversarioRoute = FloresParaAniversarioRouteImport.update({
+  id: '/flores-para-aniversario',
+  path: '/flores-para-aniversario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiaDosNamoradosRoute = DiaDosNamoradosRouteImport.update({
+  id: '/dia-dos-namorados',
+  path: '/dia-dos-namorados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiaDasMaesRoute = DiaDasMaesRouteImport.update({
+  id: '/dia-das-maes',
+  path: '/dia-das-maes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
@@ -85,6 +122,11 @@ const CatalogoRoute = CatalogoRouteImport.update({
 const CarrinhoRoute = CarrinhoRouteImport.update({
   id: '/carrinho',
   path: '/carrinho',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuqueDeRosasVermelhasRoute = BuqueDeRosasVermelhasRouteImport.update({
+  id: '/buque-de-rosas-vermelhas',
+  path: '/buque-de-rosas-vermelhas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -146,10 +188,17 @@ const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/buque-de-rosas-vermelhas': typeof BuqueDeRosasVermelhasRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/dia-das-maes': typeof DiaDasMaesRoute
+  '/dia-dos-namorados': typeof DiaDosNamoradosRoute
+  '/flores-para-aniversario': typeof FloresParaAniversarioRoute
+  '/flores-para-namorada': typeof FloresParaNamoradaRoute
+  '/floricultura-24h': typeof Floricultura24hRoute
+  '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -169,10 +218,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/buque-de-rosas-vermelhas': typeof BuqueDeRosasVermelhasRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/dia-das-maes': typeof DiaDasMaesRoute
+  '/dia-dos-namorados': typeof DiaDosNamoradosRoute
+  '/flores-para-aniversario': typeof FloresParaAniversarioRoute
+  '/flores-para-namorada': typeof FloresParaNamoradaRoute
+  '/floricultura-24h': typeof Floricultura24hRoute
+  '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -194,10 +250,17 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/buque-de-rosas-vermelhas': typeof BuqueDeRosasVermelhasRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/dia-das-maes': typeof DiaDasMaesRoute
+  '/dia-dos-namorados': typeof DiaDosNamoradosRoute
+  '/flores-para-aniversario': typeof FloresParaAniversarioRoute
+  '/flores-para-namorada': typeof FloresParaNamoradaRoute
+  '/floricultura-24h': typeof Floricultura24hRoute
+  '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -220,10 +283,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/buque-de-rosas-vermelhas'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/dia-das-maes'
+    | '/dia-dos-namorados'
+    | '/flores-para-aniversario'
+    | '/flores-para-namorada'
+    | '/floricultura-24h'
+    | '/floricultura-aberta-agora'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -243,10 +313,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/buque-de-rosas-vermelhas'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/dia-das-maes'
+    | '/dia-dos-namorados'
+    | '/flores-para-aniversario'
+    | '/flores-para-namorada'
+    | '/floricultura-24h'
+    | '/floricultura-aberta-agora'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -267,10 +344,17 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/buque-de-rosas-vermelhas'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/dia-das-maes'
+    | '/dia-dos-namorados'
+    | '/flores-para-aniversario'
+    | '/flores-para-namorada'
+    | '/floricultura-24h'
+    | '/floricultura-aberta-agora'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -292,10 +376,17 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  BuqueDeRosasVermelhasRoute: typeof BuqueDeRosasVermelhasRoute
   CarrinhoRoute: typeof CarrinhoRoute
   CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
   ContatoRoute: typeof ContatoRoute
+  DiaDasMaesRoute: typeof DiaDasMaesRoute
+  DiaDosNamoradosRoute: typeof DiaDosNamoradosRoute
+  FloresParaAniversarioRoute: typeof FloresParaAniversarioRoute
+  FloresParaNamoradaRoute: typeof FloresParaNamoradaRoute
+  Floricultura24hRoute: typeof Floricultura24hRoute
+  FloriculturaAbertaAgoraRoute: typeof FloriculturaAbertaAgoraRoute
   LoginRoute: typeof LoginRoute
   PoliticaDeDevolucaoRoute: typeof PoliticaDeDevolucaoRoute
   PoliticaDeEntregaRoute: typeof PoliticaDeEntregaRoute
@@ -359,6 +450,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/floricultura-aberta-agora': {
+      id: '/floricultura-aberta-agora'
+      path: '/floricultura-aberta-agora'
+      fullPath: '/floricultura-aberta-agora'
+      preLoaderRoute: typeof FloriculturaAbertaAgoraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/floricultura-24h': {
+      id: '/floricultura-24h'
+      path: '/floricultura-24h'
+      fullPath: '/floricultura-24h'
+      preLoaderRoute: typeof Floricultura24hRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flores-para-namorada': {
+      id: '/flores-para-namorada'
+      path: '/flores-para-namorada'
+      fullPath: '/flores-para-namorada'
+      preLoaderRoute: typeof FloresParaNamoradaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flores-para-aniversario': {
+      id: '/flores-para-aniversario'
+      path: '/flores-para-aniversario'
+      fullPath: '/flores-para-aniversario'
+      preLoaderRoute: typeof FloresParaAniversarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dia-dos-namorados': {
+      id: '/dia-dos-namorados'
+      path: '/dia-dos-namorados'
+      fullPath: '/dia-dos-namorados'
+      preLoaderRoute: typeof DiaDosNamoradosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dia-das-maes': {
+      id: '/dia-das-maes'
+      path: '/dia-das-maes'
+      fullPath: '/dia-das-maes'
+      preLoaderRoute: typeof DiaDasMaesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contato': {
       id: '/contato'
       path: '/contato'
@@ -385,6 +518,13 @@ declare module '@tanstack/react-router' {
       path: '/carrinho'
       fullPath: '/carrinho'
       preLoaderRoute: typeof CarrinhoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buque-de-rosas-vermelhas': {
+      id: '/buque-de-rosas-vermelhas'
+      path: '/buque-de-rosas-vermelhas'
+      fullPath: '/buque-de-rosas-vermelhas'
+      preLoaderRoute: typeof BuqueDeRosasVermelhasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -490,10 +630,17 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  BuqueDeRosasVermelhasRoute: BuqueDeRosasVermelhasRoute,
   CarrinhoRoute: CarrinhoRoute,
   CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,
   ContatoRoute: ContatoRoute,
+  DiaDasMaesRoute: DiaDasMaesRoute,
+  DiaDosNamoradosRoute: DiaDosNamoradosRoute,
+  FloresParaAniversarioRoute: FloresParaAniversarioRoute,
+  FloresParaNamoradaRoute: FloresParaNamoradaRoute,
+  Floricultura24hRoute: Floricultura24hRoute,
+  FloriculturaAbertaAgoraRoute: FloriculturaAbertaAgoraRoute,
   LoginRoute: LoginRoute,
   PoliticaDeDevolucaoRoute: PoliticaDeDevolucaoRoute,
   PoliticaDeEntregaRoute: PoliticaDeEntregaRoute,
