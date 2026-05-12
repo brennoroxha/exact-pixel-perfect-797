@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star, Search } from "lucide-react";
+import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star, Search, X, Plus } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -8,6 +8,9 @@ import { Footer } from "@/components/Footer";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { resolveImage, heroImage } from "@/lib/product-images";
 import { useLocationStore } from "@/stores/location";
+import { useCartStore } from "@/stores/cart";
+import { brl } from "@/lib/format";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,6 +35,7 @@ function HomePage() {
   const loc = useLocationStore((s) => s.location);
   const [activeCat, setActiveCat] = useState<string>("mais-vendidos");
   const [search, setSearch] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
 
   // Single combined query — runs all reads in parallel and caches together
   const homeQ = useQuery({
@@ -196,17 +200,15 @@ function HomePage() {
 
       {/* Buscar Produtos + Categorias */}
       <section className="mx-auto max-w-3xl px-4 pt-4 space-y-3">
-        {/* Barra de busca */}
-        <div className="relative">
+        {/* Barra de busca (abre overlay ao clicar) */}
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          className="relative flex w-full items-center rounded-full border border-border bg-blush/30 py-3 pl-12 pr-4 text-left text-sm text-green-deep/60 outline-none transition hover:bg-blush/40"
+        >
           <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-deep/60" />
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar produtos..."
-            className="w-full rounded-full border border-border bg-blush/30 py-3 pl-12 pr-4 text-sm text-green-deep placeholder:text-green-deep/50 outline-none transition focus:border-green-deep focus:bg-blush/40"
-          />
-        </div>
+          Buscar produtos...
+        </button>
 
         {/* Categorias */}
         <div className="rounded-3xl border border-border bg-white p-4 shadow-soft sm:p-5">
@@ -243,38 +245,6 @@ function HomePage() {
               <div key={i} className="aspect-square animate-pulse rounded-2xl bg-cream-dark" />
             ))}
           </div>
-        ) : search.trim().length > 0 ? (
-          (() => {
-            const q = search.trim().toLowerCase();
-            const results = allProducts.filter(
-              (p) =>
-                p.name.toLowerCase().includes(q) ||
-                (p.description ?? "").toLowerCase().includes(q),
-            );
-            return (
-              <div>
-                <div className="mb-5">
-                  <h2 className="font-display text-2xl text-green-deep md:text-3xl">
-                    🔍 Resultados da busca
-                  </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {results.length} {results.length === 1 ? "produto encontrado" : "produtos encontrados"} para "{search}"
-                  </p>
-                </div>
-                {results.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    {results.map((p, i) => (
-                      <ProductCard key={p.id} product={p} index={i} />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="rounded-2xl bg-cream-dark/40 py-12 text-center text-sm text-muted-foreground">
-                    Nenhum produto encontrado.
-                  </p>
-                )}
-              </div>
-            );
-          })()
         ) : isAll ? (
           <>
             {/* Mais Vendidos */}
@@ -439,6 +409,136 @@ function HomePage() {
       </section>
 
       <Footer />
+
+      {/* Overlay de busca em tela cheia */}
+      {searchOpen && (
+        <SearchOverlay
+          allProducts={allProducts}
+          search={search}
+          setSearch={setSearch}
+          onClose={() => {
+            setSearchOpen(false);
+            setSearch("");
+          }}
+        />
+      )}
+
     </div>
   );
 }
+
+function SearchOverlay({
+  allProducts,
+  search,
+  setSearch,
+  onClose,
+}: {
+  allProducts: FullProduct[];
+  search: string;
+  setSearch: (v: string) => void;
+  onClose: () => void;
+}) {
+  const add = useCartStore((s) => s.add);
+  const q = search.trim().toLowerCase();
+  const results = q.length === 0
+    ? allProducts
+    : allProducts.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          (p.description ?? "").toLowerCase().includes(q),
+      );
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-cream">
+      {/* topo: X + busca */}
+      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-border/60 bg-cream px-4 py-3">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar busca"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-green-deep transition hover:bg-blush/30"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-deep/60" />
+          <input
+            autoFocus
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar produtos..."
+            className="w-full rounded-full border border-blush bg-blush/20 py-3 pl-12 pr-4 text-sm text-green-deep placeholder:text-green-deep/50 outline-none transition focus:border-green-deep"
+          />
+        </div>
+      </div>
+
+      {/* lista */}
+      <div className="flex-1 overflow-y-auto px-4 py-3">
+        <p className="mb-3 text-xs text-muted-foreground">
+          {results.length} produto(s) encontrado(s)
+        </p>
+        <div className="space-y-3">
+          {results.map((p) => (
+            <article
+              key={p.id}
+              className="flex items-center gap-3 rounded-2xl border border-border bg-white p-2 shadow-soft"
+            >
+              <Link
+                to="/produto/$slug"
+                params={{ slug: p.slug }}
+                onClick={onClose}
+                className="flex flex-1 items-center gap-3"
+              >
+                <img
+                  src={resolveImage(p.images[0])}
+                  alt={p.name}
+                  loading="lazy"
+                  className="h-20 w-20 shrink-0 rounded-xl object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <h3 className="line-clamp-2 text-sm font-semibold text-green-deep">
+                    {p.name}
+                  </h3>
+                  <div className="mt-1 flex items-baseline gap-2">
+                    <span className="text-sm font-bold text-green-deep">
+                      {brl(Number(p.price))}
+                    </span>
+                    {p.original_price && p.original_price > p.price && (
+                      <span className="text-xs text-muted-foreground line-through">
+                        {brl(Number(p.original_price))}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+              <button
+                type="button"
+                aria-label={`Adicionar ${p.name}`}
+                onClick={() => {
+                  add({
+                    productId: p.id,
+                    slug: p.slug,
+                    name: p.name,
+                    price: Number(p.price),
+                    imageKey: p.images[0],
+                  });
+                  toast.success("Adicionado ao carrinho", { description: p.name });
+                }}
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-green-deep text-cream transition active:scale-95 hover:bg-green-mid"
+              >
+                <Plus className="h-5 w-5" />
+              </button>
+            </article>
+          ))}
+          {results.length === 0 && (
+            <p className="rounded-2xl bg-cream-dark/40 py-12 text-center text-sm text-muted-foreground">
+              Nenhum produto encontrado.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
