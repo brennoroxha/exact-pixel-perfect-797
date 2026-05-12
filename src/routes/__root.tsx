@@ -67,33 +67,44 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
+const BRAND = "Floratta Express";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Flora Luxe — Floricultura Delivery em até 60 min" },
+      { name: "theme-color", content: "#1f4d2b" },
+      { name: "robots", content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" },
+      { name: "googlebot", content: "index,follow" },
+      { name: "format-detection", content: "telephone=yes" },
+      { httpEquiv: "Content-Language", content: "pt-BR" },
+      { title: `${BRAND} — Floricultura Online com Entrega Hoje em todo o Brasil` },
       {
         name: "description",
         content:
-          "Buquês de luxo entregues em até 60 minutos nas principais capitais do Brasil. Flores frescas, embalagem editorial e WhatsApp 24h.",
+          "Floricultura online aberta agora com entrega no mesmo dia em todo o Brasil. Buquês de rosas, flores para presente, aniversário e namorada. Compre flores online com entrega rápida em até 60 minutos.",
       },
-      { name: "author", content: "Flora Luxe" },
-      { property: "og:title", content: "Flora Luxe — Floricultura Delivery em até 60 min" },
-      {
-        property: "og:description",
-        content: "Floricultura delivery premium. Buquês de rosas, peônias, orquídeas e mais.",
-      },
+      { name: "keywords", content: "floricultura, floricultura aberta, floricultura aberta agora, floricultura 24h, floricultura entregando, floricultura perto de mim, floricultura online, entrega de flores, entrega de flores hoje, comprar flores online, buquê de flores, buquê de rosas vermelhas, flores para namorada, flores para presente, flores para aniversário, enviar flores, flores online, floricultura delivery" },
+      { name: "author", content: BRAND },
+      { name: "publisher", content: BRAND },
+      { property: "og:site_name", content: BRAND },
+      { property: "og:locale", content: "pt_BR" },
       { property: "og:type", content: "website" },
+      { property: "og:title", content: `${BRAND} — Floricultura Online com Entrega Hoje` },
+      { property: "og:description", content: "Floricultura aberta agora com entrega no mesmo dia em todo o Brasil. Buquês de rosas, flores para presente e mais." },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:image", content: `${SITE_URL}/og-default.jpg` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Flora Luxe — Floricultura Delivery em até 60 min" },
-      { name: "description", content: "Pixel Perfect Replica creates an exact visual copy of a given screenshot, including all elements and their placement." },
-      { property: "og:description", content: "Pixel Perfect Replica creates an exact visual copy of a given screenshot, including all elements and their placement." },
-      { name: "twitter:description", content: "Pixel Perfect Replica creates an exact visual copy of a given screenshot, including all elements and their placement." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cf227ddd-7fb0-4d86-a3d5-c49a8735facf/id-preview-c093a98d--010a785f-deca-446d-afb1-b386e7004a4e.lovable.app-1778513681228.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cf227ddd-7fb0-4d86-a3d5-c49a8735facf/id-preview-c093a98d--010a785f-deca-446d-afb1-b386e7004a4e.lovable.app-1778513681228.png" },
+      { name: "twitter:title", content: `${BRAND} — Floricultura Online com Entrega Hoje` },
+      { name: "twitter:description", content: "Floricultura aberta agora. Entrega de flores em todo o Brasil em até 60 minutos." },
+      { name: "twitter:image", content: `${SITE_URL}/og-default.jpg` },
     ],
     links: [
+      { rel: "canonical", href: SITE_URL },
+      { rel: "alternate", hrefLang: "pt-BR", href: SITE_URL },
+      { rel: "alternate", hrefLang: "x-default", href: SITE_URL },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -102,6 +113,52 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
       },
       { rel: "stylesheet", href: appCss },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": `${SITE_URL}/#organization`,
+              name: BRAND,
+              url: SITE_URL,
+              logo: `${SITE_URL}/logo.png`,
+              sameAs: [],
+            },
+            {
+              "@type": "WebSite",
+              "@id": `${SITE_URL}/#website`,
+              url: SITE_URL,
+              name: BRAND,
+              inLanguage: "pt-BR",
+              publisher: { "@id": `${SITE_URL}/#organization` },
+              potentialAction: {
+                "@type": "SearchAction",
+                target: { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/catalogo?q={search_term_string}` },
+                "query-input": "required name=search_term_string",
+              },
+            },
+            {
+              "@type": "Florist",
+              "@id": `${SITE_URL}/#florist`,
+              name: BRAND,
+              url: SITE_URL,
+              image: `${SITE_URL}/og-default.jpg`,
+              priceRange: "$$",
+              areaServed: { "@type": "Country", name: "Brasil" },
+              openingHoursSpecification: [{
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+                opens: "00:00",
+                closes: "23:59",
+              }],
+            },
+          ],
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,
