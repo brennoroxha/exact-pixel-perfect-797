@@ -1,9 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Star, ShoppingBag, Heart, Truck } from "lucide-react";
-import { useState } from "react";
+import {
+  Star,
+  Heart,
+  Truck,
+  Clock,
+  ShieldCheck,
+  ChevronLeft,
+  Check,
+  Plus,
+  Minus,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { resolveImage } from "@/lib/product-images";
 import { brl } from "@/lib/format";
@@ -14,12 +23,30 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/produto/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `Buquê — Flora Luxe` },
-      { name: "description", content: `Confira ${params.slug} na Flora Luxe.` },
+      { title: `Produto — Floratta Express` },
+      { name: "description", content: `Confira ${params.slug} na Floratta Express.` },
     ],
   }),
   component: ProductPage,
 });
+
+type CardOption = { id: string; title: string; subtitle: string };
+const CARD_OPTIONS: CardOption[] = [
+  { id: "none", title: "Sem cartão", subtitle: "Enviar sem mensagem" },
+  { id: "amor", title: "Cartão Eu Te Amo", subtitle: "Mensagem romântica" },
+  { id: "aniversario", title: "Cartão Feliz Aniversário", subtitle: "Parabéns especial" },
+  { id: "agradecimento", title: "Cartão de Agradecimento", subtitle: "Obrigado(a) de coração" },
+  { id: "melhoras", title: "Cartão de Melhoras", subtitle: "Desejando recuperação" },
+];
+
+type AddOn = { id: string; title: string; subtitle: string; price: number };
+const ADDONS: AddOn[] = [
+  { id: "ferrero", title: "Ferrero Rocher T8", subtitle: "Caixa com 8 bombons", price: 24.9 },
+  { id: "lindt", title: "Chocolate Lindt", subtitle: "Barra premium 100g", price: 19.9 },
+  { id: "urso", title: "Urso de Pelúcia", subtitle: "Pelúcia fofa 25cm", price: 29.9 },
+  { id: "balao", title: "Balão Coração Metalizado", subtitle: "Balão metalizado vermelho", price: 14.9 },
+  { id: "vela", title: "Vela Aromática", subtitle: "Perfumada e relaxante", price: 17.9 },
+];
 
 function ProductPage() {
   const { slug } = Route.useParams();
@@ -27,31 +54,92 @@ function ProductPage() {
   const add = useCartStore((s) => s.add);
   const open = useCartStore((s) => s.open);
   const [qty, setQty] = useState(1);
-  const [message, setMessage] = useState("");
+  const [card, setCard] = useState("none");
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [obs, setObs] = useState("");
+  const [favorite, setFavorite] = useState(false);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", slug],
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("*").eq("slug", slug).maybeSingle();
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("slug", slug)
+        .maybeSingle();
       if (error) throw error;
       if (!data) throw notFound();
       return data;
     },
   });
 
-  if (isLoading) {
+  const { data: related } = useQuery({
+    queryKey: ["related", product?.category_slug, product?.id],
+    enabled: !!product,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("products")
+        .select("slug,name,price,images")
+        .eq("active", true)
+        .gt("price", 0)
+        .eq("category_slug", product!.category_slug ?? "")
+        .neq("id", product!.id)
+        .limit(4);
+      return data ?? [];
+    },
+  });
+
+  const { data: reviews } = useQuery({
+    queryKey: ["reviews", slug],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("reviews")
+        .select("*")
+        .eq("approved", true)
+        .order("created_at", { ascending: false })
+        .limit(6);
+      return data ?? [];
+    },
+  });
+
+  const toggleAddon = (id: string) => {
+    setSelectedAddons((cur) => {
+      if (cur.includes(id)) return cur.filter((x) => x !== id);
+      if (cur.length >= 3) {
+        toast.message("Máximo de 3 complementos");
+        return cur;
+      }
+      return [...cur, id];
+    });
+  };
+
+  const addonsTotal = useMemo(
+    () => ADDONS.filter((a) => selectedAddons.includes(a.id)).reduce((s, a) => s + a.price, 0),
+    [selectedAddons],
+  );
+
+  if (isLoading || !product) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="mx-auto max-w-6xl px-4 py-16">
-          <div className="h-96 animate-pulse rounded-3xl bg-cream-dark" />
+      <div className="min-h-screen bg-cream">
+        <div className="mx-auto max-w-2xl px-4 py-10">
+          <div className="h-[420px] animate-pulse rounded-3xl bg-cream-dark" />
+          <div className="mt-6 h-8 w-2/3 animate-pulse rounded bg-cream-dark" />
+          <div className="mt-3 h-6 w-1/3 animate-pulse rounded bg-cream-dark" />
         </div>
       </div>
     );
   }
-  if (!product) return null;
 
   const image = resolveImage(product.images?.[0]);
+  const price = Number(product.price);
+  const original = product.original_price ? Number(product.original_price) : null;
+  const discountPct =
+    original && original > price ? Math.round(((original - price) / original) * 100) : 0;
+  const stockLeft = product.stock_unlimited ? 10 : Math.max(1, product.stock_qty ?? 0);
+  const stockPct = Math.min(100, Math.max(15, (stockLeft / 30) * 100));
+
+  const totalPrice = price * qty + addonsTotal;
+
   const handleAdd = () => {
     add(
       {
@@ -63,93 +151,320 @@ function ProductPage() {
       },
       qty,
     );
-    toast.success("Adicionado ao carrinho");
+    if (selectedAddons.length > 0) {
+      const labels = ADDONS.filter((a) => selectedAddons.includes(a.id))
+        .map((a) => a.title)
+        .join(", ");
+      toast.success(`Adicionado com: ${labels}`);
+    } else {
+      toast.success("Adicionado ao carrinho");
+    }
     open();
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-10 md:grid-cols-2 md:py-16">
-        <div className="overflow-hidden rounded-3xl bg-cream-dark shadow-elegant">
-          <img src={image} alt={product.name} className="aspect-square w-full object-cover" />
+    <div className="min-h-screen bg-cream pb-28">
+      <div className="mx-auto max-w-2xl px-4 pt-4">
+        {/* Top bar */}
+        <div className="flex items-center justify-between rounded-2xl bg-white px-3 py-2.5 shadow-soft">
+          <Link
+            to="/"
+            className="flex items-center gap-1 text-sm font-bold tracking-wide text-blush hover:opacity-80"
+          >
+            <ChevronLeft className="h-4 w-4" /> VOLTAR
+          </Link>
+          <button
+            onClick={() => setFavorite((v) => !v)}
+            aria-label="Favoritar"
+            className="grid h-8 w-8 place-items-center rounded-full hover:bg-cream-dark"
+          >
+            <Heart
+              className={`h-5 w-5 transition ${
+                favorite ? "fill-blush text-blush" : "text-green-deep/60"
+              }`}
+            />
+          </button>
         </div>
-        <div>
-          <Link to="/" className="text-xs text-muted-foreground hover:text-green-deep">← Voltar à loja</Link>
-          <h1 className="mt-3 font-display text-4xl text-green-deep md:text-5xl">{product.name}</h1>
-          <div className="mt-2 flex items-center gap-2 text-sm">
-            <div className="flex text-gold">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="h-4 w-4 fill-current" />
-              ))}
-            </div>
-            <span className="text-muted-foreground">
-              {Number(product.rating).toFixed(1)} · {product.review_count} avaliações
+
+        {/* Image */}
+        <div className="relative mt-3 overflow-hidden rounded-2xl bg-white">
+          <img
+            src={image}
+            alt={product.name}
+            className="aspect-square w-full object-contain"
+          />
+          {discountPct > 0 && (
+            <span className="absolute left-3 top-3 rounded-full bg-blush px-3 py-1 text-xs font-bold text-white shadow-soft">
+              {discountPct}% OFF
             </span>
-          </div>
-          <div className="mt-5 flex items-end gap-3">
-            {product.original_price && (
-              <span className="text-base text-muted-foreground line-through">
-                {brl(Number(product.original_price))}
+          )}
+          {product.featured && (
+            <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-gold px-3 py-1 text-xs font-bold text-green-deep shadow-soft">
+              <Star className="h-3 w-3 fill-current" /> MAIS VENDIDO
+            </span>
+          )}
+        </div>
+
+        {/* Title + price */}
+        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+          <h1 className="font-display text-xl font-semibold text-green-deep md:text-2xl">
+            {product.name}
+          </h1>
+          {product.description && (
+            <p className="mt-1 text-sm text-muted-foreground">{product.description}</p>
+          )}
+
+          <div className="mt-4 flex items-end gap-2">
+            {original && original > price && (
+              <span className="text-sm text-muted-foreground">
+                de <span className="line-through">{brl(original)}</span>
               </span>
             )}
-            <span className="font-display text-4xl text-green-deep">
-              {brl(Number(product.price))}
-            </span>
+            <span className="font-display text-3xl font-bold text-blush">{brl(price)}</span>
           </div>
-          <p className="mt-5 text-foreground/80">{product.description}</p>
 
-          <div className="mt-6 rounded-2xl bg-cream-dark p-4 text-sm">
-            <div className="flex items-center gap-2 text-green-mid">
-              <Truck className="h-4 w-4" />
-              <span>
-                🟢 Entregamos {loc ? `hoje em ${loc.city}` : "rapidamente"} se pedir até as 18h
+          {discountPct > 0 && (
+            <div className="mt-2">
+              <span className="inline-block rounded-full bg-green-mid px-3 py-1 text-xs font-bold text-cream">
+                {discountPct}% OFF
               </span>
             </div>
-          </div>
+          )}
 
-          <div className="mt-6">
-            <label className="text-sm font-medium text-green-deep">Mensagem no cartão (opcional)</label>
-            <textarea
-              maxLength={200}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Ex.: Te amo. Para todos os dias da nossa vida."
-              className="mt-1.5 w-full rounded-xl border border-border bg-cream p-3 text-sm outline-none focus:border-green-mid"
-              rows={3}
-            />
-            <div className="mt-1 text-right text-[11px] text-muted-foreground">{message.length}/200</div>
-          </div>
-
-          <div className="mt-6 flex items-center gap-3">
-            <div className="inline-flex items-center rounded-full border border-border bg-cream">
-              <button onClick={() => setQty(Math.max(1, qty - 1))} className="px-4 py-2 text-lg">−</button>
-              <span className="w-10 text-center">{qty}</span>
-              <button onClick={() => setQty(qty + 1)} className="px-4 py-2 text-lg">+</button>
+          <div className="mt-4">
+            <div className="relative h-2 w-full overflow-hidden rounded-full bg-cream-dark">
+              <div
+                className="h-full rounded-full bg-blush"
+                style={{ width: `${stockPct}%` }}
+              />
             </div>
-            <button
-              onClick={handleAdd}
-              className="flex flex-1 items-center justify-center gap-2 rounded-full bg-green-deep py-4 text-cream transition hover:bg-green-mid"
-            >
-              <ShoppingBag className="h-5 w-5" /> Adicionar ao carrinho
-            </button>
-            <button
-              aria-label="Favoritar"
-              className="grid h-12 w-12 place-items-center rounded-full border border-border bg-cream"
-            >
-              <Heart className="h-5 w-5" />
-            </button>
+            <div className="mt-1 text-right text-xs text-muted-foreground">Restam {stockLeft}</div>
           </div>
-          <Link
-            to="/checkout"
+
+          <div className="mt-4 grid grid-cols-3 gap-3 border-t border-border pt-4 text-xs">
+            <div className="flex items-center gap-1.5 text-green-deep">
+              <Truck className="h-4 w-4 text-green-mid" />
+              <span>Entrega grátis</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-green-deep">
+              <Clock className="h-4 w-4 text-gold" />
+              <span>
+                {loc ? `${loc.deliveryTimeMin}-${loc.deliveryTimeMax} min` : "30-50 min"}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 text-green-deep">
+              <ShieldCheck className="h-4 w-4 text-green-mid" />
+              <span>Garantia</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Cartão de Mensagem */}
+        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold text-green-deep">
+              Cartão de Mensagem
+            </h2>
+            <span className="text-[10px] font-bold tracking-wider text-muted-foreground">
+              OPCIONAL
+            </span>
+          </div>
+          <div className="mt-3 space-y-2">
+            {CARD_OPTIONS.map((opt) => {
+              const active = card === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  onClick={() => setCard(opt.id)}
+                  className={`flex w-full items-center justify-between rounded-xl border-2 p-3 text-left transition ${
+                    active
+                      ? "border-green-deep bg-green-deep/5"
+                      : "border-border bg-cream hover:border-green-sage/40"
+                  }`}
+                >
+                  <div>
+                    <div className="text-sm font-semibold text-green-deep">{opt.title}</div>
+                    <div className="text-xs text-muted-foreground">{opt.subtitle}</div>
+                  </div>
+                  <span
+                    className={`grid h-6 w-6 place-items-center rounded-full ${
+                      active ? "bg-green-deep text-cream" : "bg-cream-dark text-transparent"
+                    }`}
+                  >
+                    <Check className="h-4 w-4" />
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Complementos */}
+        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold text-green-deep">
+              Complementos{" "}
+              <span className="text-xs font-normal text-muted-foreground">(até 3)</span>
+            </h2>
+            <span className="text-[10px] font-bold tracking-wider text-muted-foreground">
+              OPCIONAL
+            </span>
+          </div>
+          <div className="mt-3 space-y-2">
+            {ADDONS.map((a) => {
+              const active = selectedAddons.includes(a.id);
+              return (
+                <button
+                  key={a.id}
+                  onClick={() => toggleAddon(a.id)}
+                  className={`flex w-full items-center justify-between rounded-xl border-2 p-3 text-left transition ${
+                    active
+                      ? "border-green-deep bg-green-deep/5"
+                      : "border-border bg-cream hover:border-green-sage/40"
+                  }`}
+                >
+                  <div>
+                    <div className="text-sm font-semibold text-green-deep">{a.title}</div>
+                    <div className="text-xs text-muted-foreground">{a.subtitle}</div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold text-blush">+ {brl(a.price)}</span>
+                    <span
+                      className={`grid h-6 w-6 place-items-center rounded-full ${
+                        active ? "bg-green-deep text-cream" : "bg-cream-dark text-green-deep"
+                      }`}
+                    >
+                      {active ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Observações */}
+        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+          <h2 className="font-display text-lg font-semibold text-green-deep">Observações</h2>
+          <textarea
+            value={obs}
+            onChange={(e) => setObs(e.target.value)}
+            maxLength={250}
+            rows={3}
+            placeholder="Alguma observação para a entrega? (ex.: deixar com porteiro)"
+            className="mt-3 w-full rounded-xl border border-border bg-cream p-3 text-sm outline-none focus:border-green-mid"
+          />
+          <div className="mt-1 text-right text-[11px] text-muted-foreground">{obs.length}/250</div>
+        </section>
+
+        {/* Quantidade */}
+        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-green-deep">Quantidade</span>
+            <div className="inline-flex items-center rounded-full border border-border bg-cream">
+              <button
+                onClick={() => setQty(Math.max(1, qty - 1))}
+                className="grid h-9 w-9 place-items-center text-green-deep hover:bg-cream-dark"
+                aria-label="Diminuir"
+              >
+                <Minus className="h-4 w-4" />
+              </button>
+              <span className="w-8 text-center text-sm font-semibold text-green-deep">{qty}</span>
+              <button
+                onClick={() => setQty(qty + 1)}
+                className="grid h-9 w-9 place-items-center text-green-deep hover:bg-cream-dark"
+                aria-label="Aumentar"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Avaliações */}
+        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold text-green-deep">Avaliações</h2>
+            <div className="flex items-center gap-1 text-sm">
+              <span className="flex text-gold">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-current" />
+                ))}
+              </span>
+              <span className="font-semibold text-green-deep">
+                {Number(product.rating ?? 4.9).toFixed(1)}
+              </span>
+              <span className="text-muted-foreground">({product.review_count ?? 0})</span>
+            </div>
+          </div>
+          <div className="mt-4 space-y-4">
+            {(reviews ?? []).map((r) => (
+              <div key={r.id} className="flex gap-3 border-b border-border pb-3 last:border-0">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-cream-dark text-sm font-bold text-green-deep">
+                  {r.buyer_name?.[0] ?? "C"}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-green-deep">{r.buyer_name}</span>
+                    <span className="flex text-gold">
+                      {Array.from({ length: r.rating ?? 5 }).map((_, i) => (
+                        <Star key={i} className="h-3 w-3 fill-current" />
+                      ))}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm text-foreground/80">{r.comment}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Você também pode gostar */}
+        {related && related.length > 0 && (
+          <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+            <h2 className="font-display text-lg font-semibold text-green-deep">
+              Você também pode gostar
+            </h2>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {related.map((p) => (
+                <Link
+                  key={p.slug}
+                  to="/produto/$slug"
+                  params={{ slug: p.slug }}
+                  className="group overflow-hidden rounded-xl border border-border bg-cream transition hover:shadow-soft"
+                >
+                  <img
+                    src={resolveImage(p.images?.[0])}
+                    alt={p.name}
+                    className="aspect-square w-full object-cover transition group-hover:scale-105"
+                  />
+                  <div className="p-2.5">
+                    <div className="line-clamp-2 text-xs font-medium text-green-deep">{p.name}</div>
+                    <div className="mt-1 text-sm font-bold text-blush">{brl(Number(p.price))}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+
+      {/* Sticky CTA */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white p-3 shadow-float">
+        <div className="mx-auto max-w-2xl">
+          <button
             onClick={handleAdd}
-            className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-green-deep py-3 text-sm font-medium text-green-deep hover:bg-green-deep hover:text-cream"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-blush py-3.5 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
           >
-            💚 Comprar agora
-          </Link>
+            <span>🌸</span>
+            <span>Adicionar ao carrinho • {brl(totalPrice)}</span>
+          </button>
         </div>
       </div>
-      <Footer />
+
+      <div className="hidden">
+        <Footer />
+      </div>
     </div>
   );
 }
