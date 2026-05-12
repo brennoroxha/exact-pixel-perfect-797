@@ -30,7 +30,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [progress, setProgress] = useState(0);
   const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [autoDetecting, setAutoDetecting] = useState(false);
+  
   const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
   const [ipCity, setIpCity] = useState<string>("");
 
