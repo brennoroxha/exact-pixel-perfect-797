@@ -137,24 +137,24 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 md:px-4 animate-in fade-in duration-200">
-      <div className="relative z-10 flex h-full w-full flex-col bg-cream p-6 md:h-auto md:max-w-lg md:rounded-3xl md:p-8 shadow-float animate-in zoom-in-95 duration-200">
-        <div className="mb-4 flex items-center justify-center gap-2">
-          <Flower2 className="h-5 w-5 text-green-deep" />
-          <span className="font-display text-xl text-green-deep">Flora Luxe</span>
+      <div className="relative z-10 flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-cream p-4 md:h-auto md:max-h-[90vh] md:max-w-lg md:rounded-3xl md:p-8 shadow-float animate-in zoom-in-95 duration-200">
+        <div className="mb-3 flex items-center justify-center gap-2">
+          <Flower2 className="h-4 w-4 text-green-deep md:h-5 md:w-5" />
+          <span className="font-display text-lg text-green-deep md:text-xl">Flora Luxe</span>
         </div>
 
         {step === 1 && (
-          <div className="flex flex-1 flex-col space-y-4">
+          <div className="flex min-h-0 flex-1 flex-col space-y-3 md:space-y-4">
             <div className="text-center">
-              <h2 className="font-display text-2xl text-green-deep">Onde você está? 🌿</h2>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <h2 className="font-display text-xl text-green-deep md:text-2xl">Onde você está? 🌿</h2>
+              <p className="mt-1 text-[11px] text-muted-foreground md:text-xs">
                 {uf
                   ? "Detectamos seu estado. Confirme ou escolha outro."
                   : "Selecione seu estado para encontrar flores frescas perto de você"}
               </p>
             </div>
 
-            <div className="grid max-h-[50vh] flex-1 grid-cols-3 gap-2 overflow-y-auto rounded-2xl bg-cream-dark/40 p-3 sm:grid-cols-4">
+            <div className="grid min-h-0 flex-1 grid-cols-4 gap-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2 md:grid-cols-4 md:gap-2 md:p-3">
               {BR_STATES.map((s) => {
                 const active = uf === s.uf;
                 return (
@@ -165,14 +165,14 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                       setPicked(null);
                       setSearch("");
                     }}
-                    className={`flex flex-col items-center justify-center rounded-xl border-2 px-2 py-2.5 text-center transition ${
+                    className={`flex flex-col items-center justify-center rounded-xl border-2 px-1 py-2 text-center transition md:px-2 md:py-2.5 ${
                       active
                         ? "border-green-deep bg-green-deep text-cream"
                         : "border-transparent bg-cream text-green-deep hover:border-green-sage"
                     }`}
                   >
-                    <span className="font-display text-base font-semibold">{s.uf}</span>
-                    <span className="text-[10px] opacity-80">{s.name.split(" ")[0]}</span>
+                    <span className="font-display text-sm font-semibold md:text-base">{s.uf}</span>
+                    <span className="hidden text-[10px] opacity-80 md:inline">{s.name.split(" ")[0]}</span>
                   </button>
                 );
               })}
@@ -181,7 +181,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
             <Button
               disabled={!uf}
               onClick={() => setStep(2)}
-              className="w-full rounded-full bg-green-deep py-6 text-base text-cream hover:bg-green-mid"
+              className="w-full rounded-full bg-green-deep py-5 text-base text-cream hover:bg-green-mid md:py-6"
             >
               Continuar →
             </Button>
@@ -189,18 +189,18 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         )}
 
         {step === 2 && (
-          <div className="flex flex-1 flex-col space-y-4">
+          <div className="flex min-h-0 flex-1 flex-col space-y-3 md:space-y-4">
             <div className="text-center">
-              <h2 className="font-display text-2xl text-green-deep">Agora sua cidade 🏙️</h2>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <h2 className="font-display text-xl text-green-deep md:text-2xl">Agora sua cidade 🏙️</h2>
+              <p className="mt-1 text-[11px] text-muted-foreground md:text-xs">
                 {picked ? (
                   <>
-                    Detectamos <strong>{picked}</strong>. Confirme ou escolha outra cidade em{" "}
+                    Detectamos <strong>{picked}</strong>. Confirme ou escolha outra em{" "}
                     <strong>{stateName(uf)}</strong>.
                   </>
                 ) : (
                   <>
-                    Selecione ou busque sua cidade em <strong>{stateName(uf)}</strong>
+                    Selecione sua cidade em <strong>{stateName(uf)}</strong>
                   </>
                 )}
               </p>
@@ -216,7 +216,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
               />
             </div>
 
-            <div className="flex-1 space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
+            <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
               {filtered.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">
                   Nenhuma cidade encontrada.
@@ -228,7 +228,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                     <button
                       key={c}
                       onClick={() => setPicked(c)}
-                      className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition ${
+                      className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition md:px-4 md:py-3 md:text-base ${
                         active
                           ? "bg-green-deep text-cream"
                           : "bg-cream text-green-deep hover:bg-green-sage/15"
@@ -249,14 +249,14 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
               <Button
                 variant="outline"
                 onClick={() => setStep(1)}
-                className="flex-1 rounded-full border-green-sage/40"
+                className="flex-1 rounded-full border-green-sage/40 py-5 md:py-6"
               >
                 Voltar
               </Button>
               <Button
                 disabled={!picked}
                 onClick={() => setStep(3)}
-                className="flex-1 rounded-full bg-green-deep py-6 text-cream hover:bg-green-mid"
+                className="flex-1 rounded-full bg-green-deep py-5 text-cream hover:bg-green-mid md:py-6"
               >
                 Confirmar →
               </Button>
