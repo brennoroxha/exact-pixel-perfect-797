@@ -49,6 +49,9 @@
   --color-gold: var(--gold);
   --color-star: var(--star);
   --color-charcoal: var(--charcoal);
+  --color-wine: var(--wine);
+  --color-wine-soft: var(--wine-soft);
+  --color-peach: var(--peach);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -77,6 +80,9 @@
   --gold:         oklch(0.748 0.082 80);     /* #C9A96E */
   --star:         oklch(0.62 0.22 25);       /* red */
   --charcoal:     oklch(0.18 0.005 60);      /* #1A1A1A */
+  --wine:         oklch(0.42 0.13 5);        /* burgundy */
+  --wine-soft:    oklch(0.55 0.16 5);
+  --peach:        oklch(0.94 0.035 45);      /* peach card bg */
 
   --background: var(--cream);
   --foreground: var(--charcoal);
