@@ -247,6 +247,8 @@ function ProductPage() {
           <img
             src={image}
             alt={product.name}
+            fetchPriority="high"
+            decoding="async"
             className="aspect-square w-full object-contain"
           />
           {discountPct > 0 && (
@@ -502,6 +504,8 @@ function ProductPage() {
                       <img
                         src={resolveImage(p.images?.[0])}
                         alt={p.name}
+                        loading="lazy"
+                        decoding="async"
                         className="aspect-square w-full object-cover transition group-hover:scale-105"
                       />
                       <div className="p-2.5">
