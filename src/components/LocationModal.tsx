@@ -30,7 +30,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   const [progress, setProgress] = useState(0);
   const [searchMsg, setSearchMsg] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [autoDetecting, setAutoDetecting] = useState(false);
+  
   const [citiesByState, setCitiesByState] = useState<Record<string, string[]>>({});
   const [ipCity, setIpCity] = useState<string>("");
 
@@ -128,27 +128,6 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     return () => clearInterval(interval);
   }, [step, picked, uf, setLocation]);
 
-  const useGeolocation = () => {
-    if (!navigator.geolocation) return;
-    setAutoDetecting(true);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          const r = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`,
-          );
-          const data = await r.json();
-          const cityName: string =
-            data.address?.city || data.address?.town || data.address?.municipality || "";
-          const stateUf = (data.address?.["ISO3166-2-lvl4"] || "").split("-")[1];
-          if (stateUf) setUf(stateUf);
-          if (cityName) setSearch(cityName);
-        } catch {}
-        setAutoDetecting(false);
-      },
-      () => setAutoDetecting(false),
-    );
-  };
 
   const messages = [
     "Verificando disponibilidade de entrega...",
@@ -157,34 +136,25 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 px-4 animate-in fade-in duration-200">
-      <div className="relative z-10 w-full max-w-xl rounded-3xl bg-cream p-8 shadow-float md:p-10 animate-in zoom-in-95 duration-200">
-        <div className="mb-6 flex items-center justify-center gap-2">
-          <Flower2 className="h-6 w-6 text-green-deep" />
-          <span className="font-display text-2xl text-green-deep">Flora Luxe</span>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-green-deep/95 md:px-4 animate-in fade-in duration-200">
+      <div className="relative z-10 flex h-full w-full flex-col bg-cream p-6 md:h-auto md:max-w-lg md:rounded-3xl md:p-8 shadow-float animate-in zoom-in-95 duration-200">
+        <div className="mb-4 flex items-center justify-center gap-2">
+          <Flower2 className="h-5 w-5 text-green-deep" />
+          <span className="font-display text-xl text-green-deep">Flora Luxe</span>
         </div>
 
         {step === 1 && (
-          <div className="space-y-5">
+          <div className="flex flex-1 flex-col space-y-4">
             <div className="text-center">
-              <h2 className="font-display text-3xl text-green-deep">Onde você está? 🌿</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {autoDetecting
-                  ? "Detectando sua localização..."
-                  : uf
+              <h2 className="font-display text-2xl text-green-deep">Onde você está? 🌿</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {uf
                   ? "Detectamos seu estado. Confirme ou escolha outro."
                   : "Selecione seu estado para encontrar flores frescas perto de você"}
               </p>
             </div>
 
-            <button
-              onClick={useGeolocation}
-              className="flex w-full items-center justify-center gap-2 rounded-full border border-green-sage bg-cream-dark px-4 py-2.5 text-sm font-medium text-green-deep transition hover:bg-green-sage/20"
-            >
-              <MapPin className="h-4 w-4" /> Usar minha localização
-            </button>
-
-            <div className="grid max-h-[42vh] grid-cols-3 gap-2 overflow-y-auto rounded-2xl bg-cream-dark/40 p-3 sm:grid-cols-4 md:grid-cols-5">
+            <div className="grid max-h-[50vh] flex-1 grid-cols-3 gap-2 overflow-y-auto rounded-2xl bg-cream-dark/40 p-3 sm:grid-cols-4">
               {BR_STATES.map((s) => {
                 const active = uf === s.uf;
                 return (
@@ -219,10 +189,10 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         )}
 
         {step === 2 && (
-          <div className="space-y-5">
+          <div className="flex flex-1 flex-col space-y-4">
             <div className="text-center">
-              <h2 className="font-display text-3xl text-green-deep">Agora sua cidade 🏙️</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h2 className="font-display text-2xl text-green-deep">Agora sua cidade 🏙️</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
                 {picked ? (
                   <>
                     Detectamos <strong>{picked}</strong>. Confirme ou escolha outra cidade em{" "}
@@ -246,7 +216,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
               />
             </div>
 
-            <div className="max-h-[40vh] space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
+            <div className="flex-1 space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
               {filtered.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">
                   Nenhuma cidade encontrada.
@@ -295,7 +265,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         )}
 
         {step === 3 && picked && (
-          <div className="space-y-6 py-6 text-center">
+          <div className="flex flex-1 flex-col justify-center space-y-6 py-4 text-center">
             {showSuccess ? (
               <div className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
                 <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-sage/20 text-green-deep">
