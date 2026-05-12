@@ -144,17 +144,17 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         </div>
 
         {step === 1 && (
-          <div className="flex flex-1 flex-col space-y-4">
+          <div className="flex min-h-0 flex-1 flex-col space-y-3 md:space-y-4">
             <div className="text-center">
-              <h2 className="font-display text-2xl text-green-deep">Onde você está? 🌿</h2>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <h2 className="font-display text-xl text-green-deep md:text-2xl">Onde você está? 🌿</h2>
+              <p className="mt-1 text-[11px] text-muted-foreground md:text-xs">
                 {uf
                   ? "Detectamos seu estado. Confirme ou escolha outro."
                   : "Selecione seu estado para encontrar flores frescas perto de você"}
               </p>
             </div>
 
-            <div className="grid max-h-[50vh] flex-1 grid-cols-3 gap-2 overflow-y-auto rounded-2xl bg-cream-dark/40 p-3 sm:grid-cols-4">
+            <div className="grid min-h-0 flex-1 grid-cols-4 gap-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2 md:grid-cols-4 md:gap-2 md:p-3">
               {BR_STATES.map((s) => {
                 const active = uf === s.uf;
                 return (
@@ -165,14 +165,14 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                       setPicked(null);
                       setSearch("");
                     }}
-                    className={`flex flex-col items-center justify-center rounded-xl border-2 px-2 py-2.5 text-center transition ${
+                    className={`flex flex-col items-center justify-center rounded-xl border-2 px-1 py-2 text-center transition md:px-2 md:py-2.5 ${
                       active
                         ? "border-green-deep bg-green-deep text-cream"
                         : "border-transparent bg-cream text-green-deep hover:border-green-sage"
                     }`}
                   >
-                    <span className="font-display text-base font-semibold">{s.uf}</span>
-                    <span className="text-[10px] opacity-80">{s.name.split(" ")[0]}</span>
+                    <span className="font-display text-sm font-semibold md:text-base">{s.uf}</span>
+                    <span className="hidden text-[10px] opacity-80 md:inline">{s.name.split(" ")[0]}</span>
                   </button>
                 );
               })}
@@ -181,7 +181,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
             <Button
               disabled={!uf}
               onClick={() => setStep(2)}
-              className="w-full rounded-full bg-green-deep py-6 text-base text-cream hover:bg-green-mid"
+              className="w-full rounded-full bg-green-deep py-5 text-base text-cream hover:bg-green-mid md:py-6"
             >
               Continuar →
             </Button>
