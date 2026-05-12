@@ -133,6 +133,7 @@ function RootComponent() {
       <CartDrawer />
       <LocationGate />
       <WhatsAppButton />
+      <BottomNav />
       <Toaster richColors position="top-center" />
     </QueryClientProvider>
   );
