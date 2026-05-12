@@ -487,7 +487,7 @@ function HomePage() {
             <div className="mb-5">
               <h2 className="font-display text-2xl text-green-deep md:text-3xl">🔥 Mais Vendidos</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Os favoritos dos nossos clientes · {featuredProducts.length} produtos
+                Os favoritos dos nossos clientes
               </p>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
