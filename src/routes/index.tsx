@@ -4,7 +4,7 @@ import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star, Search, X,
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-import logoFlorExpress from "@/assets/logo.png";
+import logoFlorExpress from "@/assets/logo.webp";
 import { Footer } from "@/components/Footer";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { resolveImage, heroImage } from "@/lib/product-images";
@@ -347,7 +347,11 @@ function HomePage() {
           <div className="flex flex-col items-center text-center">
             <img
               src={logoFlorExpress}
-              alt="Flor Express - Floricultura Online"
+              alt="Floratta Express - Floricultura Online com Entrega Hoje no Brasil"
+              width={128}
+              height={128}
+              fetchPriority="high"
+              decoding="async"
               className="h-32 w-32 object-contain"
             />
 
