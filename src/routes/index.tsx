@@ -451,7 +451,7 @@ function HomePage() {
                       onClick={() => setActiveCat("mais-vendidos")}
                       className="rounded-full border border-green-deep px-6 py-2.5 text-sm font-medium text-green-deep transition hover:bg-green-deep hover:text-cream"
                     >
-                      Ver todos os mais vendidos ({featuredProducts.length})
+                      Ver todos os mais vendidos
                     </button>
                   </div>
                 )}
