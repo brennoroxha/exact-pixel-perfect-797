@@ -45,13 +45,13 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       params={{ slug: product.slug }}
       className="group flex flex-row overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:-translate-y-1 hover:shadow-elegant sm:flex-col"
     >
-      <div className="relative aspect-square w-28 shrink-0 overflow-hidden bg-cream-dark sm:w-full">
+      <div className="relative aspect-square w-32 shrink-0 overflow-hidden bg-cream-dark sm:w-full">
         <img
           src={resolveImage(imageKey)}
           alt={product.name}
           loading={index < 4 ? "eager" : "lazy"}
           decoding="async"
-          className="h-full w-full object-contain p-2 transition duration-500 group-hover:scale-105 sm:object-cover sm:p-0"
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
       </div>
 
