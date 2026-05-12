@@ -138,7 +138,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
               <SelectTrigger className="h-12 w-full rounded-full border-0 bg-blush/20 px-5 text-green-deep">
                 <SelectValue placeholder="Selecione seu estado" />
               </SelectTrigger>
-              <SelectContent className="max-h-72">
+              <SelectContent className="z-[110] max-h-72">
                 {BR_STATES.map((s) => (
                   <SelectItem key={s.uf} value={s.uf}>
                     {s.name}
