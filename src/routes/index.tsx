@@ -8,6 +8,9 @@ import { Footer } from "@/components/Footer";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { resolveImage, heroImage } from "@/lib/product-images";
 import { useLocationStore } from "@/stores/location";
+import { useCartStore } from "@/stores/cart";
+import { brl } from "@/lib/format";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
