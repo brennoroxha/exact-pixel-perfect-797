@@ -469,15 +469,18 @@ function HomePage() {
                 </p>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {allProducts.slice(0, 8).map((p, i) => (
+                {allProducts.slice(0, 6).map((p, i) => (
                   <ProductCard key={p.id} product={p} index={i} />
                 ))}
               </div>
-              {allProducts.length > 8 && (
+              {allProducts.length > 6 && (
                 <div className="mt-6 flex justify-center">
-                  <span className="text-sm text-muted-foreground">
-                    {allProducts.length} produtos disponíveis · use as categorias acima para filtrar
-                  </span>
+                  <button
+                    onClick={() => setActiveCat("todos")}
+                    className="rounded-full border border-green-deep px-6 py-2.5 text-sm font-medium text-green-deep transition hover:bg-green-deep hover:text-cream"
+                  >
+                    Ver todos os produtos
+                  </button>
                 </div>
               )}
             </div>
