@@ -189,10 +189,10 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         )}
 
         {step === 2 && (
-          <div className="space-y-5">
+          <div className="flex flex-1 flex-col space-y-4">
             <div className="text-center">
-              <h2 className="font-display text-3xl text-green-deep">Agora sua cidade 🏙️</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h2 className="font-display text-2xl text-green-deep">Agora sua cidade 🏙️</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
                 {picked ? (
                   <>
                     Detectamos <strong>{picked}</strong>. Confirme ou escolha outra cidade em{" "}
@@ -216,7 +216,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
               />
             </div>
 
-            <div className="max-h-[40vh] space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
+            <div className="flex-1 space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
               {filtered.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">
                   Nenhuma cidade encontrada.
