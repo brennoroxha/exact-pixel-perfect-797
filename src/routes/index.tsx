@@ -501,7 +501,7 @@ function SearchOverlay({
                     {p.name}
                   </h3>
                   <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-sm font-bold text-blush-strong">
+                    <span className="text-sm font-bold text-green-deep">
                       {brl(Number(p.price))}
                     </span>
                     {p.original_price && p.original_price > p.price && (
