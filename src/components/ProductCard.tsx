@@ -37,6 +37,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       price: Number(product.price),
       imageKey,
     });
+    openCart();
     toast.success("Adicionado ao carrinho", { description: product.name });
   };
 
