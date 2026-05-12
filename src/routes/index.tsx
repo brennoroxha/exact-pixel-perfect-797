@@ -39,7 +39,7 @@ function HomePage() {
     gcTime: 30 * 60 * 1000,
     queryFn: async () => {
       const [products, categories, occasions, reviews] = await Promise.all([
-        supabase.from("products").select("*").eq("active", true).order("featured", { ascending: false }),
+        supabase.from("products").select("*").eq("active", true).gt("price", 0).order("featured", { ascending: false }),
         supabase.from("categories").select("*").eq("active", true).order("sort_order"),
         supabase.from("occasions").select("*").eq("active", true),
         supabase.from("reviews").select("*").eq("approved", true).limit(8),
