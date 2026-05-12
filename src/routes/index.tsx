@@ -426,3 +426,119 @@ function HomePage() {
     </div>
   );
 }
+
+function SearchOverlay({
+  allProducts,
+  search,
+  setSearch,
+  onClose,
+}: {
+  allProducts: FullProduct[];
+  search: string;
+  setSearch: (v: string) => void;
+  onClose: () => void;
+}) {
+  const add = useCartStore((s) => s.add);
+  const q = search.trim().toLowerCase();
+  const results = q.length === 0
+    ? allProducts
+    : allProducts.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          (p.description ?? "").toLowerCase().includes(q),
+      );
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-cream">
+      {/* topo: X + busca */}
+      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-border/60 bg-cream px-4 py-3">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar busca"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-green-deep transition hover:bg-blush/30"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-deep/60" />
+          <input
+            autoFocus
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar produtos..."
+            className="w-full rounded-full border border-blush bg-blush/20 py-3 pl-12 pr-4 text-sm text-green-deep placeholder:text-green-deep/50 outline-none transition focus:border-green-deep"
+          />
+        </div>
+      </div>
+
+      {/* lista */}
+      <div className="flex-1 overflow-y-auto px-4 py-3">
+        <p className="mb-3 text-xs text-muted-foreground">
+          {results.length} produto(s) encontrado(s)
+        </p>
+        <div className="space-y-3">
+          {results.map((p) => (
+            <article
+              key={p.id}
+              className="flex items-center gap-3 rounded-2xl border border-border bg-white p-2 shadow-soft"
+            >
+              <Link
+                to="/produto/$slug"
+                params={{ slug: p.slug }}
+                onClick={onClose}
+                className="flex flex-1 items-center gap-3"
+              >
+                <img
+                  src={resolveImage(p.images[0])}
+                  alt={p.name}
+                  loading="lazy"
+                  className="h-20 w-20 shrink-0 rounded-xl object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <h3 className="line-clamp-2 text-sm font-semibold text-green-deep">
+                    {p.name}
+                  </h3>
+                  <div className="mt-1 flex items-baseline gap-2">
+                    <span className="text-sm font-bold text-blush-strong">
+                      {brl(Number(p.price))}
+                    </span>
+                    {p.original_price && p.original_price > p.price && (
+                      <span className="text-xs text-muted-foreground line-through">
+                        {brl(Number(p.original_price))}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+              <button
+                type="button"
+                aria-label={`Adicionar ${p.name}`}
+                onClick={() => {
+                  add({
+                    productId: p.id,
+                    slug: p.slug,
+                    name: p.name,
+                    price: Number(p.price),
+                    imageKey: p.images[0],
+                  });
+                  toast.success("Adicionado ao carrinho", { description: p.name });
+                }}
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-green-deep text-cream transition active:scale-95 hover:bg-green-mid"
+              >
+                <Plus className="h-5 w-5" />
+              </button>
+            </article>
+          ))}
+          {results.length === 0 && (
+            <p className="rounded-2xl bg-cream-dark/40 py-12 text-center text-sm text-muted-foreground">
+              Nenhum produto encontrado.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
