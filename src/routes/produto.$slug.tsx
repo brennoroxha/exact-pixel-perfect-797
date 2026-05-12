@@ -401,10 +401,8 @@ function ProductPage() {
                   <Star key={i} className="h-4 w-4 fill-current" />
                 ))}
               </span>
-              <span className="font-semibold text-green-deep">
-                {Number(product.rating ?? 4.9).toFixed(1)}
-              </span>
-              <span className="text-muted-foreground">({product.review_count ?? 0})</span>
+              <span className="font-semibold text-green-deep">{ratingDisplay.rating}</span>
+              <span className="text-muted-foreground">({ratingDisplay.count})</span>
             </div>
           </div>
           <div className="mt-4 space-y-4">
@@ -423,6 +421,17 @@ function ProductPage() {
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-foreground/80">{r.comment}</p>
+                  {r.image_url && (
+                    <img
+                      src={r.image_url}
+                      alt={`Foto de ${r.buyer_name}`}
+                      loading="lazy"
+                      className="mt-2 h-32 w-32 rounded-lg object-cover"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             ))}
