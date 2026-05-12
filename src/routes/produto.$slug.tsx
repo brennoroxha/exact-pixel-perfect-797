@@ -397,7 +397,7 @@ function ProductPage() {
           <div className="flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold text-green-deep">Avaliações</h2>
             <div className="flex items-center gap-1 text-sm">
-              <span className="flex text-gold">
+              <span className="flex text-star">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-current" />
                 ))}
@@ -437,7 +437,7 @@ function ProductPage() {
                     </span>
                     <BadgeCheck className="h-4 w-4 fill-green-mid text-cream" />
                   </div>
-                  <span className="mt-0.5 flex text-gold">
+                  <span className="mt-0.5 flex text-star">
                     {Array.from({ length: r.rating ?? 5 }).map((_, i) => (
                       <Star key={i} className="h-3 w-3 fill-current" />
                     ))}
@@ -454,11 +454,10 @@ function ProductPage() {
         {/* Você também pode gostar — carrossel de mais vendidos */}
         {related && related.length > 0 && (
           <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-3">
               <h2 className="font-display text-lg font-semibold text-green-deep">
                 Você também pode gostar
               </h2>
-              <span className="text-[10px] font-bold tracking-wider text-gold">MAIS VENDIDOS</span>
             </div>
             <div className="-mx-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div className="flex snap-x snap-mandatory gap-3">

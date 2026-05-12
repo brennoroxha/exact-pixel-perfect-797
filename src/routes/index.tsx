@@ -575,7 +575,7 @@ function HomePage() {
         {/* Stat card */}
         <div className="rounded-3xl bg-green-deep p-6 text-center text-cream shadow-elegant">
           <div className="font-display text-5xl text-gold">4,9</div>
-          <div className="mt-2 flex items-center justify-center gap-1 text-gold">
+          <div className="mt-2 flex items-center justify-center gap-1 text-star">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} className="h-5 w-5 fill-current" />
             ))}
@@ -620,7 +620,7 @@ function HomePage() {
                     <span className="grid h-4 w-4 place-items-center rounded-full bg-green-mid text-[9px] text-cream">✓</span>
                   </div>
                   <div className="mt-0.5 flex items-center gap-2">
-                    <div className="flex text-gold">
+                    <div className="flex text-star">
                       {Array.from({ length: r.rating }).map((_, i) => (
                         <Star key={i} className="h-3 w-3 fill-current" />
                       ))}
