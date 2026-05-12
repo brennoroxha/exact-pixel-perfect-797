@@ -1,0 +1,1 @@
+UPDATE public.reviews SET image_url = REPLACE(image_url, '.jpg', '.webp') WHERE image_url LIKE '/reviews/%.jpg';
