@@ -354,7 +354,7 @@ function HomePage() {
               <span className="mx-1.5 text-muted-foreground sm:mx-2">·</span>
               <span className="italic text-green-mid">Entrega Grátis para {cityLabel}</span>
             </p>
-            <p className="text-muted-foreground">
+            <p className="whitespace-nowrap text-[11px] text-muted-foreground sm:text-sm">
               <span className="mr-1">📍</span>
               Estamos a <strong className="text-green-deep">1,6 km</strong> de você
             </p>
