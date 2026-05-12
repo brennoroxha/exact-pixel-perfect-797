@@ -102,7 +102,7 @@ function CatalogoPage() {
         {categories.length > 0 && (
           <div className="mt-4 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
             <button
-              onClick={() => navigate({ search: (p) => ({ ...p, cat: "" }) })}
+              onClick={() => navigate({ search: (p: any) => ({ ...p, cat: "" }) })}
               className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition ${!cat ? "bg-green-deep text-cream" : "bg-blush/40 text-green-deep"}`}
             >
               Todas
@@ -110,7 +110,7 @@ function CatalogoPage() {
             {categories.map((c) => (
               <button
                 key={c.slug}
-                onClick={() => navigate({ search: (p) => ({ ...p, cat: c.slug }) })}
+                onClick={() => navigate({ search: (p: any) => ({ ...p, cat: c.slug }) })}
                 className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition ${cat === c.slug ? "bg-green-deep text-cream" : "bg-blush/40 text-green-deep"}`}
               >
                 {c.emoji} {c.name}
