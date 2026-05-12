@@ -106,7 +106,7 @@ function ProductPage() {
         .from("reviews")
         .select("*")
         .eq("approved", true)
-        .order("created_at", { ascending: false })
+        .order("created_at", { ascending: true })
         .limit(3);
       return data ?? [];
     },
