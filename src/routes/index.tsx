@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star } from "lucide-react";
+import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star, Search } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -31,6 +31,7 @@ type FullProduct = Product & { category_slug: string; featured: boolean };
 function HomePage() {
   const loc = useLocationStore((s) => s.location);
   const [activeCat, setActiveCat] = useState<string>("mais-vendidos");
+  const [search, setSearch] = useState("");
 
   // Single combined query — runs all reads in parallel and caches together
   const homeQ = useQuery({
@@ -194,11 +195,21 @@ function HomePage() {
       </section>
 
       {/* Buscar Produtos + Categorias */}
-      <section className="mx-auto max-w-3xl px-4 pt-4">
+      <section className="mx-auto max-w-3xl px-4 pt-4 space-y-3">
+        {/* Barra de busca */}
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-deep/60" />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar produtos..."
+            className="w-full rounded-full border border-border bg-blush/30 py-3 pl-12 pr-4 text-sm text-green-deep placeholder:text-green-deep/50 outline-none transition focus:border-green-deep focus:bg-blush/40"
+          />
+        </div>
+
+        {/* Categorias */}
         <div className="rounded-3xl border border-border bg-white p-4 shadow-soft sm:p-5">
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-green-deep">
-            Buscar Produtos
-          </h3>
           <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-green-deep">
             Categorias
           </h4>
@@ -232,6 +243,38 @@ function HomePage() {
               <div key={i} className="aspect-square animate-pulse rounded-2xl bg-cream-dark" />
             ))}
           </div>
+        ) : search.trim().length > 0 ? (
+          (() => {
+            const q = search.trim().toLowerCase();
+            const results = allProducts.filter(
+              (p) =>
+                p.name.toLowerCase().includes(q) ||
+                (p.description ?? "").toLowerCase().includes(q),
+            );
+            return (
+              <div>
+                <div className="mb-5">
+                  <h2 className="font-display text-2xl text-green-deep md:text-3xl">
+                    🔍 Resultados da busca
+                  </h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {results.length} {results.length === 1 ? "produto encontrado" : "produtos encontrados"} para "{search}"
+                  </p>
+                </div>
+                {results.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    {results.map((p, i) => (
+                      <ProductCard key={p.id} product={p} index={i} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="rounded-2xl bg-cream-dark/40 py-12 text-center text-sm text-muted-foreground">
+                    Nenhum produto encontrado.
+                  </p>
+                )}
+              </div>
+            );
+          })()
         ) : isAll ? (
           <>
             {/* Mais Vendidos */}
