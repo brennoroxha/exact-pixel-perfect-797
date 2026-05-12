@@ -527,21 +527,46 @@ function HomePage() {
       </section>
 
       {/* Pilares */}
-      <section className="bg-cream-dark/50 py-16">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 md:grid-cols-4">
-          {[
+      <section className="bg-cream-dark/50 py-12 md:py-16">
+        {(() => {
+          const pillars = [
             { icon: Flower2, title: "Flores frescas diariamente", desc: "Direto dos melhores produtores" },
             { icon: Truck, title: "Entrega em até 60 minutos", desc: "Nas principais capitais" },
             { icon: CreditCard, title: "PIX, cartão ou boleto", desc: "Pagamento 100% seguro" },
             { icon: MessageCircle, title: "Suporte WhatsApp 24h", desc: "Atendimento humano" },
-          ].map((p, i) => (
-            <div key={i} className="text-center">
-              <p.icon className="mx-auto mb-3 h-8 w-8 text-green-mid" />
-              <h3 className="font-display text-lg text-green-deep">{p.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
-            </div>
-          ))}
-        </div>
+          ];
+          return (
+            <>
+              {/* Desktop grid */}
+              <div className="mx-auto hidden max-w-7xl gap-8 px-4 md:grid md:grid-cols-4">
+                {pillars.map((p, i) => (
+                  <div key={i} className="text-center">
+                    <p.icon className="mx-auto mb-3 h-8 w-8 text-green-mid" />
+                    <h3 className="font-display text-lg text-green-deep">{p.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Mobile carousel: 1 por página com scroll-snap */}
+              <div className="md:hidden">
+                <div className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-hide">
+                  {pillars.map((p, i) => (
+                    <div key={i} className="w-full shrink-0 snap-center px-6 text-center">
+                      <p.icon className="mx-auto mb-3 h-9 w-9 text-green-mid" />
+                      <h3 className="font-display text-lg text-green-deep">{p.title}</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 flex justify-center gap-1.5">
+                  {pillars.map((_, i) => (
+                    <span key={i} className="h-1.5 w-1.5 rounded-full bg-green-deep/30" />
+                  ))}
+                </div>
+              </div>
+            </>
+          );
+        })()}
       </section>
 
       {/* Reviews */}
