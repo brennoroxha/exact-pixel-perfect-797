@@ -185,41 +185,56 @@ function ProductPage() {
     open();
   };
 
-  const productJsonLd = {
+  const SITE = "https://exact-pixel-perfect-797.lovable.app";
+  const productUrl = `${SITE}/produto/${product.slug}`;
+  const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    description: product.description ?? `${product.name} — entrega de flores no mesmo dia em todo o Brasil.`,
-    image: [image],
-    sku: product.id,
-    brand: { "@type": "Brand", name: "Floratta Express" },
-    offers: {
-      "@type": "Offer",
-      url: `https://exact-pixel-perfect-797.lovable.app/produto/${product.slug}`,
-      priceCurrency: "BRL",
-      price: price.toFixed(2),
-      availability: "https://schema.org/InStock",
-      itemCondition: "https://schema.org/NewCondition",
-      priceValidUntil: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
-      shippingDetails: {
-        "@type": "OfferShippingDetails",
-        shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "BRL" },
-        shippingDestination: { "@type": "DefinedRegion", addressCountry: "BR" },
-        deliveryTime: { "@type": "ShippingDeliveryTime", handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "HUR" }, transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "HUR" } },
+    "@graph": [
+      {
+        "@type": "Product",
+        name: product.name,
+        description: product.description ?? `${product.name} — entrega de flores no mesmo dia em todo o Brasil.`,
+        image: [image],
+        sku: product.id,
+        brand: { "@type": "Brand", name: "Floratta Express" },
+        offers: {
+          "@type": "Offer",
+          url: productUrl,
+          priceCurrency: "BRL",
+          price: price.toFixed(2),
+          availability: "https://schema.org/InStock",
+          itemCondition: "https://schema.org/NewCondition",
+          priceValidUntil: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
+          shippingDetails: {
+            "@type": "OfferShippingDetails",
+            shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "BRL" },
+            shippingDestination: { "@type": "DefinedRegion", addressCountry: "BR" },
+            deliveryTime: { "@type": "ShippingDeliveryTime", handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "HUR" }, transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "HUR" } },
+          },
+        },
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: ratingDisplay.rating,
+          reviewCount: ratingDisplay.count,
+          bestRating: 5,
+          worstRating: 1,
+        },
       },
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: ratingDisplay.rating,
-      reviewCount: ratingDisplay.count,
-      bestRating: 5,
-      worstRating: 1,
-    },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Início", item: SITE },
+          { "@type": "ListItem", position: 2, name: "Catálogo", item: `${SITE}/catalogo` },
+          { "@type": "ListItem", position: 3, name: product.name, item: productUrl },
+        ],
+      },
+    ],
   };
 
   return (
     <div className="min-h-screen bg-cream pb-28">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <div className="w-full pt-4">
         {/* Top bar */}
         <div className="flex items-center justify-between rounded-2xl bg-card px-3 py-2.5 shadow-soft">
