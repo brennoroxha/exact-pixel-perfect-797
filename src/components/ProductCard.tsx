@@ -20,6 +20,7 @@ export type Product = {
 
 export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   const add = useCartStore((s) => s.add);
+  const openCart = useCartStore((s) => s.open);
   const imageKey = product.images[0];
   const discount =
     product.original_price && product.original_price > product.price
