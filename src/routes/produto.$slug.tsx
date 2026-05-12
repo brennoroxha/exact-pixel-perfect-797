@@ -502,7 +502,7 @@ function ProductPage() {
       </div>
 
       {/* Sticky CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card p-3 shadow-float">
+      <div className="fixed inset-x-0 bottom-[64px] z-40 border-t border-border bg-card p-3 shadow-float">
         <div className="mx-auto max-w-2xl">
           <button
             onClick={handleAdd}

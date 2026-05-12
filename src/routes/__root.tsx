@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { LocationGate } from "@/components/LocationGate";
 import { CartDrawer } from "@/components/CartDrawer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { BottomNav } from "@/components/BottomNav";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -128,10 +129,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <div className="pb-16">
+        <Outlet />
+      </div>
       <CartDrawer />
       <LocationGate />
       <WhatsAppButton />
+      <BottomNav />
       <Toaster richColors position="top-center" />
     </QueryClientProvider>
   );
