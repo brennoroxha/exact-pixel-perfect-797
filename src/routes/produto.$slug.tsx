@@ -166,10 +166,10 @@ function ProductPage() {
     <div className="min-h-screen bg-cream pb-28">
       <div className="mx-auto max-w-2xl px-4 pt-4">
         {/* Top bar */}
-        <div className="flex items-center justify-between rounded-2xl bg-white px-3 py-2.5 shadow-soft">
+        <div className="flex items-center justify-between rounded-2xl bg-card px-3 py-2.5 shadow-soft">
           <Link
             to="/"
-            className="flex items-center gap-1 text-sm font-bold tracking-wide text-blush hover:opacity-80"
+            className="flex items-center gap-1 text-sm font-bold tracking-wide text-green-deep hover:opacity-80"
           >
             <ChevronLeft className="h-4 w-4" /> VOLTAR
           </Link>
@@ -187,14 +187,14 @@ function ProductPage() {
         </div>
 
         {/* Image */}
-        <div className="relative mt-3 overflow-hidden rounded-2xl bg-white">
+        <div className="relative mt-3 overflow-hidden rounded-2xl bg-card">
           <img
             src={image}
             alt={product.name}
             className="aspect-square w-full object-contain"
           />
           {discountPct > 0 && (
-            <span className="absolute left-3 top-3 rounded-full bg-blush px-3 py-1 text-xs font-bold text-white shadow-soft">
+            <span className="absolute left-3 top-3 rounded-full bg-green-deep px-3 py-1 text-xs font-bold text-cream shadow-soft">
               {discountPct}% OFF
             </span>
           )}
@@ -206,7 +206,7 @@ function ProductPage() {
         </div>
 
         {/* Title + price */}
-        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+        <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
           <h1 className="font-display text-xl font-semibold text-green-deep md:text-2xl">
             {product.name}
           </h1>
@@ -234,7 +234,7 @@ function ProductPage() {
           <div className="mt-4">
             <div className="relative h-2 w-full overflow-hidden rounded-full bg-cream-dark">
               <div
-                className="h-full rounded-full bg-blush"
+                className="h-full rounded-full bg-green-mid"
                 style={{ width: `${stockPct}%` }}
               />
             </div>
@@ -260,7 +260,7 @@ function ProductPage() {
         </section>
 
         {/* Cartão de Mensagem */}
-        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+        <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold text-green-deep">
               Cartão de Mensagem
@@ -300,7 +300,7 @@ function ProductPage() {
         </section>
 
         {/* Complementos */}
-        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+        <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold text-green-deep">
               Complementos{" "}
@@ -328,7 +328,7 @@ function ProductPage() {
                     <div className="text-xs text-muted-foreground">{a.subtitle}</div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-blush">+ {brl(a.price)}</span>
+                    <span className="text-sm font-semibold text-green-deep">+ {brl(a.price)}</span>
                     <span
                       className={`grid h-6 w-6 place-items-center rounded-full ${
                         active ? "bg-green-deep text-cream" : "bg-cream-dark text-green-deep"
@@ -344,7 +344,7 @@ function ProductPage() {
         </section>
 
         {/* Observações */}
-        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+        <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
           <h2 className="font-display text-lg font-semibold text-green-deep">Observações</h2>
           <textarea
             value={obs}
@@ -358,7 +358,7 @@ function ProductPage() {
         </section>
 
         {/* Quantidade */}
-        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+        <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold text-green-deep">Quantidade</span>
             <div className="inline-flex items-center rounded-full border border-border bg-cream">
@@ -382,7 +382,7 @@ function ProductPage() {
         </section>
 
         {/* Avaliações */}
-        <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+        <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold text-green-deep">Avaliações</h2>
             <div className="flex items-center gap-1 text-sm">
@@ -421,7 +421,7 @@ function ProductPage() {
 
         {/* Você também pode gostar */}
         {related && related.length > 0 && (
-          <section className="mt-3 rounded-2xl bg-white p-5 shadow-soft">
+          <section className="mt-3 rounded-2xl bg-card p-5 shadow-soft">
             <h2 className="font-display text-lg font-semibold text-green-deep">
               Você também pode gostar
             </h2>
@@ -440,7 +440,7 @@ function ProductPage() {
                   />
                   <div className="p-2.5">
                     <div className="line-clamp-2 text-xs font-medium text-green-deep">{p.name}</div>
-                    <div className="mt-1 text-sm font-bold text-blush">{brl(Number(p.price))}</div>
+                    <div className="mt-1 text-sm font-bold text-green-deep">{brl(Number(p.price))}</div>
                   </div>
                 </Link>
               ))}
@@ -450,11 +450,11 @@ function ProductPage() {
       </div>
 
       {/* Sticky CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white p-3 shadow-float">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card p-3 shadow-float">
         <div className="mx-auto max-w-2xl">
           <button
             onClick={handleAdd}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-blush py-3.5 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-green-deep py-3.5 text-sm font-bold text-cream shadow-soft transition hover:opacity-90"
           >
             <span>🌸</span>
             <span>Adicionar ao carrinho • {brl(totalPrice)}</span>
