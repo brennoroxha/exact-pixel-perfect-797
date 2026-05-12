@@ -31,6 +31,7 @@ type FullProduct = Product & { category_slug: string; featured: boolean };
 function HomePage() {
   const loc = useLocationStore((s) => s.location);
   const [activeCat, setActiveCat] = useState<string>("mais-vendidos");
+  const [search, setSearch] = useState("");
 
   // Single combined query — runs all reads in parallel and caches together
   const homeQ = useQuery({
