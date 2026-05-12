@@ -1,0 +1,3 @@
+UPDATE public.reviews SET buyer_name='Roberta S.', comment='Cada compra que faço me surpreendo ainda mais com a qualidade e pontualidade na entrega. Parabéns!', rating=5 WHERE id='6d53cfc0-a73b-4223-97ac-9714435729c7';
+UPDATE public.reviews SET buyer_name='Paula M.', comment='Estou na Europa e pedi para entregar uma orquídea para minha mãe. Pensei que não fossem entregar mas a entrega foi perfeita.', rating=5 WHERE id='d15ad790-5bc0-4eab-b9de-e8e168ed12a9';
+UPDATE public.reviews SET buyer_name='Cleber T.', comment='Enviei para uma prima, chegou conforme o solicitado. Empresa séria e profissionais capacitados. Recomendo!', rating=5 WHERE id='db837a81-0ab7-4c3a-8f5b-e3baee0eb6e2';
