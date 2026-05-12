@@ -74,6 +74,7 @@
   --green-sage:   oklch(0.668 0.045 160);    /* #7A9E8E */
   --blush:        oklch(0.755 0.082 20);     /* #E8A4A4 */
   --gold:         oklch(0.748 0.082 80);     /* #C9A96E */
+  --star:         oklch(0.62 0.22 25);       /* red */
   --charcoal:     oklch(0.18 0.005 60);      /* #1A1A1A */
 
   --background: var(--cream);
