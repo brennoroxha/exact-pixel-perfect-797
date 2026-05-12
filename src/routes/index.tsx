@@ -154,7 +154,7 @@ function HomePage() {
       <section id="vitrine" className="mx-auto max-w-7xl px-4 pb-16">
         <div className="mb-6 flex items-end justify-between">
           <h2 className="font-display text-3xl text-green-deep md:text-4xl">
-            {activeCat === "mais-vendidos" ? "Mais vendidos" : "Selecionados para você"}
+            {activeCat === "mais-vendidos" ? "Mais vendidos" : activeCat === "todos" ? "Todos os produtos" : "Selecionados para você"}
           </h2>
           <span className="text-sm text-muted-foreground">{filtered.length} produtos</span>
         </div>
