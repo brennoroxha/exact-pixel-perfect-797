@@ -572,23 +572,23 @@ function HomePage() {
       {/* Reviews */}
       <section className="mx-auto max-w-3xl px-4 py-12">
         {/* Stat card */}
-        <div className="rounded-3xl bg-blush/50 p-6 text-center">
-          <div className="font-display text-4xl text-green-deep">4,9</div>
+        <div className="rounded-3xl bg-green-deep p-6 text-center text-cream shadow-elegant">
+          <div className="font-display text-5xl text-gold">4,9</div>
           <div className="mt-2 flex items-center justify-center gap-1 text-gold">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} className="h-5 w-5 fill-current" />
             ))}
           </div>
-          <p className="mt-2 text-sm text-green-deep/80">2.847 avaliações verificadas</p>
-          <div className="mt-5 grid grid-cols-3 gap-2">
+          <p className="mt-2 text-sm text-cream/85">2.847 avaliações verificadas</p>
+          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-cream/15 pt-4">
             {[
               { v: "98%", l: "Recomendam" },
               { v: "99%", l: "No prazo" },
               { v: "97%", l: "Satisfeitos" },
             ].map((s) => (
               <div key={s.l}>
-                <div className="font-display text-base text-green-deep">{s.v}</div>
-                <div className="text-[11px] text-green-deep/70">{s.l}</div>
+                <div className="font-display text-lg text-gold">{s.v}</div>
+                <div className="text-[11px] text-cream/75">{s.l}</div>
               </div>
             ))}
           </div>
