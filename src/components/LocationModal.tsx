@@ -51,15 +51,27 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
     };
   }, [citiesByState, step, ipCity]);
 
-  // Pré-seleção via IP
+  // Pré-seleção via IP (GeoJS)
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const r = await fetch("https://ipwho.is/?fields=success,country_code,region_code,city");
+        const r = await fetch("https://get.geojs.io/v1/ip/geo.json");
         const d = await r.json();
-        if (cancelled || !d?.success || d.country_code !== "BR") return;
-        if (d.region_code) setUf((cur) => cur || d.region_code);
+        if (cancelled) return;
+        if (d?.country_code !== "BR") return;
+        const region: string = d.region || "";
+        // region pode vir como nome ("São Paulo") ou código ("SP")
+        let uf = "";
+        if (region.length === 2 && BR_STATES.some((s) => s.uf === region.toUpperCase())) {
+          uf = region.toUpperCase();
+        } else {
+          const norm = (s: string) =>
+            s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+          const match = BR_STATES.find((s) => norm(s.name) === norm(region));
+          if (match) uf = match.uf;
+        }
+        if (uf) setUf((cur) => cur || uf);
         if (d.city) setIpCity(d.city);
       } catch {}
     })();
