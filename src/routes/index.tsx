@@ -376,7 +376,7 @@ function HomePage() {
             <span className="mr-1">🌸</span> Promoção de primeiro pedido ativada!
           </p>
           <p className="mt-1 font-display text-base font-semibold">Entrega Grátis para {cityLabel}!</p>
-          <p className="mt-1 text-xs">Flores frescas com até 50% OFF + frete grátis no seu primeiro pedido!</p>
+          <p className="mt-1 whitespace-nowrap text-[10px] sm:text-xs">Flores frescas com até 50% OFF + frete grátis no seu primeiro pedido!</p>
         </div>
       </section>
 
