@@ -61,7 +61,7 @@ export function CartDrawer() {
             <ArrowLeft className="h-5 w-5" />
           </button>
           <h2 className="font-display text-base font-semibold text-charcoal">Seu Carrinho</h2>
-          <div className="grid h-7 w-7 place-items-center rounded-full bg-wine text-xs font-semibold text-cream">
+          <div className="grid h-7 w-7 place-items-center rounded-full bg-green-deep text-xs font-semibold text-cream">
             {totalItems}
           </div>
         </header>
@@ -73,7 +73,7 @@ export function CartDrawer() {
               <p className="text-muted-foreground">Seu carrinho está vazio</p>
               <button
                 onClick={close}
-                className="mt-2 rounded-full bg-wine px-5 py-2 text-sm text-cream"
+                className="mt-2 rounded-full bg-green-deep px-5 py-2 text-sm text-cream"
               >
                 Ver buquês
               </button>
@@ -97,7 +97,7 @@ export function CartDrawer() {
                         <h3 className="line-clamp-2 text-sm font-medium text-charcoal">
                           {it.name}
                         </h3>
-                        <div className="mt-1 font-display text-base font-semibold text-wine">
+                        <div className="mt-1 font-display text-base font-semibold text-green-deep">
                           {brl(it.price)}
                         </div>
                         <div className="mt-2 flex items-center justify-between">
@@ -135,7 +135,7 @@ export function CartDrawer() {
               </ul>
 
               {/* Summary */}
-              <div className="mt-4 rounded-2xl bg-peach px-4 py-4 text-sm">
+              <div className="mt-4 rounded-2xl bg-cream-dark px-4 py-4 text-sm">
                 <div className="flex items-center justify-between text-charcoal/70">
                   <span>Subtotal</span>
                   <span>{brl(subtotal)}</span>
@@ -148,7 +148,7 @@ export function CartDrawer() {
                 </div>
                 <div className="mt-3 border-t border-charcoal/10 pt-3 flex items-center justify-between">
                   <span className="font-semibold text-charcoal">Total</span>
-                  <span className="font-display text-xl font-bold text-wine">{brl(total)}</span>
+                  <span className="font-display text-xl font-bold text-green-deep">{brl(total)}</span>
                 </div>
               </div>
 
@@ -156,7 +156,7 @@ export function CartDrawer() {
               <Link
                 to="/checkout"
                 onClick={close}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-wine py-4 font-semibold text-cream shadow-soft transition hover:bg-wine-soft"
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-green-deep py-4 font-semibold text-cream shadow-soft transition hover:bg-green-deep-soft"
               >
                 <CreditCard className="h-5 w-5" />
                 Finalizar Pedido
@@ -195,7 +195,7 @@ export function CartDrawer() {
                               className="h-full w-full object-cover"
                             />
                             {promo > 0 && (
-                              <span className="absolute right-2 top-2 rounded-md bg-wine px-2 py-0.5 text-[10px] font-bold tracking-wide text-cream">
+                              <span className="absolute right-2 top-2 rounded-md bg-green-deep px-2 py-0.5 text-[10px] font-bold tracking-wide text-cream">
                                 PROMO
                               </span>
                             )}
@@ -205,7 +205,7 @@ export function CartDrawer() {
                               {p.name}
                             </h4>
                             <div className="mt-1 flex items-baseline gap-1.5">
-                              <span className="font-display text-sm font-semibold text-wine">
+                              <span className="font-display text-sm font-semibold text-green-deep">
                                 {brl(Number(p.price))}
                               </span>
                               {p.original_price && p.original_price > p.price && (
@@ -225,7 +225,7 @@ export function CartDrawer() {
                                 });
                                 toast.success("Adicionado ao carrinho", { description: p.name });
                               }}
-                              className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-full bg-wine px-2 py-1.5 text-[11px] font-semibold text-cream transition hover:bg-wine-soft"
+                              className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-full bg-green-deep px-2 py-1.5 text-[11px] font-semibold text-cream transition hover:bg-green-deep-soft"
                             >
                               <Plus className="h-3.5 w-3.5" /> Adicionar
                             </button>
