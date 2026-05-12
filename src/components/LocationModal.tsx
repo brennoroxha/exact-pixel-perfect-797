@@ -189,18 +189,18 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
         )}
 
         {step === 2 && (
-          <div className="flex flex-1 flex-col space-y-4">
+          <div className="flex min-h-0 flex-1 flex-col space-y-3 md:space-y-4">
             <div className="text-center">
-              <h2 className="font-display text-2xl text-green-deep">Agora sua cidade 🏙️</h2>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <h2 className="font-display text-xl text-green-deep md:text-2xl">Agora sua cidade 🏙️</h2>
+              <p className="mt-1 text-[11px] text-muted-foreground md:text-xs">
                 {picked ? (
                   <>
-                    Detectamos <strong>{picked}</strong>. Confirme ou escolha outra cidade em{" "}
+                    Detectamos <strong>{picked}</strong>. Confirme ou escolha outra em{" "}
                     <strong>{stateName(uf)}</strong>.
                   </>
                 ) : (
                   <>
-                    Selecione ou busque sua cidade em <strong>{stateName(uf)}</strong>
+                    Selecione sua cidade em <strong>{stateName(uf)}</strong>
                   </>
                 )}
               </p>
@@ -216,7 +216,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
               />
             </div>
 
-            <div className="flex-1 space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
+            <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto rounded-2xl bg-cream-dark/40 p-2">
               {filtered.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">
                   Nenhuma cidade encontrada.
@@ -228,7 +228,7 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
                     <button
                       key={c}
                       onClick={() => setPicked(c)}
-                      className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition ${
+                      className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition md:px-4 md:py-3 md:text-base ${
                         active
                           ? "bg-green-deep text-cream"
                           : "bg-cream text-green-deep hover:bg-green-sage/15"
@@ -249,14 +249,14 @@ export function LocationModal({ onClose }: { onClose?: () => void }) {
               <Button
                 variant="outline"
                 onClick={() => setStep(1)}
-                className="flex-1 rounded-full border-green-sage/40"
+                className="flex-1 rounded-full border-green-sage/40 py-5 md:py-6"
               >
                 Voltar
               </Button>
               <Button
                 disabled={!picked}
                 onClick={() => setStep(3)}
-                className="flex-1 rounded-full bg-green-deep py-6 text-cream hover:bg-green-mid"
+                className="flex-1 rounded-full bg-green-deep py-5 text-cream hover:bg-green-mid md:py-6"
               >
                 Confirmar →
               </Button>
