@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login
+Disallow: /carrinho
+Disallow: /checkout
+Disallow: /pedido/
+
+Sitemap: https://exact-pixel-perfect-797.lovable.app/sitemap.xml

@@ -18,7 +18,14 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/catalogo")({
   validateSearch: (s: Record<string, unknown>) => searchSchema.parse(s),
   head: () => ({
-    meta: [{ title: "Catálogo — Flor Express" }],
+    meta: [
+      { title: "Catálogo de Flores — Buquês, Rosas e Arranjos | Floratta Express" },
+      { name: "description", content: "Catálogo completo da Floratta Express: buquês de rosas vermelhas, flores para namorada, arranjos, cestas e combos com entrega de flores no mesmo dia em todo o Brasil." },
+      { name: "keywords", content: "catálogo de flores, buquê de rosas, comprar flores online, flores para presente, arranjos florais, cestas de presente, floricultura online" },
+      { property: "og:title", content: "Catálogo de Flores — Floratta Express" },
+      { property: "og:description", content: "Buquês, rosas, arranjos e cestas com entrega rápida em todo o Brasil." },
+    ],
+    links: [{ rel: "canonical", href: "https://exact-pixel-perfect-797.lovable.app/catalogo" }],
   }),
   component: CatalogoPage,
 });
