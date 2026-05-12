@@ -152,24 +152,103 @@ function HomePage() {
       </section>
 
       {/* Vitrine */}
-      <section id="vitrine" className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="mb-6 flex items-end justify-between">
-          <h2 className="font-display text-3xl text-green-deep md:text-4xl">
-            {activeCat === "mais-vendidos" ? "Mais vendidos" : activeCat === "todos" ? "Todos os produtos" : "Selecionados para você"}
-          </h2>
-          <span className="text-sm text-muted-foreground">{filtered.length} produtos</span>
-        </div>
+      <section id="vitrine" className="mx-auto max-w-7xl px-4 pb-16 pt-8 space-y-12">
         {homeQ.isLoading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="aspect-square animate-pulse rounded-2xl bg-cream-dark" />
             ))}
           </div>
+        ) : isAll ? (
+          <>
+            {/* Mais Vendidos */}
+            {featuredProducts.length > 0 && (
+              <div>
+                <div className="mb-5">
+                  <h2 className="font-display text-2xl text-green-deep md:text-3xl">
+                    🔥 Mais Vendidos
+                  </h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Os favoritos dos nossos clientes
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                  {featuredProducts.slice(0, 6).map((p, i) => (
+                    <ProductCard key={p.id} product={p} index={i} />
+                  ))}
+                </div>
+                {featuredProducts.length > 6 && (
+                  <div className="mt-6 flex justify-center">
+                    <button
+                      onClick={() => setActiveCat("mais-vendidos")}
+                      className="rounded-full border border-green-deep px-6 py-2.5 text-sm font-medium text-green-deep transition hover:bg-green-deep hover:text-cream"
+                    >
+                      Ver todos os mais vendidos ({featuredProducts.length})
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Todos os Produtos */}
+            <div>
+              <div className="mb-5">
+                <h2 className="font-display text-2xl text-green-deep md:text-3xl">
+                  💐 Todos os Produtos
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Explore nossa coleção completa
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {allProducts.slice(0, 8).map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} />
+                ))}
+              </div>
+              {allProducts.length > 8 && (
+                <div className="mt-6 flex justify-center">
+                  <span className="text-sm text-muted-foreground">
+                    {allProducts.length} produtos disponíveis · use as categorias acima para filtrar
+                  </span>
+                </div>
+              )}
+            </div>
+          </>
+        ) : isFeatured ? (
+          <div>
+            <div className="mb-5">
+              <h2 className="font-display text-2xl text-green-deep md:text-3xl">🔥 Mais Vendidos</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Os favoritos dos nossos clientes · {featuredProducts.length} produtos
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {featuredProducts.map((p, i) => (
+                <ProductCard key={p.id} product={p} index={i} />
+              ))}
+            </div>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {filtered.map((p, i) => (
-              <ProductCard key={p.id} product={p} index={i} />
-            ))}
+          <div>
+            <div className="mb-5">
+              <h2 className="font-display text-2xl text-green-deep md:text-3xl">
+                {activeCategory?.emoji} {activeCategory?.name ?? "Produtos"}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {categoryFiltered.length} {categoryFiltered.length === 1 ? "produto" : "produtos"}
+              </p>
+            </div>
+            {categoryFiltered.length > 0 ? (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {categoryFiltered.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} />
+                ))}
+              </div>
+            ) : (
+              <p className="rounded-2xl bg-cream-dark/40 py-12 text-center text-sm text-muted-foreground">
+                Nenhum produto nesta categoria ainda.
+              </p>
+            )}
           </div>
         )}
       </section>
