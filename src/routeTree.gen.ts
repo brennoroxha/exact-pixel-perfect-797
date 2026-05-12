@@ -16,6 +16,8 @@ import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-
 import { Route as PoliticaDeEntregaRouteImport } from './routes/politica-de-entrega'
 import { Route as PoliticaDeDevolucaoRouteImport } from './routes/politica-de-devolucao'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FloriculturaAbertaAgoraRouteImport } from './routes/floricultura-aberta-agora'
+import { Route as Floricultura24hRouteImport } from './routes/floricultura-24h'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
@@ -65,6 +67,16 @@ const PoliticaDeDevolucaoRoute = PoliticaDeDevolucaoRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FloriculturaAbertaAgoraRoute = FloriculturaAbertaAgoraRouteImport.update({
+  id: '/floricultura-aberta-agora',
+  path: '/floricultura-aberta-agora',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Floricultura24hRoute = Floricultura24hRouteImport.update({
+  id: '/floricultura-24h',
+  path: '/floricultura-24h',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContatoRoute = ContatoRouteImport.update({
@@ -150,6 +162,8 @@ export interface FileRoutesByFullPath {
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/floricultura-24h': typeof Floricultura24hRoute
+  '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -173,6 +187,8 @@ export interface FileRoutesByTo {
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/floricultura-24h': typeof Floricultura24hRoute
+  '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -198,6 +214,8 @@ export interface FileRoutesById {
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
+  '/floricultura-24h': typeof Floricultura24hRoute
+  '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -224,6 +242,8 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/floricultura-24h'
+    | '/floricultura-aberta-agora'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -247,6 +267,8 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/floricultura-24h'
+    | '/floricultura-aberta-agora'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -271,6 +293,8 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/checkout'
     | '/contato'
+    | '/floricultura-24h'
+    | '/floricultura-aberta-agora'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -296,6 +320,8 @@ export interface RootRouteChildren {
   CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
   ContatoRoute: typeof ContatoRoute
+  Floricultura24hRoute: typeof Floricultura24hRoute
+  FloriculturaAbertaAgoraRoute: typeof FloriculturaAbertaAgoraRoute
   LoginRoute: typeof LoginRoute
   PoliticaDeDevolucaoRoute: typeof PoliticaDeDevolucaoRoute
   PoliticaDeEntregaRoute: typeof PoliticaDeEntregaRoute
@@ -357,6 +383,20 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/floricultura-aberta-agora': {
+      id: '/floricultura-aberta-agora'
+      path: '/floricultura-aberta-agora'
+      fullPath: '/floricultura-aberta-agora'
+      preLoaderRoute: typeof FloriculturaAbertaAgoraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/floricultura-24h': {
+      id: '/floricultura-24h'
+      path: '/floricultura-24h'
+      fullPath: '/floricultura-24h'
+      preLoaderRoute: typeof Floricultura24hRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contato': {
@@ -494,6 +534,8 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,
   ContatoRoute: ContatoRoute,
+  Floricultura24hRoute: Floricultura24hRoute,
+  FloriculturaAbertaAgoraRoute: FloriculturaAbertaAgoraRoute,
   LoginRoute: LoginRoute,
   PoliticaDeDevolucaoRoute: PoliticaDeDevolucaoRoute,
   PoliticaDeEntregaRoute: PoliticaDeEntregaRoute,
@@ -508,3 +550,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
