@@ -4,6 +4,7 @@ import { ArrowRight, Truck, Flower2, CreditCard, MessageCircle, Star, Search, X,
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+import logoFlorExpress from "@/assets/logo.png";
 import { Footer } from "@/components/Footer";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { resolveImage, heroImage } from "@/lib/product-images";
@@ -320,10 +321,12 @@ function HomePage() {
       <section className="mx-auto max-w-3xl px-4 pt-6">
         <div className="rounded-3xl border border-border bg-white p-6 shadow-soft">
           <div className="flex flex-col items-center text-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-background shadow-soft">
-              <Flower2 className="h-9 w-9 text-green-deep" />
-            </div>
-            <h1 className="mt-4 font-display text-2xl text-green-deep">Floratta Express</h1>
+            <img
+              src={logoFlorExpress}
+              alt="Flor Express - Floricultura Online"
+              className="h-32 w-32 object-contain"
+            />
+
             <div className="mt-2 flex items-center gap-2 text-sm">
               <span className="flex text-yellow-500">
                 {Array.from({ length: 5 }).map((_, i) => (
