@@ -23,19 +23,56 @@ export const Route = createFileRoute("/entrega/$cidade")({
           type: "application/ld+json",
           children: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "LocalBusiness",
-            "@id": `${url}#localbusiness`,
-            name: `Floratta Express — Floricultura em ${name}`,
-            url,
-            image: `${SITE_URL}/og-default.jpg`,
-            priceRange: "$$",
-            areaServed: { "@type": "City", name },
-            address: { "@type": "PostalAddress", addressLocality: name, addressCountry: "BR" },
-            openingHoursSpecification: [{
-              "@type": "OpeningHoursSpecification",
-              dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-              opens: "00:00", closes: "23:59",
-            }],
+            "@graph": [
+              {
+                "@type": "LocalBusiness",
+                "@id": `${url}#localbusiness`,
+                name: `Floratta Express — Floricultura em ${name}`,
+                url,
+                image: `${SITE_URL}/og-default.jpg`,
+                priceRange: "$$",
+                areaServed: { "@type": "City", name },
+                address: { "@type": "PostalAddress", addressLocality: name, addressCountry: "BR" },
+                openingHoursSpecification: [{
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+                  opens: "00:00", closes: "23:59",
+                }],
+              },
+              {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "Início", item: SITE_URL },
+                  { "@type": "ListItem", position: 2, name: "Entrega", item: `${SITE_URL}/catalogo` },
+                  { "@type": "ListItem", position: 3, name: `Entrega em ${name}`, item: url },
+                ],
+              },
+              {
+                "@type": "FAQPage",
+                mainEntity: [
+                  {
+                    "@type": "Question",
+                    name: `Vocês entregam flores em ${name} no mesmo dia?`,
+                    acceptedAnswer: { "@type": "Answer", text: `Sim. A Floratta Express entrega buquês e arranjos em ${name} no mesmo dia, em até 60 minutos após a confirmação do pagamento.` },
+                  },
+                  {
+                    "@type": "Question",
+                    name: `Qual o horário de funcionamento da floricultura em ${name}?`,
+                    acceptedAnswer: { "@type": "Answer", text: `Atendemos ${name} 24 horas por dia, todos os dias da semana, incluindo feriados.` },
+                  },
+                  {
+                    "@type": "Question",
+                    name: `Quais formas de pagamento são aceitas para entrega em ${name}?`,
+                    acceptedAnswer: { "@type": "Answer", text: "Aceitamos PIX (com confirmação imediata), cartão de crédito e cartão de débito." },
+                  },
+                  {
+                    "@type": "Question",
+                    name: `É possível enviar flores anônimas ou com cartão de mensagem em ${name}?`,
+                    acceptedAnswer: { "@type": "Answer", text: `Sim. Em ${name} você pode enviar surpresas anônimas ou incluir um cartão personalizado com mensagem para namorada, aniversário, agradecimento e outras ocasiões.` },
+                  },
+                ],
+              },
+            ],
           }),
         },
       ],
@@ -43,6 +80,7 @@ export const Route = createFileRoute("/entrega/$cidade")({
   },
   component: CityPage,
 });
+
 
 function CityPage() {
   const { cidade } = Route.useParams();
