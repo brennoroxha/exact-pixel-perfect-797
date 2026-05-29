@@ -14,6 +14,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 
 import { BottomNav } from "@/components/BottomNav";
 import { Toaster } from "@/components/ui/sonner";
+import { safeJsonLd } from "@/lib/json-ld";
 
 function NotFoundComponent() {
   return (
@@ -119,7 +120,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: safeJsonLd({
           "@context": "https://schema.org",
           "@graph": [
             {
