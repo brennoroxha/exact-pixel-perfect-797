@@ -364,40 +364,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_order_by_id: {
-        Args: { _id: string }
-        Returns: {
-          address_cep: string
-          address_city: string
-          address_complement: string
-          address_neighborhood: string
-          address_number: string
-          address_state: string
-          address_street: string
-          buyer_email: string
-          buyer_name: string
-          buyer_phone: string
-          card_message: string
-          city_slug: string
-          coupon_code: string
-          created_at: string
-          delivery_date: string
-          delivery_fee: number
-          delivery_period: string
-          discount: number
-          id: string
-          items: Json
-          order_number: string
-          payment_method: string
-          payment_status: string
-          recipient_name: string
-          recipient_phone: string
-          status: string
-          subtotal: number
-          total: number
-          updated_at: string
-        }[]
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
