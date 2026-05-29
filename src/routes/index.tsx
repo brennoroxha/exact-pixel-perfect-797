@@ -8,6 +8,7 @@ import logoFlorExpress from "@/assets/logo.webp";
 import { Footer } from "@/components/Footer";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { resolveImage, heroImage } from "@/lib/product-images";
+import { safeJsonLd } from "@/lib/json-ld";
 import { useLocationStore } from "@/stores/location";
 import { useCartStore } from "@/stores/cart";
 import { brl } from "@/lib/format";
@@ -34,7 +35,7 @@ export const Route = createFileRoute("/")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: safeJsonLd({
           "@context": "https://schema.org",
           "@type": "FAQPage",
           mainEntity: [
