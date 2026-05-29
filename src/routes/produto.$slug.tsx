@@ -21,21 +21,55 @@ import { useCartStore } from "@/stores/cart";
 import { useLocationStore } from "@/stores/location";
 import { toast } from "sonner";
 
+const SITE_URL = "https://florexpress.delivery";
+
 export const Route = createFileRoute("/produto/$slug")({
-  head: ({ params }) => {
-    const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
-    const title = params.slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  loader: async ({ params }) => {
+    const { data } = await supabase
+      .from("products")
+      .select("id,slug,name,description,price,original_price,images,stock_qty,stock_unlimited,category_slug")
+      .eq("slug", params.slug)
+      .eq("active", true)
+      .maybeSingle();
+    return { product: data };
+  },
+  head: ({ params, loaderData }) => {
     const url = `${SITE_URL}/produto/${params.slug}`;
+    const p = loaderData?.product;
+    if (!p) {
+      const fallback = params.slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+      return {
+        meta: [
+          { title: `${fallback} | Floratta Express` },
+          { name: "description", content: `Compre ${fallback} com entrega no mesmo dia.` },
+          { property: "og:url", content: url },
+          { property: "og:type", content: "product" },
+        ],
+        links: [{ rel: "canonical", href: url }],
+      };
+    }
+    const price = Number(p.price).toFixed(2);
+    const inStock = p.stock_unlimited || (p.stock_qty ?? 0) > 0;
+    const img = resolveImage(p.images?.[0]);
+    const imgAbs = img.startsWith("http") ? img : `${SITE_URL}${img}`;
+    const desc = p.description || `Compre ${p.name} na Floratta Express. Entrega de flores no mesmo dia em todo o Brasil. Pagamento via PIX ou cartão.`;
     return {
       meta: [
-        { title: `${title} — Comprar com Entrega Hoje | Floratta Express` },
-        { name: "description", content: `Compre ${title} online na Floratta Express. Floricultura aberta agora com entrega de flores no mesmo dia em todo o Brasil. Pagamento via PIX ou cartão.` },
-        { property: "og:title", content: `${title} — Floratta Express` },
-        { property: "og:description", content: `Buquê ${title} com entrega rápida em até 60 minutos.` },
+        { title: `${p.name} — Comprar com Entrega Hoje | Floratta Express` },
+        { name: "description", content: desc },
+        { property: "og:title", content: `${p.name} — Floratta Express` },
+        { property: "og:description", content: desc },
         { property: "og:type", content: "product" },
         { property: "og:url", content: url },
-        { property: "product:availability", content: "in stock" },
+        { property: "og:image", content: imgAbs },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: imgAbs },
+        { property: "product:availability", content: inStock ? "in stock" : "out of stock" },
         { property: "product:condition", content: "new" },
+        { property: "product:price:amount", content: price },
+        { property: "product:price:currency", content: "BRL" },
+        { property: "product:brand", content: "Floratta Express" },
+        { property: "product:retailer_item_id", content: p.id },
       ],
       links: [{ rel: "canonical", href: url }],
     };

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 
-const BASE_URL = "https://exact-pixel-perfect-797.lovable.app";
+const BASE_URL = "https://florexpress.delivery";
 
 // SEO landing pages with high-intent keywords (each is a real route below)
 const LANDING_PATHS: { path: string; priority: string }[] = [
