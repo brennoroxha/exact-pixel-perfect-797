@@ -1,3 +1,15 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
 User-agent: *
 Allow: /
 Disallow: /admin
@@ -7,4 +19,4 @@ Disallow: /carrinho
 Disallow: /checkout
 Disallow: /pedido/
 
-Sitemap: https://exact-pixel-perfect-797.lovable.app/sitemap.xml
+Sitemap: https://florexpress.delivery/sitemap.xml
