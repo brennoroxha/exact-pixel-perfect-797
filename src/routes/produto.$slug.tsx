@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Footer } from "@/components/Footer";
 import { resolveImage } from "@/lib/product-images";
 import { brl } from "@/lib/format";
+import { safeJsonLd } from "@/lib/json-ld";
 import { useCartStore } from "@/stores/cart";
 import { useLocationStore } from "@/stores/location";
 import { toast } from "sonner";
@@ -267,7 +268,7 @@ function ProductPage() {
 
   return (
     <div className="min-h-screen bg-cream pb-28">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
 
       <div className="w-full pt-4">
         {/* Top bar */}
