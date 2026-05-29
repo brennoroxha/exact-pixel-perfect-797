@@ -18,15 +18,15 @@ const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Floricultura Online com Entrega Hoje em todo o Brasil | Floratta Express" },
+      { title: "Floricultura Aberta Agora | Entrega de Flores Hoje em Todo Brasil — Flor Express" },
       {
         name: "description",
         content:
-          "Floricultura aberta agora com entrega de flores no mesmo dia em todo o Brasil. Buquês de rosas vermelhas, flores para namorada, presente e aniversário. Compre online com entrega rápida em até 60 minutos.",
+          "Floricultura online aberta 24h com entrega de flores no mesmo dia em todo o Brasil. Buquês de rosas, orquídeas, cestas e presentes a partir de R$ 50. Compre flores e envie hoje mesmo!",
       },
       { name: "keywords", content: "floricultura, floricultura aberta agora, floricultura aberta 24 horas, floricultura entregando, floricultura online, comprar flores online, entrega de flores hoje, buquê de rosas vermelhas, flores para namorada entrega, flores para aniversário, enviar flores online, floricultura delivery, floricultura perto de mim" },
-      { property: "og:title", content: "Floricultura Online com Entrega Hoje no Brasil — Floratta Express" },
-      { property: "og:description", content: "Buquês entregues em até 60 minutos. Floricultura aberta agora em todo o Brasil." },
+      { property: "og:title", content: "Floricultura Aberta Agora | Entrega de Flores Hoje em Todo Brasil — Flor Express" },
+      { property: "og:description", content: "Floricultura online aberta 24h com entrega de flores no mesmo dia em todo o Brasil. Buquês de rosas, orquídeas, cestas e presentes a partir de R$ 50. Compre flores e envie hoje mesmo!" },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
     ],
