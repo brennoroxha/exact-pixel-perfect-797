@@ -219,7 +219,7 @@ function ProductPage() {
     open();
   };
 
-  const SITE = "https://exact-pixel-perfect-797.lovable.app";
+  const SITE = SITE_URL;
   const productUrl = `${SITE}/produto/${product.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
