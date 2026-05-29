@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Truck, Clock, ShieldCheck, Heart, Star } from "lucide-react";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export type SeoFaq = { q: string; a: string };
 
@@ -112,7 +113,7 @@ export function buildLandingHead(opts: {
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: safeJsonLd({
           "@context": "https://schema.org",
           "@graph": [
             {
