@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { safeJsonLd } from "@/lib/json-ld";
 
 const SITE_URL = "https://exact-pixel-perfect-797.lovable.app";
 
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/entrega/$cidade")({
       scripts: [
         {
           type: "application/ld+json",
-          children: JSON.stringify({
+          children: safeJsonLd({
             "@context": "https://schema.org",
             "@graph": [
               {
