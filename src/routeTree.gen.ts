@@ -16,6 +16,7 @@ import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-
 import { Route as PoliticaDeEntregaRouteImport } from './routes/politica-de-entrega'
 import { Route as PoliticaDeDevolucaoRouteImport } from './routes/politica-de-devolucao'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as Google4eede3016ec98bdcDothtmlRouteImport } from './routes/google4eede3016ec98bdc[.]html'
 import { Route as FloriculturaAbertaAgoraRouteImport } from './routes/floricultura-aberta-agora'
 import { Route as Floricultura24hRouteImport } from './routes/floricultura-24h'
 import { Route as FloresParaNamoradaRouteImport } from './routes/flores-para-namorada'
@@ -74,6 +75,12 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Google4eede3016ec98bdcDothtmlRoute =
+  Google4eede3016ec98bdcDothtmlRouteImport.update({
+    id: '/google4eede3016ec98bdc.html',
+    path: '/google4eede3016ec98bdc.html',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const FloriculturaAbertaAgoraRoute = FloriculturaAbertaAgoraRouteImport.update({
   id: '/floricultura-aberta-agora',
   path: '/floricultura-aberta-agora',
@@ -199,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/flores-para-namorada': typeof FloresParaNamoradaRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
+  '/google4eede3016ec98bdc.html': typeof Google4eede3016ec98bdcDothtmlRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -229,6 +237,7 @@ export interface FileRoutesByTo {
   '/flores-para-namorada': typeof FloresParaNamoradaRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
+  '/google4eede3016ec98bdc.html': typeof Google4eede3016ec98bdcDothtmlRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -261,6 +270,7 @@ export interface FileRoutesById {
   '/flores-para-namorada': typeof FloresParaNamoradaRoute
   '/floricultura-24h': typeof Floricultura24hRoute
   '/floricultura-aberta-agora': typeof FloriculturaAbertaAgoraRoute
+  '/google4eede3016ec98bdc.html': typeof Google4eede3016ec98bdcDothtmlRoute
   '/login': typeof LoginRoute
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/flores-para-namorada'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
+    | '/google4eede3016ec98bdc.html'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -324,6 +335,7 @@ export interface FileRouteTypes {
     | '/flores-para-namorada'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
+    | '/google4eede3016ec98bdc.html'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -355,6 +367,7 @@ export interface FileRouteTypes {
     | '/flores-para-namorada'
     | '/floricultura-24h'
     | '/floricultura-aberta-agora'
+    | '/google4eede3016ec98bdc.html'
     | '/login'
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
@@ -387,6 +400,7 @@ export interface RootRouteChildren {
   FloresParaNamoradaRoute: typeof FloresParaNamoradaRoute
   Floricultura24hRoute: typeof Floricultura24hRoute
   FloriculturaAbertaAgoraRoute: typeof FloriculturaAbertaAgoraRoute
+  Google4eede3016ec98bdcDothtmlRoute: typeof Google4eede3016ec98bdcDothtmlRoute
   LoginRoute: typeof LoginRoute
   PoliticaDeDevolucaoRoute: typeof PoliticaDeDevolucaoRoute
   PoliticaDeEntregaRoute: typeof PoliticaDeEntregaRoute
@@ -448,6 +462,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/google4eede3016ec98bdc.html': {
+      id: '/google4eede3016ec98bdc.html'
+      path: '/google4eede3016ec98bdc.html'
+      fullPath: '/google4eede3016ec98bdc.html'
+      preLoaderRoute: typeof Google4eede3016ec98bdcDothtmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/floricultura-aberta-agora': {
@@ -641,6 +662,7 @@ const rootRouteChildren: RootRouteChildren = {
   FloresParaNamoradaRoute: FloresParaNamoradaRoute,
   Floricultura24hRoute: Floricultura24hRoute,
   FloriculturaAbertaAgoraRoute: FloriculturaAbertaAgoraRoute,
+  Google4eede3016ec98bdcDothtmlRoute: Google4eede3016ec98bdcDothtmlRoute,
   LoginRoute: LoginRoute,
   PoliticaDeDevolucaoRoute: PoliticaDeDevolucaoRoute,
   PoliticaDeEntregaRoute: PoliticaDeEntregaRoute,
