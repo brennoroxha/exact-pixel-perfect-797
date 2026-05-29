@@ -20,6 +20,7 @@ import { Route as FloriculturaAbertaAgoraRouteImport } from './routes/floricultu
 import { Route as Floricultura24hRouteImport } from './routes/floricultura-24h'
 import { Route as FloresParaNamoradaRouteImport } from './routes/flores-para-namorada'
 import { Route as FloresParaAniversarioRouteImport } from './routes/flores-para-aniversario'
+import { Route as EntregaDeFloresHojeRouteImport } from './routes/entrega-de-flores-hoje'
 import { Route as DiaDosNamoradosRouteImport } from './routes/dia-dos-namorados'
 import { Route as DiaDasMaesRouteImport } from './routes/dia-das-maes'
 import { Route as ContatoRouteImport } from './routes/contato'
@@ -93,6 +94,11 @@ const FloresParaNamoradaRoute = FloresParaNamoradaRouteImport.update({
 const FloresParaAniversarioRoute = FloresParaAniversarioRouteImport.update({
   id: '/flores-para-aniversario',
   path: '/flores-para-aniversario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntregaDeFloresHojeRoute = EntregaDeFloresHojeRouteImport.update({
+  id: '/entrega-de-flores-hoje',
+  path: '/entrega-de-flores-hoje',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiaDosNamoradosRoute = DiaDosNamoradosRouteImport.update({
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/contato': typeof ContatoRoute
   '/dia-das-maes': typeof DiaDasMaesRoute
   '/dia-dos-namorados': typeof DiaDosNamoradosRoute
+  '/entrega-de-flores-hoje': typeof EntregaDeFloresHojeRoute
   '/flores-para-aniversario': typeof FloresParaAniversarioRoute
   '/flores-para-namorada': typeof FloresParaNamoradaRoute
   '/floricultura-24h': typeof Floricultura24hRoute
@@ -226,6 +233,7 @@ export interface FileRoutesByTo {
   '/contato': typeof ContatoRoute
   '/dia-das-maes': typeof DiaDasMaesRoute
   '/dia-dos-namorados': typeof DiaDosNamoradosRoute
+  '/entrega-de-flores-hoje': typeof EntregaDeFloresHojeRoute
   '/flores-para-aniversario': typeof FloresParaAniversarioRoute
   '/flores-para-namorada': typeof FloresParaNamoradaRoute
   '/floricultura-24h': typeof Floricultura24hRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/contato': typeof ContatoRoute
   '/dia-das-maes': typeof DiaDasMaesRoute
   '/dia-dos-namorados': typeof DiaDosNamoradosRoute
+  '/entrega-de-flores-hoje': typeof EntregaDeFloresHojeRoute
   '/flores-para-aniversario': typeof FloresParaAniversarioRoute
   '/flores-para-namorada': typeof FloresParaNamoradaRoute
   '/floricultura-24h': typeof Floricultura24hRoute
@@ -291,6 +300,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/dia-das-maes'
     | '/dia-dos-namorados'
+    | '/entrega-de-flores-hoje'
     | '/flores-para-aniversario'
     | '/flores-para-namorada'
     | '/floricultura-24h'
@@ -321,6 +331,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/dia-das-maes'
     | '/dia-dos-namorados'
+    | '/entrega-de-flores-hoje'
     | '/flores-para-aniversario'
     | '/flores-para-namorada'
     | '/floricultura-24h'
@@ -352,6 +363,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/dia-das-maes'
     | '/dia-dos-namorados'
+    | '/entrega-de-flores-hoje'
     | '/flores-para-aniversario'
     | '/flores-para-namorada'
     | '/floricultura-24h'
@@ -384,6 +396,7 @@ export interface RootRouteChildren {
   ContatoRoute: typeof ContatoRoute
   DiaDasMaesRoute: typeof DiaDasMaesRoute
   DiaDosNamoradosRoute: typeof DiaDosNamoradosRoute
+  EntregaDeFloresHojeRoute: typeof EntregaDeFloresHojeRoute
   FloresParaAniversarioRoute: typeof FloresParaAniversarioRoute
   FloresParaNamoradaRoute: typeof FloresParaNamoradaRoute
   Floricultura24hRoute: typeof Floricultura24hRoute
@@ -477,6 +490,13 @@ declare module '@tanstack/react-router' {
       path: '/flores-para-aniversario'
       fullPath: '/flores-para-aniversario'
       preLoaderRoute: typeof FloresParaAniversarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrega-de-flores-hoje': {
+      id: '/entrega-de-flores-hoje'
+      path: '/entrega-de-flores-hoje'
+      fullPath: '/entrega-de-flores-hoje'
+      preLoaderRoute: typeof EntregaDeFloresHojeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dia-dos-namorados': {
@@ -638,6 +658,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContatoRoute: ContatoRoute,
   DiaDasMaesRoute: DiaDasMaesRoute,
   DiaDosNamoradosRoute: DiaDosNamoradosRoute,
+  EntregaDeFloresHojeRoute: EntregaDeFloresHojeRoute,
   FloresParaAniversarioRoute: FloresParaAniversarioRoute,
   FloresParaNamoradaRoute: FloresParaNamoradaRoute,
   Floricultura24hRoute: Floricultura24hRoute,
