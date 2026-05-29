@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosECondicoesRouteImport } from './routes/termos-e-condicoes'
 import { Route as SobreRouteImport } from './routes/sobre'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-privacidade'
 import { Route as PoliticaDeEntregaRouteImport } from './routes/politica-de-entrega'
 import { Route as PoliticaDeDevolucaoRouteImport } from './routes/politica-de-devolucao'
@@ -48,11 +47,6 @@ const TermosECondicoesRoute = TermosECondicoesRouteImport.update({
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PoliticaDePrivacidadeRoute = PoliticaDePrivacidadeRouteImport.update({
@@ -211,7 +205,6 @@ export interface FileRoutesByFullPath {
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
   '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
@@ -242,7 +235,6 @@ export interface FileRoutesByTo {
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
   '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
@@ -275,7 +267,6 @@ export interface FileRoutesById {
   '/politica-de-devolucao': typeof PoliticaDeDevolucaoRoute
   '/politica-de-entrega': typeof PoliticaDeEntregaRoute
   '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
@@ -309,7 +300,6 @@ export interface FileRouteTypes {
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
     | '/politica-de-privacidade'
-    | '/sitemap.xml'
     | '/sobre'
     | '/termos-e-condicoes'
     | '/admin/avaliacoes'
@@ -340,7 +330,6 @@ export interface FileRouteTypes {
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
     | '/politica-de-privacidade'
-    | '/sitemap.xml'
     | '/sobre'
     | '/termos-e-condicoes'
     | '/admin/avaliacoes'
@@ -372,7 +361,6 @@ export interface FileRouteTypes {
     | '/politica-de-devolucao'
     | '/politica-de-entrega'
     | '/politica-de-privacidade'
-    | '/sitemap.xml'
     | '/sobre'
     | '/termos-e-condicoes'
     | '/admin/avaliacoes'
@@ -405,7 +393,6 @@ export interface RootRouteChildren {
   PoliticaDeDevolucaoRoute: typeof PoliticaDeDevolucaoRoute
   PoliticaDeEntregaRoute: typeof PoliticaDeEntregaRoute
   PoliticaDePrivacidadeRoute: typeof PoliticaDePrivacidadeRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
   TermosECondicoesRoute: typeof TermosECondicoesRoute
   EntregaCidadeRoute: typeof EntregaCidadeRoute
@@ -427,13 +414,6 @@ declare module '@tanstack/react-router' {
       path: '/sobre'
       fullPath: '/sobre'
       preLoaderRoute: typeof SobreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/politica-de-privacidade': {
@@ -667,7 +647,6 @@ const rootRouteChildren: RootRouteChildren = {
   PoliticaDeDevolucaoRoute: PoliticaDeDevolucaoRoute,
   PoliticaDeEntregaRoute: PoliticaDeEntregaRoute,
   PoliticaDePrivacidadeRoute: PoliticaDePrivacidadeRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
   TermosECondicoesRoute: TermosECondicoesRoute,
   EntregaCidadeRoute: EntregaCidadeRoute,
@@ -677,3 +656,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
