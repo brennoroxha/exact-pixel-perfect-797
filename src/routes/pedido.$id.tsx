@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { Check, Truck, Clock, MessageCircle } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { supabase } from "@/integrations/supabase/client";
 import { brl } from "@/lib/format";
+import { getPublicOrder } from "@/lib/orders.functions";
 
 export const Route = createFileRoute("/pedido/$id")({
   head: () => ({ meta: [{ title: "Acompanhe seu pedido — Flora Luxe" }] }),
@@ -20,12 +21,10 @@ const STAGES = [
 
 function OrderPage() {
   const { id } = Route.useParams();
+  const fetchOrder = useServerFn(getPublicOrder);
   const { data: order, isLoading } = useQuery({
     queryKey: ["order", id],
-    queryFn: async () => {
-      const { data } = await supabase.from("orders").select("*").eq("id", id).maybeSingle();
-      return data;
-    },
+    queryFn: () => fetchOrder({ data: { id } }),
     refetchInterval: 8000,
   });
 
