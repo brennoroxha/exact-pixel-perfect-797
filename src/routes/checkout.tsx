@@ -19,7 +19,8 @@ import { cartSubtotal, useCartStore } from "@/stores/cart";
 import { useLocationStore } from "@/stores/location";
 import { brl, formatCEP, formatPhone } from "@/lib/format";
 import { resolveImage } from "@/lib/product-images";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { createOrder } from "@/lib/orders.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
@@ -45,6 +46,7 @@ function formatCPF(v: string) {
 
 function CheckoutPage() {
   const navigate = useNavigate();
+  const createOrderFn = useServerFn(createOrder);
   const { items, clear } = useCartStore();
   const loc = useLocationStore((s) => s.location);
   const subtotal = cartSubtotal(items);
@@ -132,40 +134,40 @@ function CheckoutPage() {
         slug: a.id, name: a.title, price: a.price, quantity: 1, imageKey: "",
       })),
     ];
-    const { data, error } = await supabase
-      .from("orders")
-      .insert({
-        order_number: "",
-        buyer_name: form.name,
-        buyer_phone: form.phone.replace(/\D/g, ""),
-        buyer_email: form.email || null,
-        recipient_name: form.name,
-        recipient_phone: form.phone.replace(/\D/g, ""),
-        address_cep: form.cep.replace(/\D/g, ""),
-        address_street: form.street,
-        address_number: form.number,
-        address_complement: form.complement || null,
-        address_neighborhood: form.neighborhood || null,
-        address_city: form.city || loc.city,
-        address_state: loc.state,
-        card_message: null,
-        items: allItems,
-        subtotal, delivery_fee: shipping, discount: 0, total,
-        payment_method: payment,
-        payment_status: "paid",
-        status: "new",
-        city_slug: loc.citySlug,
-      })
-      .select("id, order_number")
-      .single();
-    setSubmitting(false);
-    if (error || !data) {
+    try {
+      const data = await createOrderFn({
+        data: {
+          buyer_name: form.name,
+          buyer_phone: form.phone.replace(/\D/g, ""),
+          buyer_email: form.email || null,
+          recipient_name: form.name,
+          recipient_phone: form.phone.replace(/\D/g, ""),
+          address_cep: form.cep.replace(/\D/g, ""),
+          address_street: form.street,
+          address_number: form.number,
+          address_complement: form.complement || null,
+          address_neighborhood: form.neighborhood || null,
+          address_city: form.city || loc.city,
+          address_state: loc.state,
+          card_message: null,
+          items: allItems,
+          subtotal,
+          delivery_fee: shipping,
+          discount: 0,
+          total,
+          payment_method: payment,
+          city_slug: loc.citySlug,
+        },
+      });
+      setSubmitting(false);
+      clear();
+      toast.success("Pedido confirmado!");
+      navigate({ to: "/pedido/$id", params: { id: data.id } });
+    } catch (err) {
+      setSubmitting(false);
+      console.error(err);
       toast.error("Não foi possível criar o pedido.");
-      return;
     }
-    clear();
-    toast.success("Pedido confirmado!");
-    navigate({ to: "/pedido/$id", params: { id: data.id } });
   };
 
   if (items.length === 0) {
