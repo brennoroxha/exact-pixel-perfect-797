@@ -364,6 +364,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_coupon_by_code: {
+        Args: { _code: string }
+        Returns: {
+          code: string
+          expires_at: string
+          first_order_only: boolean
+          min_order: number
+          type: string
+          value: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
