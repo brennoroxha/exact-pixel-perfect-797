@@ -1,6 +1,7 @@
-import { createFileRoute, useNavigate, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link, Outlet, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { checkIsAdmin } from "@/lib/orders.functions";
 import { LayoutDashboard, ShoppingBag, Package, MapPin, Tag, Star, LogOut, Flower2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,12 +23,20 @@ function AdminLayout() {
         navigate({ to: "/login" });
         return;
       }
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", session.user.id);
-      if (!active) return;
-      const admin = (data ?? []).some((r: { role: string }) => r.role === "admin");
-      setIsAdmin(admin);
-      setReady(true);
-      if (!admin) toast.error("Você precisa de permissão de admin para acessar.");
+      // Server-side verification: requireSupabaseAuth + admin role check.
+      // Client RLS is the second line of defense, not the only one.
+      try {
+        const { isAdmin: admin } = await checkIsAdmin();
+        if (!active) return;
+        setIsAdmin(admin);
+        setReady(true);
+        if (!admin) toast.error("Você precisa de permissão de admin para acessar.");
+      } catch {
+        if (!active) return;
+        setIsAdmin(false);
+        setReady(true);
+        toast.error("Não foi possível verificar permissões.");
+      }
     };
     check();
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
