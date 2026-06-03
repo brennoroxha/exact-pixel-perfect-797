@@ -47,7 +47,6 @@ function formatCPF(v: string) {
 function CheckoutPage() {
   const navigate = useNavigate();
   const createOrderFn = useServerFn(createOrder);
-  const navigate = useNavigate();
   const { items, clear } = useCartStore();
   const loc = useLocationStore((s) => s.location);
   const subtotal = cartSubtotal(items);
