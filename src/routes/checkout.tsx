@@ -19,7 +19,8 @@ import { cartSubtotal, useCartStore } from "@/stores/cart";
 import { useLocationStore } from "@/stores/location";
 import { brl, formatCEP, formatPhone } from "@/lib/format";
 import { resolveImage } from "@/lib/product-images";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { createOrder } from "@/lib/orders.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
